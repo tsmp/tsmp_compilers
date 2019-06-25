@@ -135,10 +135,10 @@
     <LibraryPath>X:\components\dx9sdk\lib;X:\output\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>X:\xr_3da;X:\editors\LevelEditor\Edit;X:\components\MagicFm\Include;X:\editors\ECore\Engine;X:\components\FreeImage\Source;X:\ETools;X:\xrCDB;X:\xrLC\COMMON_COMPILERS;X:\xrCore;X:\components\dx9sdk\include;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>X:\components\dx9sdk\lib;X:\output\libraries;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\components\FreeImage\Source;$(SolutionDir)\components\libvorbis\include;$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xr_3da;$(SolutionDir)\xrlc;$(SolutionDir)\xrlc\common_compilers;$(SolutionDir)\xrcdb;$(SolutionDir)\xrcore;$(SolutionDir)\xrdxt;$(SolutionDir)\components\nvtt\src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)\output\binaries_$(Configuration)_x64\</OutDir>
+    <IntDir>$(SolutionDir)\output\libraries_$(Configuration)_x64\</IntDir>
+    <LibraryPath>$(SolutionDir)\components\dx9sdk\lib;$(SolutionDir)\output\libraries_$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -294,10 +294,10 @@
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>

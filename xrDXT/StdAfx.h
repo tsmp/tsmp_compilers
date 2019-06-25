@@ -22,6 +22,8 @@
 #define XR_EPROPS_API
 #define ECORE_API
 
+#pragma comment( lib, "nvtt.lib"	)
+
 #define USE_NVTT
 
 #ifndef MAKEFOURCC

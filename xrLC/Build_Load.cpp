@@ -300,7 +300,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 			if (strchr(N,'.')) *(strchr(N,'.')) = 0;
 			strlwr			(N);
 			
-			if (0==xr_strcmp(N,"level_lods"))	
+			if (0==(int)strcmp(N,"level_lods"))
 			{
 				// HACK for merged lod textures
 				BT.dwWidth	= 1024;
