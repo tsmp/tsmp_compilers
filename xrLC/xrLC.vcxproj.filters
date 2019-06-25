@@ -31,6 +31,9 @@
     <Filter Include="COMPILER\Model">
       <UniqueIdentifier>{92398260-d98d-47ae-a0ec-9126261493b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{0fee9719-9df3-45fb-ae9a-27a20cf935b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
@@ -300,6 +303,15 @@
     </ClCompile>
     <ClCompile Include="NVMeshMender.cpp">
       <Filter>External\NV_Basis</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="object_sliding.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="PropSlimTools.cpp">
+      <Filter>Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

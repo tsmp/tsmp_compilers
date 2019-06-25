@@ -108,7 +108,7 @@
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\components\dx9sdk\lib64;$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrQSlim\src;$(SolutionDir)\etools;$(SolutionDir)\xrcdb;$(SolutionDir)\xr_3da;$(SolutionDir)\xrcore;$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\MagicFm\Include;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrQSlim\src;$(SolutionDir)\xrcdb;$(SolutionDir)\xr_3da;$(SolutionDir)\xrcore;$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\MagicFm\Include;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
@@ -563,6 +563,9 @@
     <ClCompile Include="..\xr_3da\fmesh.cpp" />
     <ClCompile Include="NVMeshMender.cpp" />
     <ClCompile Include="nv_algebra.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="object_sliding.cpp" />
+    <ClCompile Include="PropSlimTools.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -629,10 +632,6 @@
     <ClCompile Include="xr_mu_light.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ETools\ETools.vcxproj">
-      <Project>{65cbb9d0-fbc6-41a4-8316-f5e9b5d7fb33}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\xrCDB\xrCDB.vcxproj">
       <Project>{a19b1df2-82ec-4364-8bdf-85d13a1c89b5}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
