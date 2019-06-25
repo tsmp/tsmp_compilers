@@ -4,7 +4,7 @@
 #include "communicate.h"
 #include "xrThread.h"
 #include "xrRender\DetailFormat.h"
-#include "xrhemisphere.h"
+#include "..\xrhemisphere.h"
 #include "cl_intersect.h"
 #include "Etextureparams.h"
 #include "..\r_light.h"
