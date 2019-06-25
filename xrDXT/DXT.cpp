@@ -6,9 +6,9 @@
 #pragma warning(disable:4244)
 #pragma warning(disable:4018)
 #include "dxtlib.h"
-#ifdef USE_NVTT
-	#include <nvtt/nvtt.h>
-#endif
+
+#include <nvtt/nvtt.h>
+
 #pragma warning(pop)
 #include "ETextureParams.h"
 #include "dds.h"
@@ -50,18 +50,7 @@ int __cdecl WriteDTXnFile (DWORD count, const void *buffer, void * userData)
     return _write(gFileOut, buffer, count);
 }
 
-#ifndef USE_NVTT
-NV_ERROR_CODE nvDXTWriteCallback(const void *buffer, 
-                                 size_t count,  
-                                 const MIPMapData * mipMapData, 
-                                 void * userData)
-{
-    int result = WriteDTXnFile(count, buffer, userData);
-	if (-1 == result)
-		return NV_FAIL;
-	return NV_OK;
-}
-#else
+
 using namespace nvtt;
 struct dds_writer: public OutputHandler {
 			dds_writer(HFILE& fileout);
@@ -116,7 +105,6 @@ void dds_error::error(Error e)
 		case Error_FileWrite:			MessageBox(0,"File write error","DXT compress error",MB_ICONERROR|MB_OK);		break;
 	}
 }
-#endif
 
 void __cdecl ReadDTXnFile (DWORD count, void *buffer, void * userData)
 {
@@ -207,7 +195,6 @@ int DXTCompressImage	(LPCSTR out_name, u8* raw_data, u32 w, u32 h, u32 pitch,
         return false;
     }
 
-#ifdef USE_NVTT
 	bool result = false;
 	InputOptions in_opts;
 	in_opts.setTextureLayout((fmt->type==STextureParams::ttCubeMap)?TextureType_Cube:TextureType_2D, w, h);
@@ -304,127 +291,6 @@ int DXTCompressImage	(LPCSTR out_name, u8* raw_data, u32 w, u32 h, u32 pitch,
 		unlink				(out_name);
 		return 0;
 	}else					return 1;
-
-#else
-
-	NV_ERROR_CODE hr=NV_FAIL;
-// convert to Options
-    nvCompressionOptions		nvOpt;
-	ZeroMemory				(&nvOpt,sizeof(nvOpt));
-	nvOpt.					SetDefaultOptions();
-
-    if (fmt->flags.is(STextureParams::flGenerateMipMaps))	nvOpt.mipMapGeneration=kGenerateMipMaps;
-    else													nvOpt.mipMapGeneration=kNoMipMaps;
-    nvOpt.bBinaryAlpha	    = !!(fmt->flags.is(STextureParams::flBinaryAlpha));
-    nvOpt.bAlphaBorder		= !!(fmt->flags.is(STextureParams::flAlphaBorder));
-    nvOpt.bBorder			= !!(fmt->flags.is(STextureParams::flColorBorder));
-    nvOpt.borderColor32F.set	(color_get_R(fmt->border_color),color_get_G(fmt->border_color),color_get_B(fmt->border_color),color_get_A(fmt->border_color));
-    nvOpt.bFadeColor		= !!(fmt->flags.is(STextureParams::flFadeToColor));
-	nvOpt.fadeToColor32F.set	(color_get_R(fmt->fade_color),color_get_G(fmt->fade_color),color_get_B(fmt->fade_color),0);
-    nvOpt.fadeAmount32F		= fmt->fade_amount;
-	nvOpt.bFadeAlpha		= !!(fmt->flags.is(STextureParams::flFadeToAlpha));
-	nvOpt.fadeToColor32F.a		= color_get_A(fmt->fade_color);
-	nvOpt.fadeToDelay		= fmt->fade_delay;
-    nvOpt.bDitherColor		= !!(fmt->flags.is(STextureParams::flDitherColor));
-	nvOpt.bDitherMip0		= !!(fmt->flags.is(STextureParams::flDitherEachMIPLevel));
-	nvOpt.textureType		= (fmt->type==STextureParams::ttCubeMap)?kTextureTypeCubeMap:kTextureTypeTexture2D;
-    switch(fmt->fmt){
-		case STextureParams::tfDXT1				: 	nvOpt.textureFormat = kDXT1	; 	break;
-		case STextureParams::tfADXT1			: 	nvOpt.textureFormat = kDXT1a; 	break;
-		case STextureParams::tfDXT3				: 	nvOpt.textureFormat = kDXT3	; 	break;
-		case STextureParams::tfDXT5				: 	nvOpt.textureFormat = kDXT5	; 	break;
-		case STextureParams::tf4444				:
-		case STextureParams::tf1555				: 	nvOpt.textureFormat = k1555	; 	break;
-		case STextureParams::tf565				: 	nvOpt.textureFormat = k565	; 	break;
-		case STextureParams::tfRGB				: 	nvOpt.textureFormat = k888	; 	break;
-		case STextureParams::tfRGBA				: 	nvOpt.textureFormat = k8888	; 	break;
-		case STextureParams::tfA8				: 	nvOpt.textureFormat = kA8	; 	break;
-		case STextureParams::tfL8				: 	nvOpt.textureFormat = kL8	; 	break;
-		case STextureParams::tfA8L8				: 	nvOpt.textureFormat = kA8L8	; 	break;
-    }
-	
-	switch(fmt->mip_filter){
-		case STextureParams::kMIPFilterAdvanced	:	break;
-
-		case STextureParams::kMIPFilterPoint	:	nvOpt.mipFilterType = kMipFilterPoint		;	break;		
-		case STextureParams::kMIPFilterBox		:	nvOpt.mipFilterType = kMipFilterBox			;	break;
-		case STextureParams::kMIPFilterTriangle	:	nvOpt.mipFilterType = kMipFilterTriangle	;	break;	
-		case STextureParams::kMIPFilterQuadratic:	nvOpt.mipFilterType = kMipFilterQuadratic	;	break;	
-		case STextureParams::kMIPFilterCubic	:	nvOpt.mipFilterType = kMipFilterCubic		;	break;
-
-		case STextureParams::kMIPFilterCatrom	:	nvOpt.mipFilterType = kMipFilterCatrom		;	break;
-		case STextureParams::kMIPFilterMitchell	:	nvOpt.mipFilterType = kMipFilterMitchell	;	break;
-
-		case STextureParams::kMIPFilterGaussian	:	nvOpt.mipFilterType = kMipFilterGaussian	;	break;
-		case STextureParams::kMIPFilterSinc		:	nvOpt.mipFilterType = kMipFilterSinc		;	break;
-		case STextureParams::kMIPFilterBessel	:	nvOpt.mipFilterType = kMipFilterBessel		;	break;
-
-		case STextureParams::kMIPFilterHanning	:	nvOpt.mipFilterType = kMipFilterHanning		;	break;
-		case STextureParams::kMIPFilterHamming	:	nvOpt.mipFilterType = kMipFilterHamming		;	break;
-		case STextureParams::kMIPFilterBlackman	:	nvOpt.mipFilterType = kMipFilterBlackman	;	break;
-		case STextureParams::kMIPFilterKaiser	:	nvOpt.mipFilterType = kMipFilterKaiser		;	break;
-	}
-//-------------------
-	if ((fmt->flags.is(STextureParams::flGenerateMipMaps))&&(STextureParams::kMIPFilterAdvanced==fmt->mip_filter)){
-		nvOpt.mipMapGeneration	= kUseExistingMipMaps;
-
-		u8* pImagePixels	= 0;
-		int numMipmaps		= GetPowerOf2Plus1(__min(w,h));
-		u32 line_pitch		= w*2*4;
-		pImagePixels		= xr_alloc<u8>(line_pitch*h);
-		u32 w_offs			= 0;
-		u32 dwW				= w;
-		u32 dwH				= h;
-		u32 dwP				= pitch;
-		u32* pLastMip		= xr_alloc<u32>(w*h*4);
-		CopyMemory			(pLastMip,raw_data,w*h*4);
-		FillRect			(pImagePixels,(u8*)pLastMip,w_offs,pitch,dwH,line_pitch);
-		w_offs				+= dwP;
-
-		float	inv_fade	= clampr(1.f-float(fmt->fade_amount)/100.f,0.f,1.f);
-		float	blend		= fmt->flags.is_any(STextureParams::flFadeToColor|STextureParams::flFadeToAlpha)?inv_fade:1.f;
-		for (int i=1; i<numMipmaps; i++){
-			u32* pNewMip	= Build32MipLevel(dwW,dwH,dwP,pLastMip,fmt,i<fmt->fade_delay?0.f:1.f-blend);
-			FillRect		(pImagePixels,(u8*)pNewMip,w_offs,dwP,dwH,line_pitch);
-			xr_free			(pLastMip); 
-			pLastMip		= pNewMip; 
-			pNewMip			= 0;
-			w_offs			+= dwP;
-		}
-		xr_free				(pLastMip);
-
-		nvOpt.bFadeColor	= false;
-		nvOpt.bFadeAlpha	= false;
-
-		RGBAImage			pImage(w*2, h);
-		rgba_t* pixels		= pImage.pixels();
-		u8* pixel			= pImagePixels;
-		for (u32 k=0; k<w*2*h; k++,pixel+=4)
-			pixels[k].set	(pixel[2],pixel[1],pixel[0],pixel[3]);
-		hr					= nvDXTcompress(pImage,&nvOpt,&nvDXTWriteCallback,0);
-		xr_free				(pImagePixels);
-	}else{
-		RGBAImage			pImage(w,h);
-		rgba_t* pixels		= pImage.pixels();
-		u8* pixel			= raw_data;
-		for (u32 k=0; k<w*h; k++,pixel+=4)
-			pixels[k].set	(pixel[2],pixel[1],pixel[0],pixel[3]);
-		hr					= nvDXTcompress(pImage,&nvOpt,&nvDXTWriteCallback,0);
-	}
-    _close					(gFileOut);
-	if (hr!=NV_OK){
-		switch (hr){
-		case NV_INPUT_POINTER_ZERO:				MessageBox(0,"Empty source.","DXT compress error",MB_ICONERROR|MB_OK);			break;
-		case NV_DEPTH_IS_NOT_3_OR_4:			MessageBox(0,"Source depth is not 3 or 4.","DXT compress error",MB_ICONERROR|MB_OK);			break;
-		case NV_IMAGE_NOT_POWER_2:				MessageBox(0,"Source size non power 2.","DXT compress error",MB_ICONERROR|MB_OK);					break;
-		case NV_NEED_4_PLANES_FOR_RGBE:			MessageBox(0,"Source incorrect number of planes.","DXT compress error",MB_ICONERROR|MB_OK);	break;
-		case NV_IMAGE_NOT_MULT4:				MessageBox(0,"Source size non mul 4.","DXT compress error",MB_ICONERROR|MB_OK);						break;
-		case NV_FAIL:							MessageBox(0,"General fail.","DXT compress error",MB_ICONERROR|MB_OK);						break;
-		}
-		unlink				(out_name);
-		return 0;
-	}else					return 1;
-#endif
 }
 
 extern int DXTCompressBump(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth);

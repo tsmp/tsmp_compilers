@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "elight_def.h"
+#include "xrLoadSurface.h"
 
 b_params				g_params;
 extern volatile u32		dwInvalidFaces;
@@ -18,14 +19,12 @@ void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
 	if (O)		O->close	();
 }
 
-extern u32*		Surface_Load	(char* name, u32& w, u32& h);
-extern void		Surface_Init	();
-
 struct R_Control
 {
 	string64				name;
 	xr_vector<u32>			data;
 };
+
 struct R_Layer
 {
 	R_Control				control;
@@ -358,7 +357,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS, HWND Window)
 				{
 					if (BT.bHasAlpha || BT.THM.flags.test(STextureParams::flImplicitLighted) || b_radiosity)
 					{
-						//clMsg		("- loading: %s",N);
+						clMsg		("- loading: %s",N);
 						u32			w=0, h=0;
 						BT.pSurface = Surface_Load(N,w,h);
 	//					R_ASSERT2	(BT.pSurface,"Can't load surface");

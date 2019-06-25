@@ -1,12 +1,3 @@
-// stdafx.h : include file for standard system include files,
-//  or project specific include files that are used frequently, but
-//      are changed infrequently
-//
-// Third generation by Oles.
-
-#if !defined(AFX_STDAFX_H__A9DB83DB_A9FD_11D0_BFD1_444553540000__INCLUDED_)
-#define AFX_STDAFX_H__A9DB83DB_A9FD_11D0_BFD1_444553540000__INCLUDED_
-
 #pragma once
 
 #pragma warning(disable:4595)
@@ -22,9 +13,7 @@
 #define XR_EPROPS_API
 #define ECORE_API
 
-#pragma comment( lib, "nvtt.lib"	)
-
-#define USE_NVTT
+#pragma comment(lib, "nvtt.lib")
 
 #ifndef MAKEFOURCC
 #define MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
@@ -33,21 +22,4 @@
 #endif //defined(MAKEFOURCC)
 
 #pragma comment(lib,"xrCore.lib")
-#ifndef USE_NVTT
-#ifdef DEBUG
-#	ifdef _WIN64
-#		pragma comment(lib,"nvDXTlibMTDLLd.vc8.x64.lib")
-#	else
-#		pragma comment(lib,"nvDXTlibMTDLLd.vc8.lib")
-#	endif
-#else
-#	ifdef _WIN64
-#		pragma comment(lib,"nvDXTlibMTDLL.vc8.x64.lib")
-#	else
-#		pragma comment(lib,"nvDXTlibMTDLL.vc8.lib")
-#	endif
-#endif
-#endif
 #pragma warning( disable : 4995 )
-
-#endif
