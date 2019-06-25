@@ -2,6 +2,9 @@
 #pragma hdrstop
 
 #include <freeimage.h>
+#include "xrLoadSurface.h"
+
+#pragma comment(lib,"FreeImage.lib")
 
 struct SExts
 {

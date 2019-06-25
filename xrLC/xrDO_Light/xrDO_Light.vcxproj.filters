@@ -17,7 +17,6 @@
       <Filter>Kernel</Filter>
     </ClCompile>
     <ClCompile Include="compiler.cpp" />
-    <ClCompile Include="..\..\xr_3da\xrLoadSurface.cpp" />
     <ClCompile Include="..\COMMON_COMPILERS\cl_log.cpp" />
     <ClCompile Include="..\COMMON_COMPILERS\tga.cpp" />
     <ClCompile Include="..\COMMON_COMPILERS\xrThread.cpp" />

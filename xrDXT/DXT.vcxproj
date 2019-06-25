@@ -81,7 +81,7 @@
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\components\nvtt\src\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\nvtt\src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)\components\xrdxt;$(SolutionDir)\components\nvtt\src;$(IncludePath)</IncludePath>
@@ -328,6 +328,7 @@
     <ClInclude Include="tga.h" />
     <ClInclude Include="dds.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="xrLoadSurface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXT.cpp">
@@ -346,6 +347,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="xrLoadSurface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />

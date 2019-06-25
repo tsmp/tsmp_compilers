@@ -616,7 +616,6 @@
     <ClCompile Include="OGF_Face_Sphere.cpp" />
     <ClCompile Include="OGF_Face_Stripify.cpp" />
     <ClCompile Include="xrFace.cpp" />
-    <ClCompile Include="..\xr_3da\xrLoadSurface.cpp" />
     <ClCompile Include="fitter.cpp" />
     <ClCompile Include="xrMU_Model.cpp" />
     <ClCompile Include="xrMU_Model_Calc_faceopacity.cpp" />

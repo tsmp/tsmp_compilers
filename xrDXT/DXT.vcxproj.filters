@@ -55,6 +55,7 @@
     <ClInclude Include="dds.h">
       <Filter>Convert</Filter>
     </ClInclude>
+    <ClInclude Include="xrLoadSurface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXT.cpp">
@@ -79,6 +80,7 @@
       <Filter>NormalMap</Filter>
     </ClCompile>
     <ClCompile Include="StdAfx.cpp" />
+    <ClCompile Include="xrLoadSurface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />

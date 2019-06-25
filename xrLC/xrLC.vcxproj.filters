@@ -252,9 +252,6 @@
     <ClCompile Include="xrFace.cpp">
       <Filter>COMPILER\Internal</Filter>
     </ClCompile>
-    <ClCompile Include="..\xr_3da\xrLoadSurface.cpp">
-      <Filter>COMPILER\Internal</Filter>
-    </ClCompile>
     <ClCompile Include="fitter.cpp">
       <Filter>COMPILER\Model</Filter>
     </ClCompile>

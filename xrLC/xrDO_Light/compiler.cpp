@@ -9,6 +9,7 @@
 #include "Etextureparams.h"
 #include "..\r_light.h"
 #include "global_options.h"
+#include "xrLoadSurface.h"
 
 #define NUM_THREADS		16
 
@@ -147,11 +148,7 @@ void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
 	}
 	if (O)		O->close();
 }
-
-extern u32*		Surface_Load(char* name, u32& w, u32& h);
-extern void		Surface_Init();
-
-// 
+ 
 void xrLoad(LPCSTR name)
 {
 	string_path					N;
