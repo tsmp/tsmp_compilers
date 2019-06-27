@@ -7,8 +7,7 @@
 // (compatible) constants and structures so that one can use DDS files 
 // without needing to include ddraw.h.
 
-#ifndef _DDS_H_
-#define _DDS_H_
+#pragma once
 
 #define DDS_FOURCC 0x00000004  // DDPF_FOURCC
 #define DDS_RGB    0x00000040  // DDPF_RGB
@@ -67,7 +66,6 @@ const DDS_PIXELFORMAT DDSPF_R5G6B5 =
 
 #define DDS_FLAGS_VOLUME 0x00200000 // DDSCAPS2_VOLUME
 
-
 struct DDS_HEADER
 {
     DWORD dwSize;
@@ -95,7 +93,3 @@ enum DDS_HEADER_FLAGS
 	DDSD_LINEARSIZE		= (1 << 19),
 	DDSD_DEPTH			= (1 << 23),
 };
-
-
-
-#endif

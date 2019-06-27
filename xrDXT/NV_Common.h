@@ -13,17 +13,10 @@ Comments:
 
 ******************************************************************************/
 
-
-
-#ifndef	__NV_COMMON_H
-#define	__NV_COMMON_H
-
+#pragma once
 
 #include <windows.h>
 #include <assert.h>
-
-
-
 
 #ifndef ASSERT_IF_FAILED
 #define ASSERT_IF_FAILED( hres )	\
@@ -44,15 +37,13 @@ Comments:
 }
 #endif
 
-
 #ifndef FAIL_IF_NULL
 #define FAIL_IF_NULL( x )  { if( x==NULL ) { assert(false); return(E_FAIL); } }
 #endif
 
-
-	// FDebug defined in NV_Error.h
+// FDebug defined in NV_Error.h
 #ifndef ASSERT_MSG
-	#define ASSERT_MSG( var, msg )	\
+#define ASSERT_MSG( var, msg )	\
 	{									\
 		if( !(var) )					\
 		{								\
@@ -61,8 +52,6 @@ Comments:
 		assert(var);					\
 	}
 #endif
-
-
 
 #ifndef SAFE_ARRAY_DELETE
 #define SAFE_ARRAY_DELETE(p)  { if(p) { delete [] (p);  p=NULL; } }
@@ -75,9 +64,6 @@ Comments:
 #ifndef SAFE_RELEASE
 #define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p)=NULL; } }
 #endif
-  
-///////////////////////////////////////////////////////////////
-
 
 #define ifnot(x)  if (!(x))
 #define until(x) while(!(x))
@@ -85,12 +71,5 @@ Comments:
 #define wait        do {}
 #define nothing     {}
 
-
-///////////////////////////////////////////////////////////////
-// @@ extract more of these from ulCommon.h
-
-typedef unsigned short		USHORT;
-typedef unsigned short		ushort;
-
-
-#endif
+typedef unsigned short USHORT;
+typedef unsigned short ushort;
