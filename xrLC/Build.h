@@ -1,9 +1,3 @@
-// Build.h: interface for the CBuild class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_BUILD_H__C7D43EBA_1C15_4FF4_A3ED_E89F6D759F58__INCLUDED_)
-#define AFX_BUILD_H__C7D43EBA_1C15_4FF4_A3ED_E89F6D759F58__INCLUDED_
 #pragma once
 
 #include "common_compilers\communicate.h"
@@ -15,7 +9,6 @@
 #include "xrMU_Model.h"
 
 #pragma comment(lib,"dxt.lib")
-extern "C" bool __declspec(dllimport) __stdcall DXTCompress(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth);
 
 struct b_BuildTexture : public b_texture
 {
@@ -131,5 +124,3 @@ public:
 };
 
 extern CBuild* pBuild;
-
-#endif // !defined(AFX_BUILD_H__C7D43EBA_1C15_4FF4_A3ED_E89F6D759F58__INCLUDED_)

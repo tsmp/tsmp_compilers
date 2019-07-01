@@ -2,7 +2,7 @@
 #pragma hdrstop
 
 #include "freeimage.h"
-#include "xrLoadSurface.h"
+#include "DXT.h"
 
 #pragma comment(lib,"FreeImage.lib")
 

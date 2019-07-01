@@ -315,10 +315,9 @@
   <ItemGroup>
     <ClInclude Include="dds\ConvertColor.h" />
     <ClInclude Include="dds\ddsTypes.h" />
-    <ClInclude Include="dds\nvdxt_options.h" />
-    <ClInclude Include="dds\nvErrorCodes.h" />
     <ClInclude Include="dds\tPixel.h" />
     <ClInclude Include="dds\tVector.h" />
+    <ClInclude Include="DXT.h" />
     <ClInclude Include="dxtlib.h" />
     <ClInclude Include="ETextureParams.h" />
     <ClInclude Include="Image_DXTC.h" />
@@ -328,7 +327,6 @@
     <ClInclude Include="tga.h" />
     <ClInclude Include="dds.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="xrLoadSurface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXT.cpp">

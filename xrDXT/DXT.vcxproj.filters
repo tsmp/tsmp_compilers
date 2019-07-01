@@ -37,12 +37,6 @@
     <ClInclude Include="dds\ddsTypes.h">
       <Filter>Convert</Filter>
     </ClInclude>
-    <ClInclude Include="dds\nvdxt_options.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
-    <ClInclude Include="dds\nvErrorCodes.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
     <ClInclude Include="dds\tPixel.h">
       <Filter>Convert</Filter>
     </ClInclude>
@@ -55,7 +49,7 @@
     <ClInclude Include="dds.h">
       <Filter>Convert</Filter>
     </ClInclude>
-    <ClInclude Include="xrLoadSurface.h" />
+    <ClInclude Include="DXT.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXT.cpp">

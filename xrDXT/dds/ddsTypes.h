@@ -7,7 +7,6 @@
 #endif
 
 #include <dds/tPixel.h>
-#include <dds/nvErrorCodes.h>
 
 typedef	unsigned char	BYTE;
 typedef	unsigned short	WORD;

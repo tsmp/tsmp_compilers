@@ -3,7 +3,7 @@
 #include <math.h>
 #include <memory.h>
 #include <dds/tVector.h>
-#include <dds/nvErrorCodes.h>
+//#include <dds/nvErrorCodes.h>
 
 #pragma warning(disable : 4201)
 
@@ -434,31 +434,6 @@ public:
 	}
 };
 
-class q8w8v8u8_t
-{
-public:
-	union
-	{
-		char qwvu[4];
-		struct
-		{
-			char q;
-			char w;
-			char v;
-			char u;
-		};
-	};
-
-	q8w8v8u8_t& operator += (const q8w8v8u8_t& v);     // incrementation by a Vec4f
-	
-	void set(char _r, char _g, char _b, char _a)
-	{
-		q = _r;
-		w = _g;
-		v = _b;
-		u = _a;
-	}
-};
 
 #define _R 0
 #define _G 1
@@ -619,29 +594,6 @@ public:
 	}
 
 	friend int operator == (const fpPixel& v1, const fpPixel& v2);      // v1 == v2 ?
-
-	NV_ERROR_CODE normalize()
-	{
-		double u;
-		u = x * x + y * y + z * z;
-
-		if (fabs(u - 1.0) < 1e-12)
-			return NV_OK; // already normalized
-
-		if (fabs((double)u) < 1e-12)
-		{
-			x = y = z = 0.0f;
-			return NV_CANT_NORMALIZE;
-		}
-
-		u = 1.0 / sqrt(u);
-		
-		x = (float)(x * u);
-		y = (float)(y * u);
-		z = (float)(z * u);
-
-		return NV_OK;
-	}
 };
 
 class fpPixel3
@@ -718,29 +670,6 @@ public:
 	}
 
 	friend int operator == (const fpPixel3& v1, const fpPixel3& v2);      // v1 == v2 ?
-
-	NV_ERROR_CODE normalize()
-	{
-		double u;
-		u = x * x + y * y + z * z;
-
-		if (fabs(u - 1.0) < 1e-12)
-			return NV_OK; // already normalized
-
-		if (fabs((double)u) < 1e-12)
-		{
-			x = y = z = 0.0f;
-			return NV_CANT_NORMALIZE;
-		}
-
-		u = 1.0 / sqrt(u);
-
-		x = (float)(x * u);
-		y = (float)(y * u);
-		z = (float)(z * u);
-
-		return NV_OK;
-	}
 };
 
 typedef fpPixel* fp_i;

@@ -9,7 +9,7 @@
 #include "Etextureparams.h"
 #include "..\r_light.h"
 #include "global_options.h"
-#include "xrLoadSurface.h"
+#include "DXT.h"
 
 #define NUM_THREADS		16
 

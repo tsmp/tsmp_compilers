@@ -9,6 +9,7 @@
 #pragma warning(pop)
 #include "ETextureParams.h"
 #include "dds.h"
+#include "DXT.h"
 
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {
@@ -24,29 +25,6 @@ const u32 fcc_DXT3 = MAKEFOURCC('D', 'X', 'T', '3');
 const u32 fcc_DXT4 = MAKEFOURCC('D', 'X', 'T', '4');
 const u32 fcc_DXT5 = MAKEFOURCC('D', 'X', 'T', '5');
 
-int __cdecl WriteDTXnFile(DWORD count, const void* buffer, void* userData)
-{
-	if (count == sizeof(DDS_HEADER))
-	{
-		// correct DDS header
-		DDS_HEADER* hdr = (DDS_HEADER*)buffer;
-
-		if (hdr->dwSize == count) 
-		{
-			switch (hdr->ddspf.dwFourCC) 
-			{
-			case fcc_DXT1:
-			case fcc_DXT2:
-			case fcc_DXT3:
-			case fcc_DXT4:
-			case fcc_DXT5:
-				hdr->ddspf.dwRGBBitCount = 0;
-				break;
-			}
-		}
-	}
-	return _write(gFileOut, buffer, count);
-}
 
 using namespace nvtt;
 
@@ -107,18 +85,6 @@ void dds_error::error(Error e)
 	case Error_FileOpen:			MessageBox(0, "File open error", "DXT compress error", MB_ICONERROR | MB_OK);		break;
 	case Error_FileWrite:			MessageBox(0, "File write error", "DXT compress error", MB_ICONERROR | MB_OK);		break;
 	}
-}
-
-void __cdecl ReadDTXnFile(DWORD count, void* buffer, void* userData)
-{
-	_read(gFileIn, buffer, count);
-}
-
-HRESULT WriteCompressedData(void* data, int miplevel, u32 size)
-{
-	_write(gFileOut, data, size);
-	FillMemory(data, size, 0xff);
-	return 0;
 }
 
 ENGINE_API u32* Build32MipLevel(u32& _w, u32& _h, u32& _p, u32* pdwPixelSrc, STextureParams* fmt, float blend)
@@ -335,9 +301,7 @@ int DXTCompressImage(LPCSTR out_name, u8* raw_data, u32 w, u32 h, u32 pitch,
 
 extern int DXTCompressBump(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth);
 
-extern "C" __declspec(dllexport)
-int  __stdcall DXTCompress(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch,
-	STextureParams* fmt, u32 depth)
+void DXTCompress(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth)
 {
 	switch (fmt->type) 
 	{
@@ -345,12 +309,11 @@ int  __stdcall DXTCompress(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w,
 	case STextureParams::ttCubeMap:
 	case STextureParams::ttNormalMap:
 	case STextureParams::ttTerrain:
-		return DXTCompressImage(out_name, raw_data, w, h, pitch, fmt, depth);
+		DXTCompressImage(out_name, raw_data, w, h, pitch, fmt, depth);
 		break;
 	case STextureParams::ttBumpMap:
-		return DXTCompressBump(out_name, raw_data, normal_map, w, h, pitch, fmt, depth);
+		DXTCompressBump(out_name, raw_data, normal_map, w, h, pitch, fmt, depth);
 		break;
 	default: NODEFAULT;
 	}
-	return -1;
 }

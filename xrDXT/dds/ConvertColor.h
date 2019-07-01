@@ -181,13 +181,6 @@ public:
 		outColor = (ai << 24) | (ri << 16) | (gi << 8) | bi;
 	}
 
-	static void FloatToQ8W8V8U8(const fpPixel& inColor, q8w8v8u8_t& outColor)
-	{
-		outColor.q = (char)FloatToSigned(inColor.r);
-		outColor.v = (char)FloatToSigned(inColor.g);
-		outColor.w = (char)FloatToSigned(inColor.b);
-		outColor.u = (char)FloatToSigned(inColor.a);
-	}
 
 	static void FloatToU16V16(float u, float v, v16u16_t& outColor)
 	{
