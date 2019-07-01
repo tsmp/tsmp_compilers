@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include <freeimage.h>
+#include "freeimage.h"
 #include "xrLoadSurface.h"
 
 #pragma comment(lib,"FreeImage.lib")

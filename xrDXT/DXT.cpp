@@ -4,7 +4,7 @@
 #pragma warning(disable:4018)
 #include "dxtlib.h"
 
-#include <nvtt/nvtt.h>
+#include "nvtt.h"
 
 #pragma warning(pop)
 #include "ETextureParams.h"
