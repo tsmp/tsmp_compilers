@@ -80,7 +80,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>V:\Макс\compiler\components\FreeImage\x64;$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\nvtt\src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
