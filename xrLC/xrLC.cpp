@@ -11,7 +11,7 @@ XRCORE_API void ComputeBuildID(LPCSTR Date);
 #pragma comment(lib,"IMAGEHLP.LIB")
 #pragma comment(lib,"winmm.LIB")
 #pragma comment(lib,"xrCDB.lib")
-#pragma comment(lib,"xrCore.lib")
+#pragma comment(lib,"xrShared.lib")
 
 #define PROTECTED_BUILD
 

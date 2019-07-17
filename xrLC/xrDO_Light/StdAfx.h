@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../../xrCore/xrCore.h"
+#include "xrCore.h"
 
 #pragma warning(disable:4995)
 #include <d3dx9.h>

@@ -81,7 +81,7 @@
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\\components\nvtt\x64;$(SolutionDir)\components\FreeImage\x64;$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\nvtt;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\components\FreeImage;$(SolutionDir)\xrShared;$(SolutionDir)\components\nvtt;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>V:\Макс\compiler\components\FreeImage;$(SolutionDir)\components\xrdxt;$(SolutionDir)\components\nvtt;$(IncludePath)</IncludePath>
@@ -351,9 +351,8 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\xrCore\xrCore.vcxproj">
+    <ProjectReference Include="..\xrShared\xrShared.vcxproj">
       <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

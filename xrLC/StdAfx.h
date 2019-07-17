@@ -11,7 +11,7 @@
 #pragma warning(disable:4577)
 #pragma warning(disable:4595)
 
-#include "../xrCore/xrCore.h"
+#include "xrCore.h"
 
 #pragma warning(disable:4995)
 #include <commctrl.h>

@@ -4,7 +4,7 @@
 #pragma warning(disable:4091)
 #pragma warning(disable:4577)
 
-#include "../xrCore/xrCore.h"
+#include "xrCore.h"
 #include <io.h>
 #include <fcntl.h>
 #include <sys\stat.h>
@@ -21,5 +21,5 @@
 	((DWORD)(BYTE)(ch2) << 16) | ((DWORD)(BYTE)(ch3) << 24 ))
 #endif //defined(MAKEFOURCC)
 
-#pragma comment(lib,"xrCore.lib")
+#pragma comment(lib,"xrShared.lib")
 #pragma warning( disable : 4995 )

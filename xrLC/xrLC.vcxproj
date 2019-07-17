@@ -108,7 +108,7 @@
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\components\MagicFm\x64;$(SolutionDir)\components\dx9sdk\lib64;$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\xrdxt;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrQSlim\src;$(SolutionDir)\xrcdb;$(SolutionDir)\xr_3da;$(SolutionDir)\xrcore;$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\MagicFm;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\xrdxt;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrQSlim\src;$(SolutionDir)\xrcdb;$(SolutionDir)\xr_3da;$(SolutionDir)\xrShared;$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\MagicFm;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>

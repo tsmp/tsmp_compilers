@@ -8,7 +8,7 @@
 #pragma warning(disable:4595)
 #pragma warning(disable:4577)
 
-#include "../../xrCore/xrCore.h"
+#include "xrCore.h"
 
 /************************************************************************
 

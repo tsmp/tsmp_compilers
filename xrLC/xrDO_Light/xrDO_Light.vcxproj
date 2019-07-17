@@ -89,7 +89,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xrdxt;$(SolutionDir)\xrcore;$(SolutionDir)\components\FreeImage;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrcdb;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\components\dx9sdk\include;$(SolutionDir)\xrdxt;$(SolutionDir)\xrShared;$(SolutionDir)\components\FreeImage;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrcdb;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
