@@ -26,7 +26,7 @@ struct tgaHeader
 #define IMG_24B 0
 #define IMG_32B 1
 
-class ENGINE_API TGAdesc
+class TGAdesc
 {
 public:
 	int format;
@@ -40,4 +40,4 @@ public:
 	void maketga( IWriter &fs );
 };
 
-void ENGINE_API	tga_save(LPCSTR name, u32 w, u32 h, void* data, BOOL alpha );
+void tga_save(LPCSTR name, u32 w, u32 h, void* data, BOOL alpha );

@@ -313,10 +313,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="dds\ConvertColor.h" />
-    <ClInclude Include="dds\ddsTypes.h" />
-    <ClInclude Include="dds\tPixel.h" />
-    <ClInclude Include="dds\tVector.h" />
     <ClInclude Include="DXT.h" />
     <ClInclude Include="dxtlib.h" />
     <ClInclude Include="ETextureParams.h" />
@@ -325,7 +321,6 @@
     <ClInclude Include="NVI_Convolution.h" />
     <ClInclude Include="NVI_Image.h" />
     <ClInclude Include="tga.h" />
-    <ClInclude Include="dds.h" />
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -346,9 +341,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="xrLoadSurface.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\xrShared\xrShared.vcxproj">

@@ -2,7 +2,7 @@
 
 #pragma pack(push,1)
 
-struct ECORE_API STextureParams 
+struct STextureParams 
 {
 	enum ETType 
 	{

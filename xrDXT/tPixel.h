@@ -1,310 +1,438 @@
-#ifndef TPIXEL_H
-#define TPIXEL_H
+#pragma once
 
 #include <math.h>
 #include <memory.h>
 #include "tVector.h"
+//#include <dds/nvErrorCodes.h>
 
+#pragma warning(disable : 4201)
+
+namespace nv
+{
+	// modulo value x between [lo,hi]
+	// allows value 'hi'
+
+	template <class _Type>
+	inline _Type Clamp(const _Type& x,
+		const _Type& lo,
+		const _Type& hi)
+	{
+		if (x < lo)
+			return lo;
+		else if (x > hi)
+			return hi;
+	
+		return x;
+	}
+
+	inline int iClamp(int x, int lo, int hi)
+	{
+		if (x < lo)
+			return lo;
+		if (x > hi)
+			return hi;
+
+		return x;
+	}
+
+	inline float fClamp(float x, float lo, float hi)
+	{
+		if (x < lo)
+			return lo;
+		if (x > hi)
+			return hi;
+
+		return x;
+	}
+
+	inline int fmod(int x, int size)
+	{
+		return x % size;
+	}
+
+	inline __int64 fmod(__int64 x, __int64 size)
+	{
+		return x % size;
+	}
+
+	inline unsigned __int64 fmod(unsigned __int64 x, unsigned __int64 size)
+	{
+		return x % size;
+	}
+
+	inline float __cdecl fmod(float _X, float _Y)
+	{
+		return (fmodf(_X, _Y));
+	}
+
+	// calcMaxMipmap
+	//  calculates max # of mipmap levels for given texture size
+	inline size_t calcMaxMipmap(size_t w, size_t h)
+	{
+		size_t n = 0;
+		size_t count = 0;
+
+		assert(w >= 0);
+		assert(h >= 0);
+
+		if (w < h)
+			count = h;
+		else
+			count = w;
+
+		while (count)
+		{
+			n++;
+			count >>= 1;
+		}
+
+		return n;
+	}
+
+	inline size_t calcMaxMipmap(size_t w, size_t h, size_t d)
+	{
+		size_t n = 0;
+		size_t count = 0;
+
+		assert(w >= 0);
+		assert(h >= 0);
+		assert(d >= 0);
+
+		if (w < h)
+			count = h;
+		else
+			count = w;
+
+		if (d > count)
+			count = d;
+
+		while (count)
+		{
+			n++;
+			count >>= 1;
+		}
+
+		return n;
+	}
+
+	// get next mip level size
+	inline size_t NextMip(size_t m)
+	{
+		size_t next = m / 2; // round down
+
+		if (next == 0)
+			return 1;
+		else
+			return next;
+	}
+
+	// lo = 0;
+	// allow hi value
+	template < class _Type >
+	inline _Type Modulo(const _Type& x, const _Type& hi)
+	{
+		if (x >= 0 && x <= hi)
+			return x;
+
+		_Type f = fmod(x, hi);
+
+		if (f < 0)
+			f += hi;
+
+		return f;
+	}
+
+	// does not allow x == size
+	inline int iModulo(int x, int size)
+	{
+		if (x < 0)
+		{
+			int n = x / size;
+			x += size * (n + 1);
+		}
+
+		return x % size;
+	}
+
+	template < class _Type >
+	inline _Type Modulo(const _Type& x, const _Type& lo, const _Type& hi)
+	{
+		if (x >= lo && x <= hi)
+			return x;
+
+		_Type dw = hi - lo;
+		_Type t = x - lo;
+
+		_Type f = fmod(t, dw);
+
+		if (f < 0)
+			f += dw;
+
+		f += lo;
+
+		return f;
+	}
+}
 
 #pragma pack(push,4)
 
-// rad and green
-class u16v16_t	
+// red and green
+class v16u16_t
 {
 public:
+	union
+	{
+		short uv[4];
+		struct
+		{
+			short u;
+			short v;
+		};
+	};
 
-    union
-    {
-        unsigned short rg[4];
-        struct
-        {
-            unsigned short r;
-            unsigned short g;
-        };
-    };
-    u16v16_t & operator += ( const u16v16_t & v );     // incrementation by a Vec4f
+	v16u16_t& operator += (const v16u16_t& v);     // incrementation by a Vec4f
 
-
-    void set(unsigned short _r, unsigned short _g)
-    {
-        r = _r;
-        g = _g;
-    }
+	void set(unsigned short _u, unsigned short _v)
+	{
+		u = _u;
+		v = _v;
+	}
 };
 
-class r12g12b8_t	
+class r12g12b8_t
 {
 public:
+	union
+	{
+		struct
+		{
+			unsigned long r : 12;
+			unsigned long g : 12;
+			unsigned long b : 8;
+		};
+	};
 
-    union
-    {
-        
-        struct
-        {
-            unsigned long r:12;
-            unsigned long g:12;
-            unsigned long b:8;
-        };
-    };
-    r12g12b8_t & operator += ( const r12g12b8_t& v );     // incrementation by a Vec4f
+	r12g12b8_t& operator += (const r12g12b8_t& v);     // incrementation by a Vec4f
 
-
-    void set(unsigned long _r, unsigned long _g, unsigned long _b)
-    {
-        r = _r;
-        g = _g;
-        b = _b;
-    }
+	void set(unsigned long _r, unsigned long _g, unsigned long _b)
+	{
+		r = _r;
+		g = _g;
+		b = _b;
+	}
 };
-inline int iClamp(int a, int lo, int hi)
-{
-    if (a < lo)
-        a = lo;
-    if (a > hi)
-        a = hi;
-    return a;
-}
 
-inline float fClamp(float a, float lo, float hi)
-{
-    if (a < lo)
-        a = lo;
-    if (a > hi)
-        a = hi;
-    return a;
-}
-
-
-
-class rgba_t	
+class rgba_t
 {
 public:
+	union
+	{
+		unsigned long u;
+		unsigned char p[4];
+		struct
+		{
+			unsigned char r;
+			unsigned char g;
+			unsigned char b;
+			unsigned char a;
+		};
+	};
+	
+	rgba_t() {} 
 
-    union
-    {
-        unsigned long u;
-        unsigned char rgba[4];
-        struct
-        {
-            unsigned char r;
-            unsigned char g;
-            unsigned char b;
-            unsigned char a;
-        };
-    };
+	unsigned long bgra()
+	{
+		return ((unsigned long)a << 24) | ((unsigned long)r << 16) | ((unsigned long)g << 8) | ((unsigned long)b);
+	}
 
-    rgba_t() 
-    {
-    }
-    rgba_t(unsigned char _r, unsigned char _g, unsigned char _b,unsigned char _a) 
-    {
-        a = _a; 
-        r = _r; 
-        g = _g;
-        b = _b;
-    }
+	rgba_t(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
+	{
+		a = _a;
+		r = _r;
+		g = _g;
+		b = _b;
+	}
 
-    rgba_t & operator += ( const rgba_t& v )     // incrementation by a rgba_t
-    {
-        r = iClamp((int)r + (int)v.r, 0, 255);   
-        g = iClamp((int)g + (int)v.g, 0, 255);   
-        b = iClamp((int)b + (int)v.b, 0, 255);   
-        a = iClamp((int)a + (int)v.a, 0, 255);   
+	rgba_t& operator += (const rgba_t& v)     // incrementation by a rgba_t
+	{
+		r = (unsigned char)nv::Clamp((int)((int)r + (int)v.r), 0, 255);
+		g = (unsigned char)nv::Clamp((int)g + (int)v.g, 0, 255);
+		b = (unsigned char)nv::Clamp((int)b + (int)v.b, 0, 255);
+		a = (unsigned char)nv::Clamp((int)a + (int)v.a, 0, 255);
 
-        return *this;
-    }
+		return *this;
+	}
 
-    rgba_t & operator -= ( const rgba_t& v );     // decrementation by a rgba_t
-    rgba_t & operator *= ( const float d );     // multiplication by a constant
-    rgba_t & operator /= ( const float d );     // division by a constant
+	rgba_t& operator -= (const rgba_t& v);     // decrementation by a rgba_t
+	rgba_t& operator *= (const float d);     // multiplication by a constant
+	rgba_t& operator /= (const float d);     // division by a constant
 
+	rgba_t& operator = (const rgba_t& v)
+	{
+		r = v.r;
+		g = v.g;
+		b = v.b;
+		a = v.a;
+		return *this;
+	}
 
-    rgba_t& operator = (const rgba_t& v)
-    { 
-        r = v.r; 
-        g = v.g; 
-        b = v.b; 
-        a = v.a; 
-        return *this; 
-    }
+	friend rgba_t operator + (const rgba_t& v1, const rgba_t& v2)
+	{
+		int r, g, b, a;
+		r = nv::Clamp((int)v1.r + (int)v2.r, 0, 255);
+		g = nv::Clamp((int)v1.g + (int)v2.g, 0, 255);
+		b = nv::Clamp((int)v1.b + (int)v2.b, 0, 255);
+		a = nv::Clamp((int)v1.a + (int)v2.a, 0, 255);
 
-    friend rgba_t operator + (const rgba_t & v1, const rgba_t& v2)
-    {
+		return rgba_t((unsigned char)r, (unsigned char)g, (unsigned char)b, (unsigned char)a);
+	}
 
-        int r,g,b,a;
-        r = iClamp((int)v1.r + (int)v2.r, 0, 255);   
-        g = iClamp((int)v1.g + (int)v2.g, 0, 255);   
-        b = iClamp((int)v1.b + (int)v2.b, 0, 255);   
-        a = iClamp((int)v1.a + (int)v2.a, 0, 255);  
+	friend rgba_t operator / (const rgba_t& v, float s)
+	{
+		return rgba_t(
+			(unsigned char)(v.r / s),
+			(unsigned char)(v.g / s),
+			(unsigned char)(v.b / s),
+			(unsigned char)(v.a / s));
+	}
 
-        return rgba_t(r, g, b, a);
-    }
+	friend rgba_t operator / (const rgba_t& v, int s)
+	{
+		return rgba_t(
+			(unsigned char)(v.r / s),
+			(unsigned char)(v.g / s),
+			(unsigned char)(v.b / s),
+			(unsigned char)(v.a / s));
+	}
 
-    friend rgba_t operator / (const rgba_t& v, float s)
-    { 
-        return rgba_t(v.r/s, v.g/s, v.b/s, v.a/s);
-    }
+	void set(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
+	{
+		r = _r;
+		g = _g;
+		b = _b;
+		a = _a;
+	}
 
-    friend rgba_t operator / (const rgba_t& v, int s)
-    {
-        return rgba_t(v.r/s, v.g/s, v.b/s, v.a/s);
-    }
-
-    void set(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
-    {
-        r = _r;
-        g = _g;
-        b = _b;
-        a = _a;
-    }
+	void SetToZero()
+	{
+		r = g = b = a = 0;
+	}
 };
 
-class rgba16_t	
+class rgba16_t
 {
 public:
+	union
+	{
+		//unsigned __int64 u;
+		unsigned short rgba[4];
 
-    union
-    {
-        //unsigned __int64 u;
-        unsigned short rgba[4];
-        struct
-        {
-            unsigned short r;
-            unsigned short g;
-            unsigned short b;
-            unsigned short a;
-        };
-    };
+		struct
+		{
+			unsigned short r;
+			unsigned short g;
+			unsigned short b;
+			unsigned short a;
+		};
+	};
 
-    rgba16_t() 
-    {
-    }
-    rgba16_t(unsigned short _r, unsigned short _g, unsigned short _b,unsigned short _a) 
-    {
-        a = _a; 
-        r = _r; 
-        g = _g;
-        b = _b;
-    }
+	rgba16_t() {}
 
-    rgba16_t & operator += ( const rgba16_t& v )     // incrementation by a rgba_t
-    {
-        r = iClamp((int)r + (int)v.r, 0, 65535);   
-        g = iClamp((int)g + (int)v.g, 0, 65535);   
-        b = iClamp((int)b + (int)v.b, 0, 65535);   
-        a = iClamp((int)a + (int)v.a, 0, 65535);   
+	rgba16_t(unsigned short _r, unsigned short _g, unsigned short _b, unsigned short _a)
+	{
+		a = _a;
+		r = _r;
+		g = _g;
+		b = _b;
+	}
 
-        return *this;
-    }
+	rgba16_t& operator += (const rgba16_t& v)     // incrementation by a rgba_t
+	{
+		r = (unsigned char)nv::Clamp((int)r + (int)v.r, 0, 65535);
+		g = (unsigned char)nv::Clamp((int)g + (int)v.g, 0, 65535);
+		b = (unsigned char)nv::Clamp((int)b + (int)v.b, 0, 65535);
+		a = (unsigned char)nv::Clamp((int)a + (int)v.a, 0, 65535);
 
-    rgba16_t & operator -= ( const rgba16_t& v );     // decrementation by a rgba_t
-    rgba16_t & operator *= ( const float d );     // multiplication by a constant
-    rgba16_t & operator /= ( const float d );     // division by a constant
+		return *this;
+	}
 
+	rgba16_t& operator -= (const rgba16_t& v);     // decrementation by a rgba_t
+	rgba16_t& operator *= (const float d);     // multiplication by a constant
+	rgba16_t& operator /= (const float d);     // division by a constant
 
-    rgba16_t& operator = (const rgba16_t& v)
-    { 
-        r = v.r; 
-        g = v.g; 
-        b = v.b; 
-        a = v.a; 
-        return *this; 
-    }
+	rgba16_t& operator = (const rgba16_t& v)
+	{
+		r = v.r;
+		g = v.g;
+		b = v.b;
+		a = v.a;
+		return *this;
+	}
 
-    friend rgba16_t operator + (const rgba16_t & v1, const rgba16_t& v2)
-    {
+	friend rgba16_t operator + (const rgba16_t& v1, const rgba16_t& v2)
+	{
+		int r, g, b, a;
+		r = nv::Clamp((int)v1.r + (int)v2.r, 0, 65535);
+		g = nv::Clamp((int)v1.g + (int)v2.g, 0, 65535);
+		b = nv::Clamp((int)v1.b + (int)v2.b, 0, 65535);
+		a = nv::Clamp((int)v1.a + (int)v2.a, 0, 65535);
 
-        int r,g,b,a;
-        r = iClamp((int)v1.r + (int)v2.r, 0, 65535);   
-        g = iClamp((int)v1.g + (int)v2.g, 0, 65535);   
-        b = iClamp((int)v1.b + (int)v2.b, 0, 65535);   
-        a = iClamp((int)v1.a + (int)v2.a, 0, 65535);  
+		return rgba16_t((unsigned char)r, (unsigned char)g, (unsigned char)b, (unsigned char)a);
+	}
 
-        return rgba16_t(r, g, b, a);
-    }
+	friend rgba16_t operator / (const rgba16_t& v, float s)
+	{
+		return rgba16_t((unsigned short)(v.r / s),
+			(unsigned short)(v.g / s),
+			(unsigned short)(v.b / s),
+			(unsigned short)(v.a / s));
+	}
 
-    friend rgba16_t operator / (const rgba16_t& v, float s)
-    {
-        return rgba16_t(v.r/s, v.g/s, v.b/s, v.a/s);
-    }
+	friend rgba16_t operator / (const rgba16_t& v, int s)
+	{
+		return rgba16_t(
+			(unsigned short)(v.r / s),
+			(unsigned short)(v.g / s),
+			(unsigned short)(v.b / s),
+			(unsigned short)(v.a / s));
+	}
 
-    friend rgba16_t operator / (const rgba16_t& v, int s)
-    {
-        return rgba16_t(v.r/s, v.g/s, v.b/s, v.a/s);
-    }
-
-    void set(unsigned short _r, unsigned short _g, unsigned short _b, unsigned short _a)
-    {
-        r = _r;
-        g = _g;
-        b = _b;
-        a = _a;
-    }
+	void set(unsigned short _r, unsigned short _g, unsigned short _b, unsigned short _a)
+	{
+		r = _r;
+		g = _g;
+		b = _b;
+		a = _a;
+	}
 };
 
-
-class urgba_t	
+class urgba_t
 {
 public:
+	union
+	{
+		unsigned long u;
+		char rgba[4];
 
-    union
-    {
-        unsigned long u;
-        char rgba[4];
-        struct
-        {
-            char r;
-            char g;
-            char b;
-            char a;
-        };
-    };
-    urgba_t & operator += ( const urgba_t& v );     // incrementation by a Vec4f
+		struct
+		{
+			char r;
+			char g;
+			char b;
+			char a;
+		};
+	};
 
+	urgba_t& operator += (const urgba_t& v);     // incrementation by a Vec4f
 
-    void set(char _r, char _g, char _b, char _a)
-    {
-        r = _r;
-        g = _g;
-        b = _b;
-        a = _a;
-    }
+	void set(char _r, char _g, char _b, char _a)
+	{
+		r = _r;
+		g = _g;
+		b = _b;
+		a = _a;
+	}
 };
-
-
- 
-
-class q8w8v8u8_t	
-{
-public:
-
-    union
-    {
-        char qwvu[4];
-        struct
-        {
-            char q;
-            char w;
-            char v;
-            char u;
-        };
-    };
-    q8w8v8u8_t & operator += ( const q8w8v8u8_t& v );     // incrementation by a Vec4f
-
-
-    void set(char _r, char _g, char _b, char _a)
-    {
-        q = _r;
-        w = _g;
-        v = _b;
-        u = _a;
-    }
-};
-
-
-
-
-
 
 
 #define _R 0
@@ -312,613 +440,1079 @@ public:
 #define _B 2
 #define _A 3
 
-
-
-
 class fpPixel
 {
 public:
-    union
-    {
-        float p[4];
-        struct
-        {
-            float r;
-            float g;
-            float b;
-            float a;
-        };
-        struct
-        {
-            float x;
-            float y;
-            float z;
-            float w;
-        };
-    };
+	union
+	{
+		float p[4];
 
-    fpPixel() {}
-    fpPixel(const float _r, const float _g, const float _b, const float _a) 
-    {
-        a = _a; 
-        r = _r; 
-        g = _g;
-        b = _b;
-    }
+		struct
+		{
+			float r;
+			float g;
+			float b;
+			float a;
+		};
 
+		struct
+		{
+			float x;
+			float y;
+			float z;
+			float w;
+		};
 
-    fpPixel(const fpPixel& v)
-    {
-        a = v.a; 
-        r = v.r; 
-        g = v.g;
-        b = v.b;
-    }          // copy constructor
+	};
 
-    void set(const float _r, const float _g, const float _b, const float _a)
-    {
-        a = _a; 
-        r = _r; 
-        g = _g;
-        b = _b;
-    }
+	void SetToZero()
+	{
+		r = 0;
+		g = 0;
+		b = 0;
+		a = 0;
+	}
 
-    void set(const fpPixel& v)
-    {
-        a = v.a; 
-        r = v.r; 
-        g = v.g;
-        b = v.b;
-    }
+	void Clamp(fpPixel& lo, fpPixel& hi)
+	{
+		r = nv::Clamp(r, lo.r, hi.r);
+		g = nv::Clamp(g, lo.g, hi.g);
+		b = nv::Clamp(b, lo.b, hi.b);
+		a = nv::Clamp(a, lo.a, hi.a);
+	}
 
-    fpPixel & operator += ( const fpPixel& v );     // incrementation by a Vec4f
+	void Wrap(fpPixel& lo, fpPixel& hi)
+	{
+		r = nv::Modulo(r, lo.r, hi.r);
+		g = nv::Modulo(g, lo.g, hi.g);
+		b = nv::Modulo(b, lo.b, hi.b);
+		a = nv::Modulo(a, lo.a, hi.a);
+	}
 
-    fpPixel & operator = ( const fpPixel& v );      // assignment of a Vec3f         
-    fpPixel & operator -= ( const fpPixel& v );     // decrementation by a Vec3f
-    fpPixel & operator *= ( const float d );     // multiplication by a constant
-    fpPixel & operator /= ( const float d );     // division by a constant
+	void dot(fpPixel& w)
+	{
+		float grey = r * w.r + g * w.g + b * w.b + a * w.a;
+		r = grey;
+		g = grey;
+		b = grey;
+	}
 
+	fpPixel() {}
 
+	fpPixel(const float _r, const float _g, const float _b, const float _a)
+	{
+		a = _a;
+		r = _r;
+		g = _g;
+		b = _b;
+	}
 
-    friend fpPixel operator + (const fpPixel& v1, const fpPixel& v2)
-    {
-        return fpPixel(v1.r + v2.r, v1.g + v2.g, v1.b + v2.b, v1.a + v2.a);
-    }
+	fpPixel(const fpPixel& v)
+	{
+		a = v.a;
+		r = v.r;
+		g = v.g;
+		b = v.b;
+	}          // copy constructor
 
-    friend fpPixel operator / (const fpPixel& v, float s)
-    {
-        return fpPixel(v.r/s, v.g/s, v.b/s, v.a/s);
+	void set(const float _r, const float _g, const float _b, const float _a)
+	{
+		a = _a;
+		r = _r;
+		g = _g;
+		b = _b;
+	}
 
-    }
-    friend int operator == (const fpPixel& v1, const fpPixel& v2);      // v1 == v2 ?
+	void set(const fpPixel& v)
+	{
+		a = v.a;
+		r = v.r;
+		g = v.g;
+		b = v.b;
+	}
 
-    int normalize()
-    {
-        double u;
-        u = x * x + y * y + z * z;
+	fpPixel& operator += (const fpPixel& v)     // incrementation by a rgba_t
+	{
+		r += v.r;
+		g += v.g;
+		b += v.b;
+		a += v.a;
 
-        if ( fabs(u - 1.0) < 1e-12)
-            return 0; // already normalized
+		return *this;
+	}
 
-        if ( fabs((double)u) < 1e-12)
-        {
-            x = y = z = 0.0;
-            return -1;
-        }
+	fpPixel& operator -= (const fpPixel& v)     // incrementation by a rgba_t
+	{
+		r -= v.r;
+		g -= v.g;
+		b -= v.b;
+		a -= v.a;
 
+		return *this;
+	}
+	
+	fpPixel& operator *= (const fpPixel& v)     // incrementation by a rgba_t
+	{
+		r *= v.r;
+		g *= v.g;
+		b *= v.b;
+		a *= v.a;
 
-        u = 1.0 / sqrt(u);
+		return *this;
+	}
 
+	fpPixel& operator /= (const fpPixel& v)     // incrementation by a rgba_t
+	{
+		r /= v.r;
+		g /= v.g;
+		b /= v.b;
+		a /= v.a;
 
-        x *= u;
-        y *= u;
-        z *= u;
+		return *this;
+	}
 
-        return 0;
-    }
+	fpPixel& operator /= (const float& s)     // incrementation by a rgba_t
+	{
+		r /= s;
+		g /= s;
+		b /= s;
+		a /= s;
 
+		return *this;
+	}
 
+	fpPixel& operator = (const fpPixel& v);      // assignment of a Vec3f
+
+	friend fpPixel operator + (const fpPixel& v1, const fpPixel& v2)
+	{
+		return fpPixel(v1.r + v2.r, v1.g + v2.g, v1.b + v2.b, v1.a + v2.a);
+	}
+
+	friend fpPixel operator / (const fpPixel& v, float s)
+	{
+		return fpPixel(v.r / s, v.g / s, v.b / s, v.a / s);
+	}
+
+	friend int operator == (const fpPixel& v1, const fpPixel& v2);      // v1 == v2 ?
 };
+
+class fpPixel3
+{
+public:
+	union
+	{
+		float p[3];
+		struct
+		{
+			float r;
+			float g;
+			float b;
+		};
+		struct
+		{
+			float x;
+			float y;
+			float z;
+		};
+	};
+
+	void SetToZero()
+	{
+		r = 0;
+		g = 0;
+		b = 0;
+	}
+
+	fpPixel3() {}
+
+	fpPixel3(const float _r, const float _g, const float _b)
+	{
+		r = _r;
+		g = _g;
+		b = _b;
+	}
+
+	fpPixel3(const fpPixel3& v)
+	{
+		r = v.r;
+		g = v.g;
+		b = v.b;
+	}          // copy constructor
+
+	void set(const float _r, const float _g, const float _b)
+	{
+		r = _r;
+		g = _g;
+		b = _b;
+	}
+
+	void set(const fpPixel3& v)
+	{
+		r = v.r;
+		g = v.g;
+		b = v.b;
+	}
+
+	fpPixel3& operator += (const fpPixel3& v);     // incrementation by a Vec4f
+	fpPixel3& operator = (const fpPixel3& v);      // assignment of a Vec3f         
+	fpPixel3& operator -= (const fpPixel3& v);     // decrementation by a Vec3f
+	fpPixel3& operator *= (const float d);     // multiplication by a constant
+	fpPixel3& operator /= (const float d);     // division by a constant
+
+	friend fpPixel3 operator + (const fpPixel3& v1, const fpPixel3& v2)
+	{
+		return fpPixel3(v1.r + v2.r, v1.g + v2.g, v1.b + v2.b);
+	}
+
+	friend fpPixel3 operator / (const fpPixel3& v, float s)
+	{
+		return fpPixel3(v.r / s, v.g / s, v.b / s);
+	}
+
+	friend int operator == (const fpPixel3& v1, const fpPixel3& v2);      // v1 == v2 ?
+};
+
+typedef fpPixel* fp_i;
 
 inline int operator == (const fpPixel& v1, const fpPixel& v2)
 {
-    return 
-        v1.a == v2.a && 
-        v1.r == v2.r && 
-        v1.b == v2.g && 
-        v1.g == v2.b;
+	return
+		v1.a == v2.a &&
+		v1.r == v2.r &&
+		v1.b == v2.g &&
+		v1.g == v2.b;
 }
 
 inline fpPixel& fpPixel::operator = (const fpPixel& v)
-{ 
-    a = v.a; 
-    r = v.r; 
-    g = v.g; 
-    b = v.b; 
-    return *this; 
+{
+	a = v.a;
+	r = v.r;
+	g = v.g;
+	b = v.b;
+
+	return *this;
 }
 
-
-
-
-class CNormalData
+template <class _Type>
+class nvImage
 {
-public:
-    CNormalData()
-    {
-        normals = 0;
-    }
+	size_t m_width;
+	size_t m_height;
+	nvVector<_Type> m_pixels;
 
-     
-    ~CNormalData()
-    {
-        if (normals)
-        {
-            delete [] normals;
-            normals = 0;
-        }
-    }
-    int width;
-    int height;
-
-    fpPixel * normals;
-
-}; 
-
-
-
-
-template <class _type>
-class CImage 
-{
-    int m_width;
-    int m_height;
-    nvVector<_type> m_pixels;
+	bool m_RGBE;
 
 public:
-    
-    CImage < _type > & operator = ( const CImage < _type >& v ) 
-    {
+	void SetRGBE(bool b)
+	{
+		m_RGBE = b;
+	}
 
-        // resize and copy over
-        resize(v.width(), v.height());
+	bool isRGBE() const
+	{
+		return m_RGBE;
+	}
 
-        m_pixels = v.m_pixels;
+	size_t size()
+	{
+		return m_width * m_height;
+	}
 
-        return *this; 
-    }
+	nvImage <_Type>& operator = (const nvImage <_Type>& v)
+	{
+		// resize and copy over
+		resize(v.width(), v.height());
 
+		m_pixels = v.m_pixels;
+		m_RGBE = v.m_RGBE;
 
-    _type& operator [] ( int i) 
-    {
-#ifdef _DEBUG
-        assert(i < m_width * m_height);
-#endif
-        return m_pixels[i]; 
-    };  
-    
-    const _type& operator[](int i) const 
-    { 
-#ifdef _DEBUG
-        assert(i < m_width * m_height);
-#endif
-        return m_pixels[i];
-    }
+		return *this;
+	}
 
-    int nPlanesInFile;
+	_Type& operator [] (size_t i)
+	{
+		return m_pixels[i];
+	};
 
-    int width() const
-    {
-        return m_width;
+	const _Type& operator[](size_t i) const
+	{
+		return m_pixels[i];
+	}
 
-    }
+	_Type& operator () (const size_t& y, const size_t& x)
+	{
+		return m_pixels[y * m_width + x];
+	}
 
-    int height() const
-    {
-        return m_height;
+	const _Type& operator () (const size_t& y, const size_t& x) const
+	{
+		return m_pixels[y * m_width + x];
+	}
 
-    }
+	size_t width() const
+	{
+		return m_width;
+	}
 
+	size_t height() const
+	{
+		return m_height;
+	}
 
+	_Type* pixels(size_t n = 0)
+	{
+		return &m_pixels[n];
+	}
 
-    _type * pixels()
-    {
-        int s = m_pixels.size();
-        return &m_pixels[0];
-    }
+	_Type* pixelsXY(size_t x, size_t y)
+	{
+		return &m_pixels[y * width() + x];
+	}
 
-    CImage()
-    {
-        m_width = 0;
-        m_height = 0;
+	_Type* pixelsXY_Safe(size_t x, size_t y)
+	{
+		if (m_pixels.size() == 0)
+			return 0;
+		else
+			return &m_pixels[y * width() + x];
+	}
 
-        nPlanesInFile = -1;
+	_Type* pixelsYX(size_t y, size_t x)
+	{
+		return &m_pixels[y * width() + x];
 
-        m_pixels.clear();
-        
-    };
-   ~CImage()
-    {
- 
-    }
-    void clear()
-    {
-        m_width = 0;
-        m_height = 0;
-        m_pixels.clear();
-    }
+	}
 
-    void resize(int width, int height)
-    {
-        m_pixels.resize(width * height);
-        m_width = width;
-        m_height = height;
+	// row / column
+	_Type* pixelsRC(size_t y, size_t x)
+	{
+		return &m_pixels[y * width() + x];
+	}
 
-    }
+	_Type& pixel_ref(size_t n = 0)
+	{
+		return m_pixels[n];
+	}
 
-    CImage<_type>(int width, int height)
-    {
-        m_pixels.resize(width * height);
-        m_width = width;
-        m_height = height;
-        nPlanesInFile = -1;
+	_Type& pixelsXY_ref(size_t x, size_t y)
+	{
+		return m_pixels[y * width() + x];
+	}
 
-    };
+	_Type& pixelsYX_ref(size_t y, size_t x)
+	{
+		return m_pixels[y * width() + x];
+	}
 
+	// row / column
+	_Type& pixelsRC_ref(size_t y, size_t x)
+	{
+		return m_pixels[y * width() + x];
+	}
 
-    void SwapRB()
-    {
-		
-        _type * p = &m_pixels[0];
-		for(int i=0; i < m_width * m_height; i++ );
+	_Type* pixelsXY_wrapped(int x, int y)
+	{
+		y = mod(y, m_height);
+		x = mod(x, m_width);
+
+		return &m_pixels[y * m_width + x];
+	}
+
+	nvImage(const nvImage < _Type >& other)
+	{
+		m_width = other.m_width;
+		m_height = other.m_height;
+
+		m_pixels = other.m_pixels;
+		m_RGBE = other.m_RGBE;
+	}
+
+	nvImage()
+	{
+		m_width = 0;
+		m_height = 0;
+		m_RGBE = false;
+
+		m_pixels.clear();
+	};
+
+	~nvImage() {}
+
+	void clear()
+	{
+		m_width = 0;
+		m_height = 0;
+		m_pixels.clear();
+	}
+
+	void resize(size_t width, size_t height)
+	{
+		m_pixels.resize(width * height);
+		m_width = width;
+		m_height = height;
+	}
+
+	void realloc(size_t width, size_t height)
+	{
+		m_pixels.realloc(width * height);
+		m_width = width;
+		m_height = height;
+	}
+
+	nvImage<_Type>(size_t width, size_t height)
+	{
+		m_pixels.resize(width * height);
+		m_width = width;
+		m_height = height;
+		m_RGBE = false;
+	};
+
+	void SwapRB()
+	{
+		_Type* p = &m_pixels[0];
+		_Type tmp;
+
+		for (size_t i = 0; i < m_width * m_height; i++)
 		{
+			tmp.r = p->r;
+			p->r = p->b;
+			p->b = tmp.r;
 
-            int r = p->r;
-            p->r = p->b;
-            p->b = r;
-		} 
-    }
+			p++;
+		}
+	}
 
+	void Scale(_Type s)
+	{
+		_Type* p = &m_pixels[0];
 
-    void	FlipTopToBottom()
-    {
+		for (size_t i = 0; i < m_width * m_height; i++)
+		{
+			*p++ *= s;
+		}
+	}
 
-        _type * swap = new _type[ m_width];
+	void Bias(_Type b)
+	{
+		_Type* p = &m_pixels[0];
 
-        unsigned long row;
+		for (size_t i = 0; i < m_width * m_height; i++)
+		{
+			*p++ += b;
+		}
+	}
 
-        _type * end_row;
-        _type * start_row;
+	void dot(_Type w)
+	{
+		_Type* p = &m_pixels[0];
 
-        int len = sizeof(_type) * m_width;
+		for (size_t i = 0; i < m_width * m_height; i++)
+		{
+			p->dot(w);
+			p++;
+		}
+	}
 
-        for( row = 0; row < m_height / 2; row ++ )
-        {
-            end_row =   &m_pixels[ m_width * ( m_height - row - 1) ];
-            start_row = &m_pixels[ m_width * row ];
+	void Clamp(_Type low, _Type hi)
+	{
+		_Type* p = &m_pixels[0];
 
-            // copy row toward end of image into temporary swap buffer
-            memcpy( swap, end_row, len );
+		for (size_t i = 0; i < m_width * m_height; i++)
+		{
+			p->Clamp(low, hi);
+			p++;
+		}
+	}
 
-            // copy row at beginning to row at end
-            memcpy( end_row, start_row, len );
+	void Wrap(_Type low, _Type hi)
+	{
+		_Type* p = &m_pixels[0];
 
-            // copy old bytes from row at end (in swap) to row at beginning
-            memcpy( start_row, swap, len );
-        }
+		for (size_t i = 0; i < m_width * m_height; i++)
+		{
+			p->Wrap(low, hi);
+			p++;
+		}
+	}
 
-        delete [] swap;
-    }
+	void FlipTopToBottom()
+	{
+		_Type* swap = new _Type[m_width];
+		size_t row;
 
+		_Type* end_row;
+		_Type* start_row;
 
- 
+		size_t len = sizeof(_Type) * m_width;
+
+		for (row = 0; row < m_height / 2; row++)
+		{
+			end_row = &m_pixels[m_width * (m_height - row - 1)];
+			start_row = &m_pixels[m_width * row];
+
+			// copy row toward end of image into temporary swap buffer
+			memcpy(swap, end_row, len);
+
+			// copy row at beginning to row at end
+			memcpy(end_row, start_row, len);
+
+			// copy old bytes from row at end (in swap) to row at beginning
+			memcpy(start_row, swap, len);
+		}
+
+		delete[] swap;
+	}
+
+	void SetToZero()
+	{
+		for (size_t i = 0; i < m_width * m_height; i++)
+		{
+			pixel_ref(i).SetToZero();
+		}
+	}
+
+	void SetToZeroDirect()
+	{
+		for (size_t i = 0; i < m_width * m_height; i++)
+		{
+			m_pixels[i] = 0;
+		}
+	}
 };
 
+typedef nvImage<rgba_t> RGBAImage;
+typedef nvVector<RGBAImage> RGBAImageArray;
 
-
-class RGBAImage 
+class RGBAMipMappedImage
 {
-    int m_width;
-    int m_height;
-    nvVector<rgba_t> m_pixels;
+	RGBAImageArray mipArray; // array of images, one for each MIP map RGBA
 
 public:
-    
-    RGBAImage & operator = ( const RGBAImage& v ) 
-    {
 
-        // resize and copy over
-        resize(v.width(), v.height());
+	void resize(size_t width, size_t height, size_t nMIPMaps)
+	{
+		if (nMIPMaps == 0)
+			nMIPMaps = nv::calcMaxMipmap(width, height);
 
-        m_pixels = v.m_pixels;
+		mipArray.resize(nMIPMaps);
 
-        return *this; 
-    }
-
-
-    rgba_t& operator [] ( int i) 
-    {
-#ifdef _DEBUG
-        assert(i < m_width * m_height);
-#endif
-        return m_pixels[i]; 
-    };  
-    
-    const rgba_t& operator[](int i) const 
-    { 
-#ifdef _DEBUG
-        assert(i < m_width * m_height);
-#endif
-        return m_pixels[i];
-    }
-
-    int nPlanesInFile;
-
-    int width() const
-    {
-        return m_width;
-
-    }
-
-    int height() const
-    {
-        return m_height;
-
-    }
-
-
-
-    rgba_t * pixels()
-    {
-        int s = m_pixels.size();
-        return &m_pixels[0];
-    }
-
-    RGBAImage()
-    {
-        m_width = 0;
-        m_height = 0;
-
-        nPlanesInFile = -1;
-
-        m_pixels.clear();
-        
-    };
-   ~RGBAImage()
-    {
- 
-    }
-    void clear()
-    {
-        m_width = 0;
-        m_height = 0;
-        m_pixels.clear();
-    }
-
-    void resize(int width, int height)
-    {
-        m_pixels.resize(width * height);
-        m_width = width;
-        m_height = height;
-
-    }
-
-    RGBAImage(int width, int height)
-    {
-        m_pixels.resize(width * height);
-        m_width = width;
-        m_height = height;
-        nPlanesInFile = -1;
-
-    };
-
-
-    void SwapRB()
-    {
-		
-        rgba_t * p = &m_pixels[0];
-		for(int i=0; i < m_width * m_height; i++ );
+		for (size_t mipLevel = 0; mipLevel < nMIPMaps; mipLevel++)
 		{
+			RGBAImage& mip = mipArray[mipLevel];
 
-            int r = p->r;
-            p->r = p->b;
-            p->b = r;
-		} 
-    }
+			mip.resize(width, height);
 
+			width = nv::NextMip(width);
+			height = nv::NextMip(height);
+		}
+	}
 
-    void	FlipTopToBottom()
-    {
+	RGBAMipMappedImage(int width, int height, int nMIPMaps)
+	{
+		resize(width, height, nMIPMaps);
+	}
 
-        rgba_t * swap = new rgba_t[ m_width];
+	RGBAMipMappedImage() {}
 
-        unsigned long row;
+	RGBAImage& operator [] (size_t i) { return mipArray[i]; };       // indexing
+	const RGBAImage& operator[](size_t i) const { return mipArray[i]; }
 
-        rgba_t * end_row;
-        rgba_t * start_row;
+	size_t numMIPMaps() const
+	{
+		return mipArray.size();
+	}
 
-        int len = sizeof(rgba_t) * m_width;
+	void resize(size_t size)
+	{
+		mipArray.resize(size);
+	}
 
-        for( row = 0; row < m_height / 2; row ++ )
-        {
-            end_row =   &m_pixels[ m_width * ( m_height - row - 1) ];
-            start_row = &m_pixels[ m_width * row ];
+	void realloc(size_t size)
+	{
+		mipArray.realloc(size);
+	}
 
-            // copy row toward end of image into temporary swap buffer
-            memcpy( swap, end_row, len );
+	size_t width() const
+	{
+		if (mipArray.size() == 0)
+			return 0;
 
-            // copy row at beginning to row at end
-            memcpy( end_row, start_row, len );
+		return mipArray[0].width();
+	}
 
-            // copy old bytes from row at end (in swap) to row at beginning
-            memcpy( start_row, swap, len );
-        }
+	size_t height() const
+	{
+		if (mipArray.size() == 0)
+			return 0;
 
-        delete [] swap;
-    }
+		return mipArray[0].height();
+	}
 
-
- 
+	void clear()
+	{
+		mipArray.clear();
+	}
 };
 
-
-
-
-class fpImage 
+class RGBAMipMappedCubeMap
 {
-    int m_width;
-    int m_height;
-    nvVector<fpPixel> m_pixels;
+	RGBAMipMappedImage cubeFaces[6]; // array of images, one for each MIP map RGBA
 
 public:
-    fpImage & operator = ( const fpImage& v )
-    {
 
-        // resize and copy over
-        resize(v.width(), v.height());
+	void resize(size_t width, size_t height, size_t nMIPMaps)
+	{
+		if (nMIPMaps == 0)
+			nMIPMaps = nv::calcMaxMipmap(width, height);
 
-        
-        m_pixels = v.m_pixels;
-        return *this; 
-    }
-
-
-
-    fpPixel& operator [] ( int i) 
-    {
-#ifdef _DEBUG
-        assert(i < m_width * m_height);
-#endif
-        return m_pixels[i]; 
-    };  
-    
-    const fpPixel& operator[](int i) const 
-    { 
-#ifdef _DEBUG
-        assert(i < m_width * m_height);
-#endif
-        return m_pixels[i];
-    }
-
-
-    int nPlanesInFile;
-
-    int width() const
-    {
-        return m_width;
-
-    }
-
-    int height() const
-    {
-        return m_height;
-
-    }
-
-
-
-    fpPixel * pixels()
-    {
-        return &m_pixels[0];
-    }
-
-    fpImage()
-    {
-        m_width = 0;
-        m_height = 0;
-        nPlanesInFile = 0;
-        m_pixels.clear();
-
-        
-    };
-   ~fpImage()
-    {
- 
-    }
-
-    void zeroize()
-    {
-        fpPixel * p = &m_pixels[0];
-		for(int i=0; i < m_width * m_height; i++ );
+		for (int f = 0; f < 6; f++)
 		{
-            p->r = 0;
-            p->g = 0;
-            p->b = 0;
-            p->a = 0;
-		} 
+			RGBAMipMappedImage& mipFace = cubeFaces[f];
+			mipFace.resize(width, height, nMIPMaps);
+		}
+	}
 
-    }
+	RGBAMipMappedCubeMap(size_t width, size_t height, size_t nMIPMaps)
+	{
+		resize(width, height, nMIPMaps);
+	}
 
-    void resize(int width, int height)
-    {
-        m_pixels.resize(width * height);
-        m_width = width;
-        m_height = height;
-    }
+	RGBAMipMappedCubeMap() {}
 
-    fpImage(int width, int height)
-    {
-        m_pixels.resize(width * height);
-        m_width = width;
-        m_height = height;
-        nPlanesInFile = -1;
-    };
+	RGBAMipMappedImage& operator [] (size_t i) { return cubeFaces[i]; };       // indexing
+	const RGBAMipMappedImage& operator[](size_t i) const { return cubeFaces[i]; }
+	
+	size_t numMIPMaps() const
+	{
+		return cubeFaces[0].numMIPMaps();
+	}
 
+	size_t height() const
+	{
+		return cubeFaces[0].height();
+	}
 
-    void SwapRB()
-    {
-		
-        fpPixel * p = &m_pixels[0];
-		for(int i=0; i < m_width * m_height; i++ );
+	size_t width() const
+	{
+		return cubeFaces[0].height();
+	}
+
+	void clear()
+	{
+		for (size_t f = 0; f < 6; f++)
 		{
-
-            int r = p->r;
-            p->r = p->b;
-            p->b = r;
-		} 
-    }
-
-
-    void	FlipTopToBottom()
-    {
-
-        fpPixel * swap = new fpPixel[ m_width];
-
-        unsigned long row;
-
-        fpPixel * end_row;
-        fpPixel * start_row;
-
-        int len = sizeof(rgba_t) * m_width;
-
-        for( row = 0; row < m_height / 2; row ++ )
-        {
-            end_row =   &m_pixels[ m_width * ( m_height - row - 1) ];
-            start_row = &m_pixels[ m_width * row ];
-
-            // copy row toward end of image into temporary swap buffer
-            memcpy( swap, end_row, len );
-
-            // copy row at beginning to row at end
-            memcpy( end_row, start_row, len );
-
-            // copy old bytes from row at end (in swap) to row at beginning
-            memcpy( start_row, swap, len );
-        }
-
-        delete [] swap;
-    }
-
+			RGBAMipMappedImage& mipFace = cubeFaces[f];
+			mipFace.clear();
+		}
+	}
 };
 
+typedef nvVector< RGBAImageArray > RGBAVolume;
 
+class RGBAMipMappedVolumeMap
+{
+	// array of MIP mapped images
+	RGBAVolume volumeArray;
 
+public:
 
+	void resize(size_t width, size_t height, size_t depth, size_t nMIPMaps)
+	{
+		if (nMIPMaps == 0)
+			nMIPMaps = nv::calcMaxMipmap(width, height, depth);
+
+		volumeArray.resize(nMIPMaps);
+
+		size_t w = width;
+		size_t h = height;
+		size_t d = depth;
+
+		for (size_t mipLevel = 0; mipLevel < nMIPMaps; mipLevel++)
+		{
+			RGBAImageArray& volImage = volumeArray[mipLevel];
+			volImage.resize(d);
+
+			for (size_t slice = 0; slice < d; slice++)
+			{
+				RGBAImage& mipFace = volImage[slice];
+
+				mipFace.resize(w, h);
+			}
+
+			w = nv::NextMip(w);
+			h = nv::NextMip(h);
+			d = nv::NextMip(d);
+		}
+	}
+
+	RGBAMipMappedVolumeMap(size_t width, size_t height, size_t depth, size_t nMIPMaps)
+	{
+		resize(width, height, depth, nMIPMaps);
+	}
+
+	// mip level
+	RGBAImageArray& operator [] (size_t i) { return volumeArray[i]; };       // indexing
+	const RGBAImageArray& operator[](size_t i) const { return volumeArray[i]; }
+
+	RGBAMipMappedVolumeMap() {}
+
+	size_t numMIPMaps() const
+	{
+		return volumeArray.size();
+	}
+
+	const RGBAImageArray* vol0() const
+	{
+		if (numMIPMaps() == 0)
+			return 0;
+
+		return &volumeArray[0];
+	}
+
+	const RGBAImage* slice0() const
+	{
+		const RGBAImageArray* v0 = vol0();
+
+		if (v0 == 0)
+			return 0;
+
+		if (v0->size() == 0)
+			return 0;
+
+		const RGBAImageArray& array = *v0;
+
+		return &array[0];
+	}
+
+	size_t width() const
+	{
+		const RGBAImage* image0 = slice0();
+
+		if (image0 == 0)
+			return 0;
+		else
+			return image0->width();
+	}
+
+	size_t height() const
+	{
+		const RGBAImage* image0 = slice0();
+
+		if (image0 == 0)
+			return 0;
+		else
+			return image0->height();
+	}
+
+	size_t depth() const
+	{
+		const RGBAImageArray* v0 = vol0();
+
+		if (v0 == 0)
+			return 0;
+
+		return v0->size();
+	}
+};
+
+typedef nvMatrix<float> floatImage;
+typedef nvMatrix<fpPixel> fpImage;
+typedef nvMatrix<fpPixel3> fpImage3;
+typedef nvVector<fpImage> fpImageArray;
+
+class fpMipMappedImage
+{
+	fpImageArray mipArray; // array of images, one for each MIP map RGBA
+
+public:
+
+	fpMipMappedImage() {}
+
+	fpMipMappedImage(size_t width, size_t height, size_t nMIPMaps)
+	{
+		resize(width, height, nMIPMaps);
+	}
+
+	// copy constructor
+	fpMipMappedImage(const fpMipMappedImage& v)
+	{
+		// copy the images over
+		mipArray.resize(v.mipArray.size());
+
+		for (size_t mipLevel = 0; mipLevel < numMIPMaps(); mipLevel++)
+		{
+			fpImage& dst = mipArray[mipLevel];
+			const fpImage& src = v.mipArray[mipLevel];
+			dst = src;
+		}
+	}
+
+	void resize(size_t width, size_t height, size_t nMIPMaps)
+	{
+		if (nMIPMaps == 0)
+			nMIPMaps = nv::calcMaxMipmap(width, height);
+
+		mipArray.resize(nMIPMaps);
+
+		for (size_t mipLevel = 0; mipLevel < nMIPMaps; mipLevel++)
+		{
+			fpImage& mip = mipArray[mipLevel];
+
+			mip.resize(width, height);
+
+			width = nv::NextMip(width);
+			height = nv::NextMip(height);
+		}
+	}
+
+	void FlipTopToBottom()
+	{
+		// copy the images over
+		for (size_t mipLevel = 0; mipLevel < numMIPMaps(); mipLevel++)
+		{
+			fpImage& mip = mipArray[mipLevel];
+			mip.FlipTopToBottom();
+		}
+	}
+
+	fpImage& operator [] (size_t i) { return mipArray[i]; };       // indexing
+	const fpImage& operator[](size_t i) const { return mipArray[i]; }
+
+	void SetToZero()
+	{
+		for (size_t mipLevel = 0; mipLevel < numMIPMaps(); mipLevel++)
+		{
+			fpImage& mip = mipArray[mipLevel];
+			mip.SetToZero();
+		}
+	}
+
+	void clear()
+	{
+		mipArray.clear();
+	}
+
+	void realloc(size_t size)
+	{
+		mipArray.realloc(size);
+	}
+
+	void resize(size_t nMIPLevels)
+	{
+		mipArray.resize(nMIPLevels);
+	}
+
+	size_t numMIPMaps()  const
+	{
+		return mipArray.size();
+	}
+
+	size_t width()  const
+	{
+		return mipArray[0].width();
+	}
+
+	size_t height() const
+	{
+		return mipArray[0].height();
+	}
+};
+
+class fpMipMappedCubeMap
+{
+	fpMipMappedImage cubeFaces[6]; // array of images, one for each MIP map RGBA
+
+public:
+
+	void resize(size_t width, size_t height, size_t nMIPMaps)
+	{
+		if (nMIPMaps == 0)
+			nMIPMaps = nv::calcMaxMipmap(width, height);
+
+		for (size_t f = 0; f < 6; f++)
+		{
+			fpMipMappedImage& mipFace = cubeFaces[f];
+			mipFace.resize(width, height, nMIPMaps);
+		}
+	}
+
+	fpMipMappedCubeMap(int width, int height, int nMIPMaps)
+	{
+		resize(width, height, nMIPMaps);
+	}
+
+	fpMipMappedCubeMap() {}
+
+	fpMipMappedImage& operator [] (size_t i) { return cubeFaces[i]; };       // indexing
+	const fpMipMappedImage& operator[](size_t i) const { return cubeFaces[i]; }
+	
+	size_t numMIPMaps() const
+	{
+		return cubeFaces[0].numMIPMaps();
+	}
+
+	size_t height() const
+	{
+		return cubeFaces[0].height();
+	}
+
+	size_t width() const
+	{
+		return cubeFaces[0].height();
+	}
+
+	void clear()
+	{
+		for (size_t f = 0; f < 6; f++)
+		{
+			fpMipMappedImage& mipFace = cubeFaces[f];
+			mipFace.clear();
+		}
+	}
+
+	void FlipTopToBottom()
+	{
+		for (size_t f = 0; f < 6; f++)
+		{
+			fpMipMappedImage& mipFace = cubeFaces[f];
+			mipFace.FlipTopToBottom();
+		}
+	}
+};
+
+// mip level, array
+typedef nvVector< fpImageArray > fpVolume;
+
+class fpMipMappedVolumeMap
+{
+	// array of MIP mapped images
+	fpVolume volumeArray;
+
+public:
+
+	void resize(size_t width, size_t height, size_t depth, size_t nMIPMaps)
+	{
+		if (nMIPMaps == 0)
+			nMIPMaps = nv::calcMaxMipmap(width, height, depth);
+
+		volumeArray.resize(nMIPMaps);
+
+		size_t w = width;
+		size_t h = height;
+		size_t d = depth;
+
+		for (size_t mipLevel = 0; mipLevel < nMIPMaps; mipLevel++)
+		{
+			fpImageArray& volImage = volumeArray[mipLevel];
+			volImage.resize(d);
+
+			for (size_t slice = 0; slice < d; slice++)
+			{
+				fpImage& mipFace = volImage[slice];
+
+				mipFace.resize(w, h);
+			}
+
+			w = nv::NextMip(w);
+			h = nv::NextMip(h);
+			d = nv::NextMip(d);
+		}
+	}
+
+	void FlipTopToBottom()
+	{
+		for (size_t mipLevel = 0; mipLevel < numMIPMaps(); mipLevel++)
+		{
+			fpImageArray& volImage = volumeArray[mipLevel];
+
+			for (size_t slice = 0; slice < volImage.size(); slice++)
+			{
+				fpImage& mipFace = volImage[slice];
+				mipFace.FlipTopToBottom();
+			}
+		}
+	}
+
+	void realloc(size_t size)
+	{
+		volumeArray.realloc(size);
+	}
+
+	fpMipMappedVolumeMap(size_t width, size_t height, size_t depth, size_t nMIPMaps)
+	{
+		resize(width, height, depth, nMIPMaps);
+	}
+
+	// mip level
+	fpImageArray& operator [] (size_t i) { return volumeArray[i]; };       // indexing
+	const fpImageArray& operator[](size_t i) const { return volumeArray[i]; }
+
+	fpMipMappedVolumeMap() {}
+
+	size_t numMIPMaps() const
+	{
+		return volumeArray.size();
+	}
+
+	const fpImageArray* vol0() const
+	{
+		if (numMIPMaps() == 0)
+			return 0;
+
+		return &volumeArray[0];
+	}
+
+	const fpImage* slice0() const
+	{
+		const fpImageArray* v0 = vol0();
+
+		if (v0 == 0)
+			return 0;
+
+		if (v0->size() == 0)
+			return 0;
+
+		const fpImageArray& array = *v0;
+
+		return &array[0];
+	}
+
+	size_t width() const
+	{
+		const fpImage* image0 = slice0();
+
+		if (image0 == 0)
+			return 0;
+		
+		return image0->width();
+	}
+
+	size_t height() const
+	{
+		const fpImage* image0 = slice0();
+
+		if (image0 == 0)
+			return 0;
+		
+		return image0->height();
+	}
+
+	size_t depth() const
+	{
+		const fpImageArray* v0 = vol0();
+
+		if (v0 == 0)
+			return 0;
+
+		return v0->size();
+	}
+
+	void clear()
+	{
+		volumeArray.clear();
+	}
+};
 #pragma pack(pop)
 
 
-
-#include "ColorConvert.h"
-
-
-#endif
+#include "ConvertColor.h"   

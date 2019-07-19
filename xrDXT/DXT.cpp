@@ -10,6 +10,7 @@
 #include "ETextureParams.h"
 #include "dds.h"
 #include "DXT.h"
+#include <fcntl.h>
 
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {
@@ -87,7 +88,7 @@ void dds_error::error(Error e)
 	}
 }
 
-ENGINE_API u32* Build32MipLevel(u32& _w, u32& _h, u32& _p, u32* pdwPixelSrc, STextureParams* fmt, float blend)
+u32* Build32MipLevel(u32& _w, u32& _h, u32& _p, u32* pdwPixelSrc, STextureParams* fmt, float blend)
 {
 	R_ASSERT(pdwPixelSrc);
 	R_ASSERT((_w % 2) == 0);
@@ -299,21 +300,7 @@ int DXTCompressImage(LPCSTR out_name, u8* raw_data, u32 w, u32 h, u32 pitch,
 		return 1;
 }
 
-extern int DXTCompressBump(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth);
-
-void DXTCompress(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth)
+void DXTCompress(LPCSTR out_name, u8* raw_data, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth)
 {
-	switch (fmt->type) 
-	{
-	case STextureParams::ttImage:
-	case STextureParams::ttCubeMap:
-	case STextureParams::ttNormalMap:
-	case STextureParams::ttTerrain:
 		DXTCompressImage(out_name, raw_data, w, h, pitch, fmt, depth);
-		break;
-	case STextureParams::ttBumpMap:
-		DXTCompressBump(out_name, raw_data, normal_map, w, h, pitch, fmt, depth);
-		break;
-	default: NODEFAULT;
-	}
 }

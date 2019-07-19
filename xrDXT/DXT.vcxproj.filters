@@ -31,22 +31,7 @@
       <Filter>NormalMap</Filter>
     </ClInclude>
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="dds\ConvertColor.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
-    <ClInclude Include="dds\ddsTypes.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
-    <ClInclude Include="dds\tPixel.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
-    <ClInclude Include="dds\tVector.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
     <ClInclude Include="dxtlib.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
-    <ClInclude Include="dds.h">
       <Filter>Convert</Filter>
     </ClInclude>
     <ClInclude Include="DXT.h" />
@@ -75,8 +60,5 @@
     </ClCompile>
     <ClCompile Include="StdAfx.cpp" />
     <ClCompile Include="xrLoadSurface.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
   </ItemGroup>
 </Project>

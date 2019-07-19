@@ -282,7 +282,7 @@ void CBuild::ImplicitLighting()
 			fmt.flags.set			(STextureParams::flDitherColor,		FALSE);
 			fmt.flags.set			(STextureParams::flGenerateMipMaps,	FALSE);
 			fmt.flags.set			(STextureParams::flBinaryAlpha,		FALSE);
-			DXTCompress				(out_name,raw_data,0,w,h,pitch,&fmt,4);
+			DXTCompress				(out_name,raw_data,w,h,pitch,&fmt,4);
 		}
 
 		// lmap
@@ -307,7 +307,7 @@ void CBuild::ImplicitLighting()
 			fmt.flags.set			(STextureParams::flDitherColor,		FALSE);
 			fmt.flags.set			(STextureParams::flGenerateMipMaps,	FALSE);
 			fmt.flags.set			(STextureParams::flBinaryAlpha,		FALSE);
-			DXTCompress				(out_name,raw_data,0,w,h,pitch,&fmt,4);
+			DXTCompress				(out_name,raw_data,w,h,pitch,&fmt,4);
 		}
 		defl.Deallocate				();
 	}

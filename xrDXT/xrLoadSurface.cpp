@@ -3,8 +3,7 @@
 
 #include "freeimage.h"
 #include "DXT.h"
-
-#pragma comment(lib,"FreeImage.lib")
+#include <fcntl.h>
 
 struct SExts
 {

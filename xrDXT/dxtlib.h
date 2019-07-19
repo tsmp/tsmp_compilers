@@ -16,8 +16,8 @@
 #pragma once
 
 #include <windows.h>
-#include <dds/tPixel.h>
-#include <dds/ddsTypes.h>
+#include "tPixel.h"
+#include "ddsTypes.h"
 
 struct MIPMapData
 {
