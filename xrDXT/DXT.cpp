@@ -6,7 +6,6 @@
 
 #include <windows.h>
 #include "tPixel.h"
-#include "ddsTypes.h"
 
 struct MIPMapData
 {
@@ -25,6 +24,10 @@ struct MIPMapData
 #include "dds.h"
 #include "DXT.h"
 #include <fcntl.h>
+
+#if defined(WIN32_LEAN_AND_MEAN)
+#include <mmsystem.h>	// MAKEFOURCC
+#endif
 
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {

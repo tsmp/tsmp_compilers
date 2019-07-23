@@ -36,6 +36,22 @@
 
 #define DDS_FLAGS_VOLUME 0x00200000 // DDSCAPS2_VOLUME
 
+typedef	unsigned char	BYTE;
+typedef	unsigned short	WORD;
+typedef	unsigned long	DWORD;
+
+struct DDS_PIXELFORMAT
+{
+	DWORD dwSize;
+	DWORD dwFlags;
+	DWORD dwFourCC;
+	DWORD dwRGBBitCount;
+	DWORD dwRBitMask;
+	DWORD dwGBitMask;
+	DWORD dwBBitMask;
+	DWORD dwRGBAlphaBitMask;
+};
+
 struct DDS_HEADER
 {
     DWORD dwSize;

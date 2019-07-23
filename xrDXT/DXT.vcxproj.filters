@@ -15,12 +15,6 @@
     <ClInclude Include="ETextureParams.h">
       <Filter>Shared</Filter>
     </ClInclude>
-    <ClInclude Include="Image_DXTC.h">
-      <Filter>NormalMap</Filter>
-    </ClInclude>
-    <ClInclude Include="NVI_Convolution.h">
-      <Filter>NormalMap</Filter>
-    </ClInclude>
     <ClInclude Include="NVI_Image.h">
       <Filter>NormalMap</Filter>
     </ClInclude>
@@ -36,15 +30,6 @@
     </ClCompile>
     <ClCompile Include="ETextureParams.cpp">
       <Filter>Shared</Filter>
-    </ClCompile>
-    <ClCompile Include="Image_DXTC.cpp">
-      <Filter>NormalMap</Filter>
-    </ClCompile>
-    <ClCompile Include="NormalMapGen.cpp">
-      <Filter>NormalMap</Filter>
-    </ClCompile>
-    <ClCompile Include="NVI_Convolution.cpp">
-      <Filter>NormalMap</Filter>
     </ClCompile>
     <ClCompile Include="NVI_Image.cpp">
       <Filter>NormalMap</Filter>

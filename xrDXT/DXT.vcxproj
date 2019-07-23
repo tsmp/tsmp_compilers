@@ -315,8 +315,6 @@
   <ItemGroup>
     <ClInclude Include="DXT.h" />
     <ClInclude Include="ETextureParams.h" />
-    <ClInclude Include="Image_DXTC.h" />
-    <ClInclude Include="NVI_Convolution.h" />
     <ClInclude Include="NVI_Image.h" />
     <ClInclude Include="tga.h" />
     <ClInclude Include="StdAfx.h" />
@@ -327,9 +325,6 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <ClCompile Include="ETextureParams.cpp" />
-    <ClCompile Include="Image_DXTC.cpp" />
-    <ClCompile Include="NormalMapGen.cpp" />
-    <ClCompile Include="NVI_Convolution.cpp" />
     <ClCompile Include="NVI_Image.cpp" />
     <ClCompile Include="tga.cpp" />
     <ClCompile Include="StdAfx.cpp">
