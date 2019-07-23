@@ -3,7 +3,6 @@
 #include <math.h>
 #include <memory.h>
 #include "tVector.h"
-//#include <dds/nvErrorCodes.h>
 
 #pragma warning(disable : 4201)
 
@@ -1215,9 +1214,8 @@ public:
 	}
 };
 
-typedef nvMatrix<float> floatImage;
+
 typedef nvMatrix<fpPixel> fpImage;
-typedef nvMatrix<fpPixel3> fpImage3;
 typedef nvVector<fpImage> fpImageArray;
 
 class fpMipMappedImage

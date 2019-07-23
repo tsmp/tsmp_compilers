@@ -314,10 +314,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DXT.h" />
-    <ClInclude Include="dxtlib.h" />
     <ClInclude Include="ETextureParams.h" />
     <ClInclude Include="Image_DXTC.h" />
-    <ClInclude Include="NV_Common.h" />
     <ClInclude Include="NVI_Convolution.h" />
     <ClInclude Include="NVI_Image.h" />
     <ClInclude Include="tga.h" />

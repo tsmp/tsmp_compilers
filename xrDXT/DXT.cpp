@@ -2,7 +2,21 @@
 #pragma warning(push)
 #pragma warning(disable:4244)
 #pragma warning(disable:4018)
-#include "dxtlib.h"
+
+
+#include <windows.h>
+#include "tPixel.h"
+#include "ddsTypes.h"
+
+struct MIPMapData
+{
+	size_t mipLevel;
+	size_t width;
+	size_t height;
+	int faceNumber; // current face number for this image
+	int numFaces;   // total number of faces (depth for volume textures, 6 for cube maps)
+};
+
 
 #include "nvtt.h"
 
@@ -178,7 +192,7 @@ int DXTCompressImage(LPCSTR out_name, u8* raw_data, u32 w, u32 h, u32 pitch,
 	if (gFileOut == -1) 
 	{
 		fprintf(stderr, "Can't open output file %s\n", out_name);
-		return false;
+		return 1;
 	}
 
 	bool result = false;
@@ -224,7 +238,7 @@ int DXTCompressImage(LPCSTR out_name, u8* raw_data, u32 w, u32 h, u32 pitch,
 	if (fileout == -1) 
 	{
 		fprintf(stderr, "Can't open output file %s\n", out_name);
-		return false;
+		return 2;
 	}
 
 	OutputOptions out_opts;
@@ -294,13 +308,15 @@ int DXTCompressImage(LPCSTR out_name, u8* raw_data, u32 w, u32 h, u32 pitch,
 	if (result == false) 
 	{
 		unlink(out_name);
-		return 0;
+		return 3;
 	}
 	else					
-		return 1;
+		return 4;
 }
 
 void DXTCompress(LPCSTR out_name, u8* raw_data, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth)
 {
-		DXTCompressImage(out_name, raw_data, w, h, pitch, fmt, depth);
+	int i = DXTCompressImage(out_name, raw_data, w, h, pitch, fmt, depth);
+
+	Msg("result %i",i);
 }

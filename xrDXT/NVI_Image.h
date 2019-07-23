@@ -17,7 +17,6 @@ Comments:
 
 #include <windows.h>
 #include <assert.h>
-#include "NV_Common.h"
 
 // Debug test switch
 // Define to turn on debug _ASSERT()s
