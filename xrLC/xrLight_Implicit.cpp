@@ -275,13 +275,8 @@ void CBuild::ImplicitLighting()
 			BYTE* raw_data			=	LPBYTE(TEX.pSurface);
 			u32	w					=	TEX.dwWidth;
 			u32	h					=	TEX.dwHeight;
-			u32	pitch				=	w*4;
-			STextureParams			fmt	= TEX.THM;
-			fmt.fmt					= STextureParams::tfDXT5;
-			fmt.flags.set			(STextureParams::flDitherColor,		FALSE);
-			fmt.flags.set			(STextureParams::flGenerateMipMaps,	FALSE);
-			fmt.flags.set			(STextureParams::flBinaryAlpha,		FALSE);
-			DXTCompress				(out_name,raw_data,w,h,pitch,&fmt,4);
+	
+			DXTCompress				(out_name,raw_data,w,h);
 		}
 
 		// lmap
@@ -300,13 +295,8 @@ void CBuild::ImplicitLighting()
 			BYTE* raw_data			= LPBYTE(&*packed.begin());
 			u32	w					= TEX.dwWidth;
 			u32	h					= TEX.dwHeight;
-			u32	pitch				= w*4;
-			STextureParams			fmt;
-			fmt.fmt					= STextureParams::tfDXT5;
-			fmt.flags.set			(STextureParams::flDitherColor,		FALSE);
-			fmt.flags.set			(STextureParams::flGenerateMipMaps,	FALSE);
-			fmt.flags.set			(STextureParams::flBinaryAlpha,		FALSE);
-			DXTCompress				(out_name,raw_data,w,h,pitch,&fmt,4);
+
+			DXTCompress				(out_name,raw_data,w,h);
 		}
 		defl.Deallocate				();
 	}

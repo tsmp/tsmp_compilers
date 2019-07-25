@@ -3,12 +3,10 @@
   <ItemGroup>
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="DXT.h" />
-    <ClInclude Include="ETextureParams.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp" />
     <ClCompile Include="xrLoadSurface.cpp" />
-    <ClCompile Include="ETextureParams.cpp" />
     <ClCompile Include="DXT.cpp" />
   </ItemGroup>
 </Project>
