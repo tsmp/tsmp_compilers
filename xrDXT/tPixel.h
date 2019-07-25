@@ -8,9 +8,6 @@
 
 namespace nv
 {
-	// modulo value x between [lo,hi]
-	// allows value 'hi'
-
 	template <class _Type>
 	inline _Type Clamp(const _Type& x,
 		const _Type& lo,
@@ -22,154 +19,6 @@ namespace nv
 			return hi;
 	
 		return x;
-	}
-
-	inline int iClamp(int x, int lo, int hi)
-	{
-		if (x < lo)
-			return lo;
-		if (x > hi)
-			return hi;
-
-		return x;
-	}
-
-	inline float fClamp(float x, float lo, float hi)
-	{
-		if (x < lo)
-			return lo;
-		if (x > hi)
-			return hi;
-
-		return x;
-	}
-
-	inline int fmod(int x, int size)
-	{
-		return x % size;
-	}
-
-	inline __int64 fmod(__int64 x, __int64 size)
-	{
-		return x % size;
-	}
-
-	inline unsigned __int64 fmod(unsigned __int64 x, unsigned __int64 size)
-	{
-		return x % size;
-	}
-
-	inline float __cdecl fmod(float _X, float _Y)
-	{
-		return (fmodf(_X, _Y));
-	}
-
-	// calcMaxMipmap
-	//  calculates max # of mipmap levels for given texture size
-	inline size_t calcMaxMipmap(size_t w, size_t h)
-	{
-		size_t n = 0;
-		size_t count = 0;
-
-		assert(w >= 0);
-		assert(h >= 0);
-
-		if (w < h)
-			count = h;
-		else
-			count = w;
-
-		while (count)
-		{
-			n++;
-			count >>= 1;
-		}
-
-		return n;
-	}
-
-	inline size_t calcMaxMipmap(size_t w, size_t h, size_t d)
-	{
-		size_t n = 0;
-		size_t count = 0;
-
-		assert(w >= 0);
-		assert(h >= 0);
-		assert(d >= 0);
-
-		if (w < h)
-			count = h;
-		else
-			count = w;
-
-		if (d > count)
-			count = d;
-
-		while (count)
-		{
-			n++;
-			count >>= 1;
-		}
-
-		return n;
-	}
-
-	// get next mip level size
-	inline size_t NextMip(size_t m)
-	{
-		size_t next = m / 2; // round down
-
-		if (next == 0)
-			return 1;
-		else
-			return next;
-	}
-
-	// lo = 0;
-	// allow hi value
-	template < class _Type >
-	inline _Type Modulo(const _Type& x, const _Type& hi)
-	{
-		if (x >= 0 && x <= hi)
-			return x;
-
-		_Type f = fmod(x, hi);
-
-		if (f < 0)
-			f += hi;
-
-		return f;
-	}
-
-	// does not allow x == size
-	inline int iModulo(int x, int size)
-	{
-		if (x < 0)
-		{
-			int n = x / size;
-			x += size * (n + 1);
-		}
-
-		return x % size;
-	}
-
-	template < class _Type >
-	inline _Type Modulo(const _Type& x, const _Type& lo, const _Type& hi)
-	{
-		if (x >= lo && x <= hi)
-			return x;
-
-		_Type dw = hi - lo;
-		_Type t = x - lo;
-
-		_Type f = fmod(t, dw);
-
-		if (f < 0)
-			f += dw;
-
-		f += lo;
-
-		return f;
 	}
 }
 
@@ -273,6 +122,10 @@ public:
 		r = g = b = a = 0;
 	}
 };
+
+
+
+
 
 template <class _Type>
 class nvImage
@@ -562,5 +415,6 @@ public:
 };
 
 typedef nvImage<rgba_t> RGBAImage;
+
 
 #pragma pack(pop)

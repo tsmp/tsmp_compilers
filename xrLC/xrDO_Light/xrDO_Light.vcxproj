@@ -317,7 +317,6 @@
     </ClCompile>
     <ClCompile Include="compiler.cpp" />
     <ClCompile Include="..\COMMON_COMPILERS\cl_log.cpp" />
-    <ClCompile Include="..\COMMON_COMPILERS\tga.cpp" />
     <ClCompile Include="..\COMMON_COMPILERS\xrThread.cpp" />
     <ClCompile Include="xrDO_Light.cpp" />
   </ItemGroup>

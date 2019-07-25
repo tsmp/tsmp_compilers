@@ -575,7 +575,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="COMMON_COMPILERS\cl_log.cpp" />
-    <ClCompile Include="COMMON_COMPILERS\tga.cpp" />
     <ClCompile Include="COMMON_COMPILERS\xrThread.cpp" />
     <ClCompile Include="xrLC.cpp" />
     <ClCompile Include="NV_Library\NvTriStrip.cpp" />

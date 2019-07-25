@@ -292,7 +292,6 @@
       <Filter>COMPILER\XRAY</Filter>
     </ClCompile>
     <ClCompile Include="COMMON_COMPILERS\cl_log.cpp" />
-    <ClCompile Include="COMMON_COMPILERS\tga.cpp" />
     <ClCompile Include="COMMON_COMPILERS\xrThread.cpp" />
     <ClCompile Include="xr_mu_light.cpp" />
     <ClCompile Include="nv_algebra.cpp">

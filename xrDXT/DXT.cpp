@@ -7,6 +7,10 @@
 #include <windows.h>
 #include "tPixel.h"
 
+#if defined(WIN32_LEAN_AND_MEAN)
+#include <mmsystem.h>	// MAKEFOURCC
+#endif
+
 struct MIPMapData
 {
 	size_t mipLevel;
@@ -17,17 +21,44 @@ struct MIPMapData
 };
 
 
+typedef	unsigned char	BYTE;
+typedef	unsigned short	WORD;
+typedef	unsigned long	DWORD;
+
+struct DDS_PIXELFORMAT
+ {
+	DWORD dwSize;
+	DWORD dwFlags;
+	DWORD dwFourCC;
+	DWORD dwRGBBitCount;
+	DWORD dwRBitMask;
+	DWORD dwGBitMask;
+	DWORD dwBBitMask;
+	DWORD dwRGBAlphaBitMask;
+	};
+
+struct DDS_HEADER
+ {
+	DWORD dwSize;
+	DWORD dwHeaderFlags;
+	DWORD dwHeight;
+	DWORD dwWidth;
+	DWORD dwPitchOrLinearSize;
+	DWORD dwDepth; // only if DDS_HEADER_FLAGS_VOLUME is set in dwHeaderFlags
+	DWORD dwMipMapCount;
+	DWORD dwReserved1[11];
+	DDS_PIXELFORMAT ddspf;
+	DWORD dwSurfaceFlags;
+	DWORD dwCubemapFlags;
+	DWORD dwReserved2[3];
+	};
+
 #include "nvtt.h"
 
 #pragma warning(pop)
 #include "ETextureParams.h"
-#include "dds.h"
 #include "DXT.h"
 #include <fcntl.h>
-
-#if defined(WIN32_LEAN_AND_MEAN)
-#include <mmsystem.h>	// MAKEFOURCC
-#endif
 
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {
