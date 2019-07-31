@@ -121,69 +121,7 @@ bool AABBTreeCollider::Collide(BVTCache& cache, const Matrix4x4* world0, const M
 		- if countdown reaches 0, enable hull test
 
 	*/
-
-#ifdef __MESHMERIZER_H__
-	// Handle hulls
-	if(cache.HullTest)
-	{
-		if(cache.Model0->GetHull() && cache.Model1->GetHull())
-		{
-			struct Local
-			{
-				static Point* SVCallback(const Point& sv, udword& previndex, udword user_data)
-				{
-					CollisionHull* Hull = (CollisionHull*)user_data;
-					previndex = Hull->ComputeSupportingVertex(sv, previndex);
-					return (Point*)&Hull->GetVerts()[previndex];
-				}
-			};
-
-			bool Collide;
-
-			if(0)
-			{
-				static GJKEngine GJK;
-				static bool GJKInitDone=false;
-				if(!GJKInitDone)
-				{
-					GJK.Enable(GJK_BACKUP_PROCEDURE);
-					GJK.Enable(GJK_DEGENERATE);
-					GJK.Enable(GJK_HILLCLIMBING);
-					GJKInitDone = true;
-				}
-				GJK.SetCallbackObj0(Local::SVCallback);
-				GJK.SetCallbackObj1(Local::SVCallback);
-				GJK.SetUserData0(udword(cache.Model0->GetHull()));
-				GJK.SetUserData1(udword(cache.Model1->GetHull()));
-				Collide = GJK.Collide(*world0, *world1, &cache.SepVector);
-			}
-			else
-			{
-				static SVEngine SVE;
-				SVE.SetCallbackObj0(Local::SVCallback);
-				SVE.SetCallbackObj1(Local::SVCallback);
-				SVE.SetUserData0(udword(cache.Model0->GetHull()));
-				SVE.SetUserData1(udword(cache.Model1->GetHull()));
-				Collide = SVE.Collide(*world0, *world1, &cache.SepVector);
-			}
-
-			if(!Collide)
-			{
-		// Reset stats & contact status
-		mFlags &= ~OPC_CONTACT;
-		mNbBVBVTests		= 0;
-		mNbPrimPrimTests	= 0;
-		mNbBVPrimTests		= 0;
-		mPairs.Reset();
-		return true;
-			}
-		}
-	}
-
-	// Here, hulls collide
-	cache.HullTest = false;
-#endif // __MESHMERIZER_H__
-
+	
 	// Simple double-dispatch
 	bool Status;
 	if(!cache.Model0->HasLeafNodes())
@@ -217,21 +155,6 @@ bool AABBTreeCollider::Collide(BVTCache& cache, const Matrix4x4* world0, const M
 		}
 	}
 
-#ifdef __MESHMERIZER_H__
-	if(Status)
-	{
-		// Reset counter as long as overlap occurs
-		if(GetContactStatus())	cache.ResetCountDown();
-
-		// Enable hull test again when counter reaches zero
-		cache.CountDown--;
-		if(!cache.CountDown)
-		{
-			cache.ResetCountDown();
-			cache.HullTest = true;
-		}
-	}
-#endif
 	return Status;
 }
 

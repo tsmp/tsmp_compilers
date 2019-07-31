@@ -141,9 +141,6 @@ OPCODECREATE::OPCODECREATE()
 	Rules			= SPLIT_COMPLETE | SPLIT_LARGESTAXIS;
 	NoLeaf			= true;
 	Quantized		= true;
-#ifdef __MESHMERIZER_H__
-	CollisionHull	= false;
-#endif // __MESHMERIZER_H__
 	KeepOriginal	= false;
 }
 
@@ -154,9 +151,6 @@ OPCODECREATE::OPCODECREATE()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OPCODE_Model::OPCODE_Model() : mSource(null), mTree(null), mNoLeaf(false), mQuantized(false)
 {
-#ifdef __MESHMERIZER_H__	// Collision hulls only supported within ICE !
-	mHull	= null;
-#endif // __MESHMERIZER_H__
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,9 +162,6 @@ OPCODE_Model::~OPCODE_Model()
 {
 	xr_delete(mSource);
 	xr_delete(mTree);
-#ifdef __MESHMERIZER_H__	// Collision hulls only supported within ICE !
-	xr_delete(mHull);
-#endif // __MESHMERIZER_H__
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,22 +229,5 @@ bool OPCODE_Model::Build(const OPCODECREATE& create)
 		xr_delete			(mSource)	;	
 	}
 
-#ifdef __MESHMERIZER_H__
-	// 4) Convex hull
-	if(create.CollisionHull)
-	{
-		// Create hull
-		mHull = xr_new<CollisionHull>();
-		CHECKALLOC(mHull);
-
-		CONVEXHULLCREATE CHC;
-		CHC.NbVerts			= create.NbVerts;
-		CHC.Vertices		= create.Verts;
-		CHC.UnifyNormals	= true;
-		CHC.ReduceVertices	= true;
-		CHC.WordFaces		= false;
-		mHull->Compute(CHC);
-	}
-#endif // __MESHMERIZER_H__
 	return true;
 }

@@ -4,83 +4,7 @@
 #include "xrCDB.h"
 
 namespace CDB
-{
-	u32		Collector::VPack(const Fvector& V, float eps)
-	{
-		xr_vector<Fvector>::iterator I, E;
-		I = verts.begin();	E = verts.end();
-		for (; I != E; I++)		if (I->similar(V, eps)) return u32(I - verts.begin());
-		verts.push_back(V);
-		return verts.size() - 1;
-	}
-
-	void	Collector::add_face_D(
-		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
-#ifdef _WIN64
-		u64 dummy								// misc
-#else
-		u32 dummy								// misc
-#endif
-	)
-	{
-		TRI T;
-		T.verts[0] = verts.size();
-		T.verts[1] = verts.size() + 1;
-		T.verts[2] = verts.size() + 2;
-		T.dummy = dummy;
-
-		verts.push_back(v0);
-		verts.push_back(v1);
-		verts.push_back(v2);
-		faces.push_back(T);
-	}
-
-	void	Collector::add_face(const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector)
-	{
-		TRI			T;
-		T.verts[0] = verts.size();
-		T.verts[1] = verts.size() + 1;
-		T.verts[2] = verts.size() + 2;
-		T.material = material;
-		T.sector = sector;
-
-		verts.push_back(v0);
-		verts.push_back(v1);
-		verts.push_back(v2);
-		faces.push_back(T);
-	}
-
-	void	Collector::add_face_packed(
-		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
-		u16		material, u16 sector,								// misc
-		float	eps
-	)
-	{
-		TRI T;
-		T.verts[0] = VPack(v0, eps);
-		T.verts[1] = VPack(v1, eps);
-		T.verts[2] = VPack(v2, eps);
-		T.material = material;
-		T.sector = sector;
-		faces.push_back(T);
-	}
-
-	void	Collector::add_face_packed_D(
-		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
-#ifdef _WIN64
-		u64		dummy, float eps
-#else
-		u32		dummy, float eps
-#endif
-	)
-	{
-		TRI T;
-		T.verts[0] = VPack(v0, eps);
-		T.verts[1] = VPack(v1, eps);
-		T.verts[2] = VPack(v2, eps);
-		T.dummy = dummy;
-		faces.push_back(T);
-	}
+{	
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -115,72 +39,6 @@ namespace CDB
 		}
 	};
 
-	void	Collector::calc_adjacency(xr_vector<u32>& dest)
-	{
-		VERIFY(faces.size() < 65536);
-		const u32						edge_count = faces.size() * 3;
-#ifdef _EDITOR
-		xr_vector<edge> _edges(edge_count);
-		edge 							*edges = &*_edges.begin();
-#else
-		edge							*edges = (edge*)_alloca(edge_count * sizeof(edge));
-#endif
-		edge							*i = edges;
-		xr_vector<TRI>::const_iterator	B = faces.begin(), I = B;
-		xr_vector<TRI>::const_iterator	E = faces.end();
-		for (; I != E; ++I) {
-			u32							face_id = u32(I - B);
-
-			(*i).face_id = face_id;
-			(*i).edge_id = 0;
-			(*i).vertex_id0 = (u16)(*I).verts[0];
-			(*i).vertex_id1 = (u16)(*I).verts[1];
-			if ((*i).vertex_id0 > (*i).vertex_id1)
-				std::swap((*i).vertex_id0, (*i).vertex_id1);
-			++i;
-
-			(*i).face_id = face_id;
-			(*i).edge_id = 1;
-			(*i).vertex_id0 = (u16)(*I).verts[1];
-			(*i).vertex_id1 = (u16)(*I).verts[2];
-			if ((*i).vertex_id0 > (*i).vertex_id1)
-				std::swap((*i).vertex_id0, (*i).vertex_id1);
-			++i;
-
-			(*i).face_id = face_id;
-			(*i).edge_id = 2;
-			(*i).vertex_id0 = (u16)(*I).verts[2];
-			(*i).vertex_id1 = (u16)(*I).verts[0];
-			if ((*i).vertex_id0 > (*i).vertex_id1)
-				std::swap((*i).vertex_id0, (*i).vertex_id1);
-			++i;
-		}
-
-		std::sort(edges, edges + edge_count, sort_predicate());
-
-		dest.assign(edge_count, u32(-1));
-
-		{
-			edge						*II = edges, *J;
-			edge						*EE = edges + edge_count;
-			for (; II != EE; ++II) {
-				if (II + 1 == EE)
-					continue;
-
-				J = II + 1;
-
-				if ((*II).vertex_id0 != (*J).vertex_id0)
-					continue;
-
-				if ((*II).vertex_id1 != (*J).vertex_id1)
-					continue;
-
-				dest[(*II).face_id * 3 + (*II).edge_id] = (*J).face_id;
-				dest[(*J).face_id * 3 + (*J).edge_id] = (*II).face_id;
-			}
-		}
-	}
-
 	IC BOOL similar(TRI& T1, TRI& T2)
 	{
 		if ((T1.verts[0] == T2.verts[0]) && (T1.verts[1] == T2.verts[1]) && (T1.verts[2] == T2.verts[2]) && (T1.dummy == T2.dummy)) return TRUE;
@@ -190,26 +48,6 @@ namespace CDB
 		if ((T1.verts[1] == T2.verts[0]) && (T1.verts[0] == T2.verts[1]) && (T1.verts[2] == T2.verts[2]) && (T1.dummy == T2.dummy)) return TRUE;
 		if ((T1.verts[1] == T2.verts[0]) && (T1.verts[2] == T2.verts[1]) && (T1.verts[0] == T2.verts[2]) && (T1.dummy == T2.dummy)) return TRUE;
 		return FALSE;
-	}
-
-	void Collector::remove_duplicate_T()
-	{
-		for (u32 f = 0; f<faces.size(); f++)
-		{
-			for (u32 t = f + 1; t<faces.size();)
-			{
-				if (t == f)	continue;
-				TRI& T1 = faces[f];
-				TRI& T2 = faces[t];
-				
-				if (similar(T1, T2)) 
-				{
-					faces[t] = faces.back();
-					faces.pop_back();
-				}
-				else t++;				
-			}
-		}
 	}
 
 	CollectorPacked::CollectorPacked(const Fbox &bb, int apx_vertices, int apx_faces)

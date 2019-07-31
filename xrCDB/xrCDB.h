@@ -189,33 +189,6 @@ namespace CDB
 		ICF void		r_clear_compact() { rd.clear_and_free(); };
 	};
 
-	//
-	class XRCDB_API Collector
-	{
-		xr_vector<Fvector>	verts;
-		xr_vector<TRI>		faces;
-
-		u32				VPack(const Fvector& V, float eps);
-	public:
-		void			add_face(const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector);
-#ifdef _WIN64
-		void			add_face_D(const Fvector& v0, const Fvector& v1, const Fvector& v2, u64 dummy);
-		void			add_face_packed_D(const Fvector& v0, const Fvector& v1, const Fvector& v2, u64 dummy, float eps = EPS);
-#else
-		void			add_face_D(const Fvector& v0, const Fvector& v1, const Fvector& v2, u32 dummy);
-		void			add_face_packed_D(const Fvector& v0, const Fvector& v1, const Fvector& v2, u32 dummy, float eps = EPS);
-#endif
-		void			add_face_packed(const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, float eps = EPS);
-		void			remove_duplicate_T();
-		void			calc_adjacency(xr_vector<u32>& dest);
-
-		Fvector*		getV() { return &*verts.begin(); }
-		size_t			getVS() { return verts.size(); }
-		TRI*			getT() { return &*faces.begin(); }
-		size_t			getTS() { return faces.size(); }
-		void			clear() { verts.clear(); faces.clear(); }
-	};
-
 	struct non_copyable {
 		non_copyable() {}
 	private:

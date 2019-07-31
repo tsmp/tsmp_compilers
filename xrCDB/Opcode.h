@@ -70,8 +70,6 @@
 	using namespace IceMaths;
 #endif
 
-#ifndef __MESHMERIZER_H__
-	#define MESHMERIZER_API	OPCODE_API
 	namespace Meshmerizer
 	{
 		#include "OPC_Triangle.h"
@@ -80,7 +78,7 @@
 		#include "OPC_BoundingSphere.h"
 	}
 	using namespace Meshmerizer;
-#endif
+
 
 	namespace Opcode
 	{
