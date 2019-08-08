@@ -75,7 +75,6 @@
 		#include "OPC_Triangle.h"
 		#include "OPC_AABB.h"
 		#include "OPC_OBB.h"
-		#include "OPC_BoundingSphere.h"
 	}
 	using namespace Meshmerizer;
 
@@ -92,11 +91,7 @@
 		#include "OPC_BVTCache.h"
 		#include "OPC_Collider.h"
 		#include "OPC_VolumeCollider.h"
-		#include "OPC_TreeCollider.h"
-		#include "OPC_RayCollider.h"    
-		#include "OPC_SphereCollider.h"
-		#include "OPC_OBBCollider.h"
-		#include "OPC_AABBCollider.h"
+		#include "OPC_RayCollider.h"
 		#include "OPC_PlanesCollider.h"
 	}
 

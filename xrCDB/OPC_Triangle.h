@@ -13,7 +13,7 @@
 #define __ICETRIANGLE_H__
 
 	// An indexed triangle class.
-	class MESHMERIZER_API IndexedTriangle
+	class OPCODE_API IndexedTriangle
 	{
 		public:
 		//! Constructor

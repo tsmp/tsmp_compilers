@@ -15,7 +15,7 @@
 	class IndexedTriangle;
 	class LSS;
 
-	class MESHMERIZER_API OBB
+	class OPCODE_API OBB
 	{
 		public:
 		//! Constructor
@@ -111,7 +111,7 @@
 	 *	\return		true if success
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	FUNCTION MESHMERIZER_API bool ComputeSpread(const IndexedTriangle* tris, udword nbtris, const Point* verts, udword nbverts, Point& center, Point& eigenvalues, Matrix3x3& eigenvectors, bool usehull=false);
+	FUNCTION OPCODE_API bool ComputeSpread(const IndexedTriangle* tris, udword nbtris, const Point* verts, udword nbverts, Point& center, Point& eigenvalues, Matrix3x3& eigenvectors, bool usehull=false);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/**
@@ -125,8 +125,8 @@
 	 *	\return		true if success
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	FUNCTION MESHMERIZER_API bool ComputeOBB(const IndexedTriangle* tris, udword nbtris, const Point* verts, udword nbverts, OBB& obb, bool usehull);
+	FUNCTION OPCODE_API bool ComputeOBB(const IndexedTriangle* tris, udword nbtris, const Point* verts, udword nbverts, OBB& obb, bool usehull);
 
-	FUNCTION MESHMERIZER_API void OBBFromTriangle(const Point& p1, const Point& p2, const Point& p3, OBB& obb);
+	FUNCTION OPCODE_API void OBBFromTriangle(const Point& p1, const Point& p2, const Point& p3, OBB& obb);
 
 #endif	// __ICEOBB_H__

@@ -1,13 +1,5 @@
-#ifndef XRCDB_H
-#define XRCDB_H
-
 #pragma once
-// The following ifdef block is the standard way of creating macros which make exporting
-// from a DLL simpler. All files within this DLL are compiled with the XRCDB_EXPORTS
-// symbol defined on the command line. this symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see
-// XRCDB_API functions as being imported from a DLL, wheras this DLL sees symbols
-// defined with this macro as being exported.
+
 #ifdef XRCDB_EXPORTS
 #define XRCDB_API __declspec(dllexport)
 #else
@@ -20,9 +12,8 @@
 #define ALIGN(a)
 #endif
 
-// forward declarations
-class CFrustum;
-namespace Opcode {
+namespace Opcode 
+{
 	class OPCODE_Model;
 	class AABBNoLeafNode;
 };
@@ -176,10 +167,7 @@ namespace CDB
 
 		ICF void		box_options(u32 f) { box_mode = f; }
 		void			box_query(const MODEL *m_def, const Fvector& b_center, const Fvector& b_dim);
-
-		ICF void		frustum_options(u32 f) { frustum_mode = f; }
-		void			frustum_query(const MODEL *m_def, const CFrustum& F);
-
+		
 		ICF RESULT*		r_begin() { return &*rd.begin(); };
 		ICF RESULT*		r_end() { return &*rd.end(); };
 		RESULT&			r_add();
@@ -214,10 +202,6 @@ namespace CDB
 	public:
 		CollectorPacked(const Fbox &bb, int apx_vertices = 5000, int apx_faces = 5000);
 
-		//		__declspec(noinline) CollectorPacked &operator=	(const CollectorPacked &object)
-		//		{
-		//			verts
-		//		}
 
 		void				add_face(const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector);
 #ifdef _WIN64
@@ -236,4 +220,3 @@ namespace CDB
 };
 
 #pragma pack(pop)
-#endif

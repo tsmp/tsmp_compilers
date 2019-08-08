@@ -4,75 +4,37 @@
 #include "xrCDB.h"
 
 namespace CDB
-{	
+{
 
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
 #pragma warning(pop)
 
-#pragma pack(push,1)
-	struct edge {
-		u32		face_id : 30;
-		u32		edge_id : 2;
-		u16		vertex_id0;
-		u16		vertex_id1;
-	};
-#pragma pack(pop)
-
-	struct sort_predicate {
-		IC	bool	operator()	(const edge &edge0, const edge &edge1) const
-		{
-			if (edge0.vertex_id0 < edge1.vertex_id0)
-				return				(true);
-
-			if (edge1.vertex_id0 < edge0.vertex_id0)
-				return				(false);
-
-			if (edge0.vertex_id1 < edge1.vertex_id1)
-				return				(true);
-
-			if (edge1.vertex_id1 < edge0.vertex_id1)
-				return				(false);
-
-			return					(edge0.face_id < edge1.face_id);
-		}
-	};
-
-	IC BOOL similar(TRI& T1, TRI& T2)
-	{
-		if ((T1.verts[0] == T2.verts[0]) && (T1.verts[1] == T2.verts[1]) && (T1.verts[2] == T2.verts[2]) && (T1.dummy == T2.dummy)) return TRUE;
-		if ((T1.verts[0] == T2.verts[0]) && (T1.verts[2] == T2.verts[1]) && (T1.verts[1] == T2.verts[2]) && (T1.dummy == T2.dummy)) return TRUE;
-		if ((T1.verts[2] == T2.verts[0]) && (T1.verts[0] == T2.verts[1]) && (T1.verts[1] == T2.verts[2]) && (T1.dummy == T2.dummy)) return TRUE;
-		if ((T1.verts[2] == T2.verts[0]) && (T1.verts[1] == T2.verts[1]) && (T1.verts[0] == T2.verts[2]) && (T1.dummy == T2.dummy)) return TRUE;
-		if ((T1.verts[1] == T2.verts[0]) && (T1.verts[0] == T2.verts[1]) && (T1.verts[2] == T2.verts[2]) && (T1.dummy == T2.dummy)) return TRUE;
-		if ((T1.verts[1] == T2.verts[0]) && (T1.verts[2] == T2.verts[1]) && (T1.verts[0] == T2.verts[2]) && (T1.dummy == T2.dummy)) return TRUE;
-		return FALSE;
-	}
-
-	CollectorPacked::CollectorPacked(const Fbox &bb, int apx_vertices, int apx_faces)
+	CollectorPacked::CollectorPacked(const Fbox& bb, int apx_vertices, int apx_faces)
 	{
 		// Params
 		VMscale.set(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z);
 		VMmin.set(bb.min);
 		VMeps.set(VMscale.x / clpMX / 2, VMscale.y / clpMY / 2, VMscale.z / clpMZ / 2);
-		VMeps.x = (VMeps.x<EPS_L) ? VMeps.x : EPS_L;
-		VMeps.y = (VMeps.y<EPS_L) ? VMeps.y : EPS_L;
-		VMeps.z = (VMeps.z<EPS_L) ? VMeps.z : EPS_L;
+		VMeps.x = (VMeps.x < EPS_L) ? VMeps.x : EPS_L;
+		VMeps.y = (VMeps.y < EPS_L) ? VMeps.y : EPS_L;
+		VMeps.z = (VMeps.z < EPS_L) ? VMeps.z : EPS_L;
 
 		// Preallocate memory
 		verts.reserve(apx_vertices);
 		faces.reserve(apx_faces);
 
-		int		_size = (clpMX + 1)*(clpMY + 1)*(clpMZ + 1);
-		int		_average = (apx_vertices / _size) / 2;
-		for (int ix = 0; ix<clpMX + 1; ix++)
-			for (int iy = 0; iy<clpMY + 1; iy++)
-				for (int iz = 0; iz<clpMZ + 1; iz++)
+		int	_size = (clpMX + 1) * (clpMY + 1) * (clpMZ + 1);
+		int	_average = (apx_vertices / _size) / 2;
+
+		for (int ix = 0; ix < clpMX + 1; ix++)
+			for (int iy = 0; iy < clpMY + 1; iy++)
+				for (int iz = 0; iz < clpMZ + 1; iz++)
 					VM[ix][iy][iz].reserve(_average);
 	}
 
-	void	CollectorPacked::add_face(
+	void CollectorPacked::add_face(
 		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
 		u16 material, u16 sector									// misc
 	)
@@ -86,7 +48,7 @@ namespace CDB
 		faces.push_back(T);
 	}
 
-	void	CollectorPacked::add_face_D(
+	void CollectorPacked::add_face_D(
 		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
 #ifdef _WIN64
 		u64 dummy													// misc
@@ -103,14 +65,14 @@ namespace CDB
 		faces.push_back(T);
 	}
 
-	u32		CollectorPacked::VPack(const Fvector& V)
+	u32	CollectorPacked::VPack(const Fvector& V)
 	{
 		u32 P = 0xffffffff;
 
 		u32 ix, iy, iz;
-		ix = iFloor(float(V.x - VMmin.x) / VMscale.x*clpMX);
-		iy = iFloor(float(V.y - VMmin.y) / VMscale.y*clpMY);
-		iz = iFloor(float(V.z - VMmin.z) / VMscale.z*clpMZ);
+		ix = iFloor(float(V.x - VMmin.x) / VMscale.x * clpMX);
+		iy = iFloor(float(V.y - VMmin.y) / VMscale.y * clpMY);
+		iz = iFloor(float(V.z - VMmin.z) / VMscale.z * clpMZ);
 
 		//		R_ASSERT(ix<=clpMX && iy<=clpMY && iz<=clpMZ);
 		clamp(ix, (u32)0, clpMX);	clamp(iy, (u32)0, clpMY);	clamp(iz, (u32)0, clpMZ);
@@ -119,11 +81,13 @@ namespace CDB
 			DWORDList* vl;
 			vl = &(VM[ix][iy][iz]);
 			for (DWORDIt it = vl->begin(); it != vl->end(); it++)
-				if (verts[*it].similar(V)) {
+				if (verts[*it].similar(V)) 
+				{
 					P = *it;
 					break;
 				}
 		}
+
 		if (0xffffffff == P)
 		{
 			P = verts.size();
@@ -132,9 +96,9 @@ namespace CDB
 			VM[ix][iy][iz].push_back(P);
 
 			u32 ixE, iyE, izE;
-			ixE = iFloor(float(V.x + VMeps.x - VMmin.x) / VMscale.x*clpMX);
-			iyE = iFloor(float(V.y + VMeps.y - VMmin.y) / VMscale.y*clpMY);
-			izE = iFloor(float(V.z + VMeps.z - VMmin.z) / VMscale.z*clpMZ);
+			ixE = iFloor(float(V.x + VMeps.x - VMmin.x) / VMscale.x * clpMX);
+			iyE = iFloor(float(V.y + VMeps.y - VMmin.y) / VMscale.y * clpMY);
+			izE = iFloor(float(V.z + VMeps.z - VMmin.z) / VMscale.z * clpMZ);
 
 			//			R_ASSERT(ixE<=clpMX && iyE<=clpMY && izE<=clpMZ);
 			clamp(ixE, (u32)0, clpMX);	clamp(iyE, (u32)0, clpMY);	clamp(izE, (u32)0, clpMZ);

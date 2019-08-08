@@ -38,6 +38,7 @@ MODEL::MODEL	()
 	verts_count	= 0;
 	status		= S_INIT;
 }
+
 MODEL::~MODEL()
 {
 	syncronize	();		// maybe model still in building
@@ -76,19 +77,17 @@ void	MODEL::build			(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc,
     R_ASSERT					((Vcnt>=4)&&(Tcnt>=2));
 
 	_initialize_cpu_thread		();
-#ifdef _EDITOR    
-	build_internal				(V,Vcnt,T,Tcnt,bc,bcp);
-#else
+
 	if(!strstr(Core.Params, "-mt_cdb"))
-	{
-		build_internal				(V,Vcnt,T,Tcnt,bc,bcp);
-	}else
+		build_internal(V,Vcnt,T,Tcnt,bc,bcp);
+	else
 	{
 		BTHREAD_params				P = { this, V, Vcnt, T, Tcnt, bc, bcp };
 		thread_spawn				(build_thread,"CDB-construction",0,&P);
-		while						(S_INIT	== status)	Sleep	(5);
+
+		while(S_INIT	== status)	
+			Sleep(5);
 	}
-#endif
 }
 
 void	MODEL::build_internal	(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc, void* bcp)
