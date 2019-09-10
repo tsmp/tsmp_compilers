@@ -89,10 +89,6 @@
 		#include "OPC_OptimizedTree.h"
 		#include "OPC_Model.h"
 		#include "OPC_BVTCache.h"
-		#include "OPC_Collider.h"
-		#include "OPC_VolumeCollider.h"
-		#include "OPC_RayCollider.h"
-		#include "OPC_PlanesCollider.h"
 	}
 
 #endif // __OPCODE_H__

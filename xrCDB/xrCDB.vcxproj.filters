@@ -30,9 +30,6 @@
     <ClCompile Include="OPC_AABBTree.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
-    <ClCompile Include="OPC_Collider.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
     <ClCompile Include="OPC_Common.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
@@ -57,25 +54,16 @@
     <ClCompile Include="OPC_Plane.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
-    <ClCompile Include="OPC_PlanesCollider.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
     <ClCompile Include="OPC_Point.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
     <ClCompile Include="OPC_Ray.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
-    <ClCompile Include="OPC_RayCollider.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
     <ClCompile Include="OPC_TreeBuilders.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
     <ClCompile Include="OPC_Triangle.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
-    <ClCompile Include="OPC_VolumeCollider.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
     <ClCompile Include="Opcode.cpp">
@@ -96,9 +84,6 @@
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_BVTCache.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_Collider.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Common.h">
@@ -131,15 +116,6 @@
     <ClInclude Include="OPC_Plane.h">
       <Filter>Opcode</Filter>
     </ClInclude>
-    <ClInclude Include="OPC_PlanesAABBOverlap.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_PlanesCollider.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_PlanesTriOverlap.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
     <ClInclude Include="OPC_Point.h">
       <Filter>Opcode</Filter>
     </ClInclude>
@@ -147,15 +123,6 @@
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Ray.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_RayAABBOverlap.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_RayCollider.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_RayTriOverlap.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Settings.h">
@@ -168,9 +135,6 @@
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Types.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_VolumeCollider.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="Opcode.h">
