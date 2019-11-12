@@ -6,6 +6,8 @@
 
 XRCORE_API void ComputeBuildID(LPCSTR Date);
 
+extern void DoCompiler();
+
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"IMAGEHLP.LIB")
@@ -65,100 +67,102 @@ typedef int __cdecl xrOptions(b_params* params, u32 version, bool bRunBuild);
 
 void Startup(LPSTR     lpCmdLine)
 {
-	char cmd[512],name[256];
+	char cmd[512], name[256];
 
 	BOOL bModifyOptions = FALSE;
 	bool bIsSilent = false;
 
 
-	strcpy(cmd,lpCmdLine);
+	strcpy(cmd, lpCmdLine);
 	strlwr(cmd);
-	if (strstr(cmd,"-?") || strstr(cmd,"-h"))	{ Help(); return; }
-	if (strstr(cmd,"-f")==0)					{ Help(); return; }
-	if (strstr(cmd,"-o"))						bModifyOptions		= TRUE;
-	if (strstr(cmd,"-gi"))						b_radiosity			= TRUE;
-	if (strstr(cmd,"-noise"))					b_noise				= TRUE;
-	if (strstr(cmd,"-nosun"))					b_nosun				= TRUE;
-	if (strstr(cmd, "-priority_highest"))		b_highest_priority	= TRUE;
-	if (strstr(cmd, "-silent"))					bIsSilent			= true;
+	if (strstr(cmd, "-?") || strstr(cmd, "-h")) { Help(); return; }
+	if (strstr(cmd, "-f") == 0) { Help(); return; }
+	if (strstr(cmd, "-o"))						bModifyOptions = TRUE;
+	if (strstr(cmd, "-gi"))						b_radiosity = TRUE;
+	if (strstr(cmd, "-noise"))					b_noise = TRUE;
+	if (strstr(cmd, "-nosun"))					b_nosun = TRUE;
+	if (strstr(cmd, "-priority_highest"))		b_highest_priority = TRUE;
+	if (strstr(cmd, "-silent"))					bIsSilent = true;
 
-// KD: new options
-	if (strstr(cmd,"-norgb"))					b_norgb				= TRUE;
-	if (strstr(cmd,"-nolmaps"))					b_nolmaps			= TRUE;
-	if (strstr(cmd,"-skipinvalid"))				b_skipinvalid		= TRUE;
+	// KD: new options
+	if (strstr(cmd, "-norgb"))					b_norgb = TRUE;
+	if (strstr(cmd, "-nolmaps"))					b_nolmaps = TRUE;
+	if (strstr(cmd, "-skipinvalid"))				b_skipinvalid = TRUE;
 	get_console_float(lpCmdLine, "-lmap_quality ", &f_lmap_quality);
-	
+
 	// Give a LOG-thread a chance to startup
-	InitCommonControls		();
-	thread_spawn			(logThread, "log-update",	1024*1024,0);
-	Sleep					(150);
-	
+	InitCommonControls();
+	thread_spawn(logThread, "log-update", 1024 * 1024, 0);
+	Sleep(150);
+
 	// Faster FPU 
-	SetPriorityClass		(GetCurrentProcess(),NORMAL_PRIORITY_CLASS);
+	SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 	if (b_highest_priority) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-	
+
 	// Load project
-	name[0]=0;				sscanf(strstr(cmd,"-f")+2,"%s",name);
+	name[0] = 0;				sscanf(strstr(cmd, "-f") + 2, "%s", name);
 	string_path				prjName;
-	FS.update_path			(prjName,"$game_levels$",strconcat(sizeof(prjName),prjName,name,"\\build.prj"));
+	FS.update_path(prjName, "$game_levels$", strconcat(sizeof(prjName), prjName, name, "\\build.prj"));
 	string256				phaseName;
-	Phase					(strconcat(sizeof(phaseName),phaseName,"Reading project [",name,"]..."));
+	Phase(strconcat(sizeof(phaseName), phaseName, "Reading project [", name, "]..."));
 
 	string256 inf;
 	extern  HWND logWindow;
-	IReader*	F			= FS.r_open(prjName);
-	if (NULL==F)
+	IReader* F = FS.r_open(prjName);
+	if (NULL == F)
 	{
-		sprintf				(inf,"Build failed!\nCan't find level: '%s'",name);
-		clMsg				(inf);
-		MessageBox			(logWindow,inf,"Error!",MB_OK|MB_ICONERROR);
+		sprintf(inf, "Build failed!\nCan't find level: '%s'", name);
+		clMsg(inf);
+		MessageBox(logWindow, inf, "Error!", MB_OK | MB_ICONERROR);
 		return;
 	}
 
 	// Version
 	u32 version;
-	F->r_chunk			(EB_Version,&version);
-	clMsg				("version: %d",version);
-	R_ASSERT(XRCL_CURRENT_VERSION==version);
+	F->r_chunk(EB_Version, &version);
+	clMsg("version: %d", version);
+	R_ASSERT(XRCL_CURRENT_VERSION == version);
 
 	// Header
 	b_params				Params;
-	F->r_chunk			(EB_Parameters,&Params);
+	F->r_chunk(EB_Parameters, &Params);
 
 	//KD start
-	Params.m_lm_pixels_per_meter	= f_lmap_quality;
+	Params.m_lm_pixels_per_meter = f_lmap_quality;
 	//KD end
 
 	// Show options if needed
-	if (bModifyOptions)		
+	if (bModifyOptions)
 	{
-		Phase		("Project options...");
-		HMODULE		L = LoadLibrary		("xrLC_Options.dll");
-		void*		P = GetProcAddress	(L,"_frmScenePropertiesRun");
-		R_ASSERT	(P);
-		xrOptions*	O = (xrOptions*)P;
-		int			R = O(&Params,version,false);
-		FreeLibrary	(L);
-		if (R==2)	
+		Phase("Project options...");
+		HMODULE		L = LoadLibrary("xrLC_Options.dll");
+		void* P = GetProcAddress(L, "_frmScenePropertiesRun");
+		R_ASSERT(P);
+		xrOptions* O = (xrOptions*)P;
+		int			R = O(&Params, version, false);
+		FreeLibrary(L);
+		if (R == 2)
 		{
 			ExitProcess(0);
 		}
 	}
-	
-	SetThreadPriority(GetCurrentThread(),THREAD_PRIORITY_HIGHEST);
+
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+
 
 	// Conversion
-	Phase					("Converting data structures...");
-	pBuild					= xr_new<CBuild>();
-	pBuild->Load			(Params,*F, logWindow);
-	FS.r_close				(F);
-	
-	// Call for builder
-	string_path				lfn;
+	Phase("Converting data structures...");
+		pBuild = xr_new<CBuild>();
+		pBuild->Load(Params, *F, logWindow);
+		FS.r_close(F);
+
+		// Call for builder
+		string_path				lfn;
 	CTimer	dwStartupTime;	dwStartupTime.Start();
-	FS.update_path			(lfn,_game_levels_,name);
-	pBuild->Run				(lfn);
-	xr_delete				(pBuild);
+	FS.update_path(lfn, _game_levels_, name);
+	pBuild->Run(lfn);
+	xr_delete(pBuild);
+
 
 	// Show statistic
 	extern	std::string make_time(u32 sec);
@@ -185,7 +189,7 @@ int APIENTRY WinMain(HINSTANCE hInst,
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 
 	// KD: let's init debug to enable exception handling
-	Debug._initialize	(false);
+	//Debug._initialize	(false);
 
 	// KD: custom log name
 	char app_name[10];

@@ -135,9 +135,6 @@
     <ClCompile Include="StdAfx.cpp">
       <Filter>Kernel</Filter>
     </ClCompile>
-    <ClCompile Include="xrLC.cpp">
-      <Filter>Kernel</Filter>
-    </ClCompile>
     <ClCompile Include="NV_Library\NvTriStrip.cpp">
       <Filter>External\NV_Strips</Filter>
     </ClCompile>
@@ -308,6 +305,9 @@
     </ClCompile>
     <ClCompile Include="PropSlimTools.cpp">
       <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Startup.cpp">
+      <Filter>Kernel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
