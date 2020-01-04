@@ -783,7 +783,7 @@ void	xrLight()
 	Timer.Start();
 
 	DO_count = range;
-	const int threads_count = 8;
+	const int threads_count = 16;
 
 	for (u32 it = 0; it < range; it++)	DO_task_pool.push_back(it);
 

@@ -118,7 +118,7 @@ void CBuild::xrPhase_AdaptiveHT()
 	CThreadManager TMPrecalcilatingBaseHemisphere;
 
 	u32 count = g_vertices.size();
-	u32 threads_count = 8;
+	u32 threads_count = 16;
 
 	if (count)
 	{
