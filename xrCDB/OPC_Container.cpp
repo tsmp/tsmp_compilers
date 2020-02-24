@@ -29,8 +29,8 @@ using namespace IceCore;
 
 // Static members
 #ifdef CONTAINER_STATS
-udword Container::mNbContainers = 0;
-udword Container::mUsedRam = 0;
+unsigned int Container::mNbContainers = 0;
+unsigned int Container::mUsedRam = 0;
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ udword Container::mUsedRam = 0;
  *	Constructor. No entries allocated there.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Container::Container() : mMaxNbEntries(0), mCurNbEntries(0), mEntries(null), mGrowthFactor(2.0f)
+Container::Container() : mMaxNbEntries(0), mCurNbEntries(0), mEntries(0), mGrowthFactor(2.0f)
 {
 #ifdef CONTAINER_STATS
 	mNbContainers++;
@@ -51,7 +51,7 @@ Container::Container() : mMaxNbEntries(0), mCurNbEntries(0), mEntries(null), mGr
  *	Constructor. Also allocates a given number of entries.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Container::Container(udword size, float growth_factor) : mMaxNbEntries(0), mCurNbEntries(0), mEntries(null), mGrowthFactor(growth_factor)
+Container::Container(unsigned int size, float growth_factor) : mMaxNbEntries(0), mCurNbEntries(0), mEntries(0), mGrowthFactor(growth_factor)
 {
 #ifdef CONTAINER_STATS
 	mNbContainers++;
@@ -81,28 +81,28 @@ Container::~Container()
  *	\return		true if success.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Container::Resize(udword needed)
+bool Container::Resize(unsigned int needed)
 {
 #ifdef CONTAINER_STATS
 	// Subtract previous amount of bytes
-	mUsedRam-=mMaxNbEntries*sizeof(udword);
+	mUsedRam-=mMaxNbEntries*sizeof(unsigned int);
 #endif
 
 	// Get more entries
-	mMaxNbEntries = mMaxNbEntries ? udword(float(mMaxNbEntries)*mGrowthFactor) : 2;	// Default nb Entries = 2
+	mMaxNbEntries = mMaxNbEntries ? unsigned int(float(mMaxNbEntries)*mGrowthFactor) : 2;	// Default nb Entries = 2
 	if(mMaxNbEntries<mCurNbEntries + needed)	mMaxNbEntries = mCurNbEntries + needed;
 
 	// Get some bytes for _new_ entries
-	udword*	NewEntries = xr_alloc<udword>(mMaxNbEntries);
+	unsigned int*	NewEntries = xr_alloc<unsigned int>(mMaxNbEntries);
 	CHECKALLOC(NewEntries);
 
 #ifdef CONTAINER_STATS
 	// Add current amount of bytes
-	mUsedRam+=mMaxNbEntries*sizeof(udword);
+	mUsedRam+=mMaxNbEntries*sizeof(unsigned int);
 #endif
 
 	// Copy old data if needed
-	if(mCurNbEntries)	CopyMemory(NewEntries, mEntries, mCurNbEntries*sizeof(udword));
+	if(mCurNbEntries)	CopyMemory(NewEntries, mEntries, mCurNbEntries*sizeof(unsigned int));
 
 	// Delete old data
 	xr_free(mEntries);
@@ -120,7 +120,7 @@ bool Container::Resize(udword needed)
  *	\return		true if success
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Container::SetSize(udword nb)
+bool Container::SetSize(unsigned int nb)
 {
 	// Make sure it's empty
 	Empty();
@@ -132,12 +132,12 @@ bool Container::SetSize(udword nb)
 	mMaxNbEntries = nb;
 
 	// Get some bytes for _new_ entries
-	mEntries = xr_alloc<udword>(mMaxNbEntries);
+	mEntries = xr_alloc<unsigned int>(mMaxNbEntries);
 	CHECKALLOC(mEntries);
 
 #ifdef CONTAINER_STATS
 	// Add current amount of bytes
-	mUsedRam+=mMaxNbEntries*sizeof(udword);
+	mUsedRam+=mMaxNbEntries*sizeof(unsigned int);
 #endif
 	return true;
 }
@@ -152,7 +152,7 @@ bool Container::Refit()
 {
 #ifdef CONTAINER_STATS
 	// Subtract previous amount of bytes
-	mUsedRam-=mMaxNbEntries*sizeof(udword);
+	mUsedRam-=mMaxNbEntries*sizeof(unsigned int);
 #endif
 
 	// Get just enough entries
@@ -160,16 +160,16 @@ bool Container::Refit()
 	if(!mMaxNbEntries)	return false;
 
 	// Get just enough bytes
-	udword*	NewEntries = xr_alloc<udword>(mMaxNbEntries);
+	unsigned int*	NewEntries = xr_alloc<unsigned int>(mMaxNbEntries);
 	CHECKALLOC(NewEntries);
 
 #ifdef CONTAINER_STATS
 	// Add current amount of bytes
-	mUsedRam+=mMaxNbEntries*sizeof(udword);
+	mUsedRam+=mMaxNbEntries*sizeof(unsigned int);
 #endif
 
 	// Copy old data
-	CopyMemory(NewEntries, mEntries, mCurNbEntries*sizeof(udword));
+	CopyMemory(NewEntries, mEntries, mCurNbEntries*sizeof(unsigned int));
 
 	// Delete old data
 	xr_free(mEntries);
@@ -185,16 +185,16 @@ bool Container::Refit()
  *	Checks whether the container already contains a given value.
  *	\param		entry			[in] the value to look for in the container
  *	\param		location		[out] a possible pointer to store the entry location
- *	\see		Add(udword entry)
+ *	\see		Add(unsigned int entry)
  *	\see		Add(float entry)
  *	\see		Empty()
  *	\return		true if the value has been found in the container, else false.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Container::Contains(udword entry, udword* location) const
+bool Container::Contains(unsigned int entry, unsigned int* location) const
 {
 	// Look for the entry
-	for(udword i=0;i<mCurNbEntries;i++)
+	for(unsigned int i=0;i<mCurNbEntries;i++)
 	{
 		if(mEntries[i]==entry)
 		{
@@ -213,10 +213,10 @@ bool Container::Contains(udword entry, udword* location) const
  *	\warning	This method is arbitrary slow (O(n)) and should be used carefully. Insertion order is not preserved.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Container::Delete(udword entry)
+bool Container::Delete(unsigned int entry)
 {
 	// Look for the entry
-	for(udword i=0;i<mCurNbEntries;i++)
+	for(unsigned int i=0;i<mCurNbEntries;i++)
 	{
 		if(mEntries[i]==entry)
 		{
@@ -236,17 +236,17 @@ bool Container::Delete(udword entry)
  *	\warning	This method is arbitrary slow (O(n)) and should be used carefully.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Container::DeleteKeepingOrder(udword entry)
+bool Container::DeleteKeepingOrder(unsigned int entry)
 {
 	// Look for the entry
-	for(udword i=0;i<mCurNbEntries;i++)
+	for(unsigned int i=0;i<mCurNbEntries;i++)
 	{
 		if(mEntries[i]==entry)
 		{
 			// Entry has been found at index i.
 			// Shift entries to preserve order. You really should use a linked list instead.
 			mCurNbEntries--;
-			for(udword j=i;j<mCurNbEntries;j++)
+			for(unsigned int j=i;j<mCurNbEntries;j++)
 			{
 				mEntries[j] = mEntries[j+1];
 			}
@@ -264,9 +264,9 @@ bool Container::DeleteKeepingOrder(udword entry)
  *	\return		Self-Reference
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Container& Container::FindNext(udword& entry, bool wrap)
+Container& Container::FindNext(unsigned int& entry, bool wrap)
 {
-	udword Location;
+	unsigned int Location;
 	if(Contains(entry, &Location))
 	{
 		Location++;
@@ -284,9 +284,9 @@ Container& Container::FindNext(udword& entry, bool wrap)
  *	\return		Self-Reference
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Container& Container::FindPrev(udword& entry, bool wrap)
+Container& Container::FindPrev(unsigned int& entry, bool wrap)
 {
-	udword Location;
+	unsigned int Location;
 	if(Contains(entry, &Location))
 	{
 		Location--;
@@ -302,7 +302,7 @@ Container& Container::FindPrev(udword& entry, bool wrap)
  *	\return		the ram used in bytes.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-udword Container::GetUsedRam() const
+unsigned int Container::GetUsedRam() const
 {
-	return sizeof(Container) + mMaxNbEntries * sizeof(udword);
+	return sizeof(Container) + mMaxNbEntries * sizeof(unsigned int);
 }

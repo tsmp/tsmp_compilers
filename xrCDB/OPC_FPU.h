@@ -15,10 +15,10 @@
 	#define	SIGN_BITMASK			0x80000000
 
 	//! Integer representation of a floating-point value.
-	#define IR(x)					((udword&)(x))
+	#define IR(x)					((unsigned int&)(x))
 
 	//! Signed integer representation of a floating-point value.
-	#define SIR(x)					((sdword&)(x))
+	#define SIR(x)					((signed int&)(x))
 
 	//! Absolute integer representation of a floating-point value
 	#define AIR(x)					(IR(x)&0x7fffffff)
@@ -34,14 +34,14 @@
 	//! Don't use it blindy, it can be faster or slower than the FPU comparison, depends on the context.
 	inline_ float FastFabs(float x)
 	{
-		udword FloatBits = IR(x)&0x7fffffff;
+		unsigned int FloatBits = IR(x)&0x7fffffff;
 		return FR(FloatBits);
 	}
 
 	//! Saturates positive to zero.
 	inline_ float fsat(float f)
 	{
-		udword y = (udword&)f & ~((sdword&)f >>31);
+		unsigned int y = (unsigned int&)f & ~((signed int&)f >>31);
 		return (float&)y;
 	}
 
@@ -49,19 +49,11 @@
 	inline_ float frsqrt(float f)
 	{
 		float x = f * 0.5f;
-		udword y = 0x5f3759df - ((udword&)f >> 1);
+		unsigned int y = 0x5f3759df - ((unsigned int&)f >> 1);
 		// Iteration...
 		(float&)y  = (float&)y * ( 1.5f - ( x * (float&)y * (float&)y ) );
 		// Result
 		return (float&)y;
-	}
-
-	//! Computes 1.0f / sqrtf(x). Comes from NVIDIA.
-	inline_ float InvSqrt(const float& x)
-	{
-		udword tmp = (udword(IEEE_1_0 << 1) + IEEE_1_0 - *(udword*)&x) >> 1;   
-		float y = *(float*)&tmp;                                             
-		return y * (1.47f - 0.47f * x * y * y);
 	}
 
 	//! Computes 1.0f / sqrtf(x). Comes from Quake3. Looks like the first one I had above.
@@ -85,7 +77,7 @@
 	//! TO BE DOCUMENTED
 	inline_ float fsqrt(float f)
 	{
-		udword y = ( ( (sdword&)f - 0x3f800000 ) >> 1 ) + 0x3f800000;
+		unsigned int y = ( ( (signed int&)f - 0x3f800000 ) >> 1 ) + 0x3f800000;
 		// Iteration...?
 		// (float&)y = (3.0f - ((float&)y * (float&)y) / f) * (float&)y * 0.5f;
 		// Result
@@ -95,53 +87,22 @@
 	//! Returns the float ranged espilon value.
 	inline_ float fepsilon(float f)
 	{
-		udword b = (udword&)f & 0xff800000;
-		udword a = b | 0x00000001;
+		unsigned int b = (unsigned int&)f & 0xff800000;
+		unsigned int a = b | 0x00000001;
 		(float&)a -= (float&)b;
 		// Result
 		return (float&)a;
 	}
 
 	//! Is the float valid ?
-	inline_ bool IsNAN(float value)	{ return ((*(udword*)&value)&0x7f800000)==0x7f800000; }
+	inline_ bool IsNAN(float value)	{ return ((*(unsigned int*)&value)&0x7f800000)==0x7f800000; }
 	#define	NaN(value) (!((value>=0) || (value<0)))
 
-/*
-	//! FPU precision setting function.
-	inline_ void SetFPU()
-	{
-		// This function evaluates whether the floating-point
-		// control word is set to single precision/round to nearest/
-		// exceptions disabled. If these conditions don't hold, the
-		// function changes the control word to set them and returns
-		// TRUE, putting the old control word value in the passback
-		// location pointed to by pwOldCW.
-		{
-			uword wTemp, wSave;
- 
-			__asm fstcw wSave
-			if (wSave & 0x300 ||            // Not single mode
-				0x3f != (wSave & 0x3f) ||   // Exceptions enabled
-				wSave & 0xC00)              // Not round to nearest mode
-			{
-				__asm
-				{
-					mov ax, wSave
-					and ax, not 300h    ;; single mode
-					or  ax, 3fh         ;; disable all exceptions
-					and ax, not 0xC00   ;; round to nearest mode
-					mov wTemp, ax
-					fldcw   wTemp
-				}
-			}
-		}
-	}
-*/
 	//! This function computes the slowest possible floating-point value (you can also directly use FLT_EPSILON)
 	inline_ float ComputeFloatEpsilon()
 	{
 		float f = 1.0f;
-		((udword&)f)^=1;
+		((unsigned int&)f)^=1;
 		return f - 1.0f;	// You can check it's the same as FLT_EPSILON
 	}
 

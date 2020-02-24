@@ -64,13 +64,13 @@
 
 		// Row-column access
 		//! Returns a row.
-		inline_	void			GetRow(const udword r, Point& p)	const	{ p.x = m[r][0];	p.y = m[r][1];	p.z = m[r][2];	}
+		inline_	void			GetRow(const unsigned int r, Point& p)	const	{ p.x = m[r][0];	p.y = m[r][1];	p.z = m[r][2];	}
 		//! Sets a row.
-		inline_	void			SetRow(const udword r, const Point& p)		{ m[r][0] = p.x;	m[r][1] = p.y;	m[r][2] = p.z;	}
+		inline_	void			SetRow(const unsigned int r, const Point& p)		{ m[r][0] = p.x;	m[r][1] = p.y;	m[r][2] = p.z;	}
 		//! Returns a column.
-		inline_	void			GetCol(const udword c, Point& p)	const	{ p.x = m[0][c];	p.y = m[1][c];	p.z = m[2][c];	}
+		inline_	void			GetCol(const unsigned int c, Point& p)	const	{ p.x = m[0][c];	p.y = m[1][c];	p.z = m[2][c];	}
 		//! Sets a column.
-		inline_	void			SetCol(const udword c, const Point& p)		{ m[0][c] = p.x;	m[1][c] = p.y;	m[2][c] = p.z;	}
+		inline_	void			SetCol(const unsigned int c, const Point& p)		{ m[0][c] = p.x;	m[1][c] = p.y;	m[2][c] = p.z;	}
 
 		//! Computes the trace. The trace is the sum of the 3 diagonal components.
 		inline_	float			Trace()					const				{ return m[0][0] + m[1][1] + m[2][2];				}
@@ -79,22 +79,7 @@
 		//! Sets the identity matrix.
 		inline_	void			Identity()									{ Zero(); m[0][0] = m[1][1] = m[2][2] = 1.0f; 		}
 		//! Checks for identity
-		inline_	bool			IsIdentity()			const
-				{
-					if(IR(m[0][0])!=IEEE_1_0)	return false;
-					if(IR(m[0][1])!=0)			return false;
-					if(IR(m[0][2])!=0)			return false;
-
-					if(IR(m[1][0])!=0)			return false;
-					if(IR(m[1][1])!=IEEE_1_0)	return false;
-					if(IR(m[1][2])!=0)			return false;
-
-					if(IR(m[2][0])!=0)			return false;
-					if(IR(m[2][1])!=0)			return false;
-					if(IR(m[2][2])!=IEEE_1_0)	return false;
-
-					return true;
-				}
+		
 
 		//! Makes a skew-symmetric matrix (a.k.a. Star(*) Matrix)
 		//!	[  0.0  -a.z   a.y ]
@@ -270,14 +255,7 @@
 					return (m[0][0]*m[1][1]*m[2][2] + m[0][1]*m[1][2]*m[2][0] + m[0][2]*m[1][0]*m[2][1])
 						-  (m[2][0]*m[1][1]*m[0][2] + m[2][1]*m[1][2]*m[0][0] + m[2][2]*m[1][0]*m[0][1]);
 				}
-/*
-		//! Compute a cofactor. Used for matrix inversion.
-				float			CoFactor(ubyte row, ubyte column)	const
-				{
-					static sdword gIndex[3+2] = { 0, 1, 2, 0, 1 };
-					return	(m[gIndex[row+1]][gIndex[column+1]]*m[gIndex[row+2]][gIndex[column+2]] - m[gIndex[row+2]][gIndex[column+1]]*m[gIndex[row+1]][gIndex[column+2]]);
-				}
-*/
+
 		//! Invert the matrix. Determinant must be different from zero, else matrix can't be inverted.
 				Matrix3x3&		Invert()
 				{
@@ -329,7 +307,7 @@
 					Identity();
 					Term.Identity();
 
-					for(udword div=1; div<=NbTerms; div++)
+					for(unsigned int div=1; div<=NbTerms; div++)
 					{
 						Temp.Mult(Term, a);
 						Term.Mult(Temp, 1.0f / float(div));

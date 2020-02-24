@@ -19,7 +19,7 @@ using namespace Opcode;
 ICF bool planeBoxOverlap(const Point& normal, const float d, const Point& maxbox)
 {
 	Point vmin, vmax;
-	for(udword q=0;q<=2;q++)
+	for(unsigned int q=0;q<=2;q++)
 	{
 		if(((const float*)normal)[q]>0.0f)	{ ((float*)vmin)[q]=-((const float*)maxbox)[q]; ((float*)vmax)[q]=((const float*)maxbox)[q]; }
 		else								{ ((float*)vmin)[q]=((const float*)maxbox)[q]; ((float*)vmax)[q]=-((const float*)maxbox)[q]; }

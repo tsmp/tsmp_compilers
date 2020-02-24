@@ -40,7 +40,7 @@
 	 *	\param		user_data		[in] user-defined data from SetCallback()
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	typedef void	(*OPC_CALLBACK)	(udword triangle_index, VertexPointers& triangle, udword user_data);
+	typedef void	(*OPC_CALLBACK)	(unsigned int triangle_index, VertexPointers& triangle, unsigned int user_data);
 
 	class OPCODE_API CollisionAABB
 	{
@@ -53,9 +53,9 @@
 		inline_				~CollisionAABB()					{}
 
 		//! Get component of the box's min point along a given axis
-		inline_	float		GetMin(udword axis)		const		{ return ((const float*)mCenter)[axis] - ((const float*)mExtents)[axis];	}
+		inline_	float		GetMin(unsigned int axis)		const		{ return ((const float*)mCenter)[axis] - ((const float*)mExtents)[axis];	}
 		//! Get component of the box's max point along a given axis
-		inline_	float		GetMax(udword axis)		const		{ return ((const float*)mCenter)[axis] + ((const float*)mExtents)[axis];	}
+		inline_	float		GetMax(unsigned int axis)		const		{ return ((const float*)mCenter)[axis] + ((const float*)mExtents)[axis];	}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -87,8 +87,8 @@
 		//! Destructor
 		inline_				~QuantizedAABB()		{}
 
-				sword		mCenter[3];				//!< Quantized center
-				uword		mExtents[3];			//!< Quantized extents
+		signed short		mCenter[3];				//!< Quantized center
+		unsigned short		mExtents[3];			//!< Quantized extents
 	};
 
 	class OPCODE_API CollisionFace
@@ -99,7 +99,7 @@
 		//! Destructor
 		inline_				~CollisionFace()		{}
 
-				udword		mFaceID;				//!< Index of touched face
+				unsigned int		mFaceID;				//!< Index of touched face
 				float		mDistance;				//!< Distance from collider to hitpoint
 				float		mU, mV;					//!< Impact barycentric coordinates
 	};
@@ -112,7 +112,7 @@
 		//! Destructor
 		inline_							~CollisionFaces()						{}
 
-		inline_	udword					GetNbFaces()					const	{ return GetNbEntries()>>2;						}
+		inline_	unsigned int					GetNbFaces()					const	{ return GetNbEntries()>>2;						}
 		inline_	const CollisionFace*	GetFaces()						const	{ return (const CollisionFace*)GetEntries();	}
 
 		inline_	void					Reset()									{ Container::Reset();							}

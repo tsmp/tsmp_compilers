@@ -235,11 +235,11 @@
 				bool			ApproxZero()		const		{ return SquareMagnitude() < EPSILON2;									}
 
 		//! Slighty moves the point
-				void			Tweak(udword coordmask, udword tweakmask)
+				void			Tweak(unsigned int coordmask, unsigned int tweakmask)
 								{
-									if(coordmask&1)		{ udword Dummy = IR(x);	Dummy^=tweakmask;	x = FR(Dummy); }
-									if(coordmask&2)		{ udword Dummy = IR(y);	Dummy^=tweakmask;	y = FR(Dummy); }
-									if(coordmask&4)		{ udword Dummy = IR(z);	Dummy^=tweakmask;	z = FR(Dummy); }
+									if(coordmask&1)		{ unsigned int Dummy = IR(x);	Dummy^=tweakmask;	x = FR(Dummy); }
+									if(coordmask&2)		{ unsigned int Dummy = IR(y);	Dummy^=tweakmask;	y = FR(Dummy); }
+									if(coordmask&4)		{ unsigned int Dummy = IR(z);	Dummy^=tweakmask;	z = FR(Dummy); }
 								}
 
 		#define TWEAKMASK		0x3fffff
@@ -247,7 +247,7 @@
 		//! Slighty moves the point out
 		inline_	void			TweakBigger()
 								{
-									udword	Dummy = (IR(x)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
+									unsigned int	Dummy = (IR(x)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
 											Dummy = (IR(y)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(y))	Dummy+=TWEAKMASK+1;	y = FR(Dummy);
 											Dummy = (IR(z)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(z))	Dummy+=TWEAKMASK+1;	z = FR(Dummy);
 								}
@@ -255,7 +255,7 @@
 		//! Slighty moves the point in
 		inline_	void			TweakSmaller()
 								{
-									udword	Dummy = (IR(x)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
+									unsigned int	Dummy = (IR(x)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
 											Dummy = (IR(y)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(y))	Dummy+=TWEAKMASK+1;	y = FR(Dummy);
 											Dummy = (IR(z)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(z))	Dummy+=TWEAKMASK+1;	z = FR(Dummy);
 								}
@@ -309,7 +309,7 @@
 								}
 
 		//! Vector code ( bitmask = sign(z) | sign(y) | sign(x) )
-		inline_	udword			VectorCode()						const
+		inline_	unsigned int			VectorCode()						const
 								{
 									return (IR(x)>>31) | ((IR(y)&SIGN_BITMASK)>>30) | ((IR(z)&SIGN_BITMASK)>>29);
 								}
@@ -357,10 +357,10 @@
 				Point&			Unfold(Plane& p, Point& a, Point& b);
 
 		//! Hash function from Ville Miettinen
-		inline_	udword			GetHashValue()						const
+		inline_	unsigned int			GetHashValue()						const
 		{
-			const udword* h = (const udword*)(this);
-			udword f = (h[0]+h[1]*11-(h[2]*17)) & 0x7fffffff;	// avoid problems with +-0
+			const unsigned int* h = (const unsigned int*)(this);
+			unsigned int f = (h[0]+h[1]*11-(h[2]*17)) & 0x7fffffff;	// avoid problems with +-0
 			return (f>>22)^(f>>12)^(f);
 		}
 

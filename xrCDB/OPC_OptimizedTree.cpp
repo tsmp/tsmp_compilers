@@ -85,14 +85,14 @@ static bool gFixQuantized = true;
  *	else					remaining bits are a P-node pointer, and N = P + 1
  *
  *	\relates	AABBCollisionNode
- *	\fn			_BuildCollisionTree(AABBCollisionNode* linear, const udword boxid, udword& curid, const AABBTreeNode* curnode)
+ *	\fn			_BuildCollisionTree(AABBCollisionNode* linear, const unsigned int boxid, unsigned int& curid, const AABBTreeNode* curnode)
  *	\param		linear		[in] base address of destination nodes
  *	\param		boxid		[in] index of destination node
  *	\param		curid		[in] current running index
  *	\param		curnode		[in] current node from input tree
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static void _BuildCollisionTree(AABBCollisionNode* linear, const udword boxid, udword& curid, const AABBTreeNode* curnode)
+static void _BuildCollisionTree(AABBCollisionNode* linear, const unsigned int boxid, unsigned int& curid, const AABBTreeNode* curnode)
 {
 	// Current node from input tree is "curnode". Must be flattened into "linear[boxid]".
 
@@ -105,15 +105,15 @@ static void _BuildCollisionTree(AABBCollisionNode* linear, const udword boxid, u
 		// The input tree must be complete => i.e. one primitive/leaf
 		ASSERT(curnode->GetNbPrimitives()==1);
 		// Get the primitive index from the input tree
-		udword PrimitiveIndex = curnode->GetPrimitives()[0];
+		unsigned int PrimitiveIndex = curnode->GetPrimitives()[0];
 		// Setup box data as the primitive index, marked as leaf
 		linear[boxid].mData = (PrimitiveIndex<<1)|1;
 	}
 	else
 	{
 		// To make the negative one implicit, we must store P and N in successive order
-		udword PosID = curid++;	// Get a _new_ id for positive child
-		udword NegID = curid++;	// Get a _new_ id for negative child
+		unsigned int PosID = curid++;	// Get a _new_ id for positive child
+		unsigned int NegID = curid++;	// Get a _new_ id for negative child
 		// Setup box data as the forthcoming _new_ P pointer
 		linear[boxid].mData = (uintptr_t)&linear[PosID];
 		// Make sure it's not marked as leaf
@@ -136,14 +136,14 @@ static void _BuildCollisionTree(AABBCollisionNode* linear, const udword boxid, u
  *			- N pointer => a node (LSB=0) or a primitive (LSB=1)
  *
  *	\relates	AABBNoLeafNode
- *	\fn			_BuildNoLeafTree(AABBNoLeafNode* linear, const udword boxid, udword& curid, const AABBTreeNode* curnode)
+ *	\fn			_BuildNoLeafTree(AABBNoLeafNode* linear, const unsigned int boxid, unsigned int& curid, const AABBTreeNode* curnode)
  *	\param		linear		[in] base address of destination nodes
  *	\param		boxid		[in] index of destination node
  *	\param		curid		[in] current running index
  *	\param		curnode		[in] current node from input tree
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword boxid, udword& curid, const AABBTreeNode* curnode)
+static void _BuildNoLeafTree(AABBNoLeafNode* linear, const unsigned int boxid, unsigned int& curid, const AABBTreeNode* curnode)
 {
 	const AABBTreeNode* P = curnode->GetPos();
 	const AABBTreeNode* N = curnode->GetNeg();
@@ -159,14 +159,14 @@ static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword boxid, udword&
 		// The input tree must be complete => i.e. one primitive/leaf
 		ASSERT(P->GetNbPrimitives()==1);
 		// Get the primitive index from the input tree
-		udword PrimitiveIndex = P->GetPrimitives()[0];
+		unsigned int PrimitiveIndex = P->GetPrimitives()[0];
 		// Setup prev box data as the primitive index, marked as leaf
 		linear[boxid].mData = (PrimitiveIndex<<1)|1;
 	}
 	else
 	{
 		// Get a _new_ id for positive child
-		udword PosID = curid++;
+		unsigned int PosID = curid++;
 		// Setup box data
 		linear[boxid].mData = (uintptr_t)&linear[PosID];
 		// Make sure it's not marked as leaf
@@ -180,14 +180,14 @@ static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword boxid, udword&
 		// The input tree must be complete => i.e. one primitive/leaf
 		ASSERT(N->GetNbPrimitives()==1);
 		// Get the primitive index from the input tree
-		udword PrimitiveIndex = N->GetPrimitives()[0];
+		unsigned int PrimitiveIndex = N->GetPrimitives()[0];
 		// Setup prev box data as the primitive index, marked as leaf
 		linear[boxid].mData2 = (PrimitiveIndex<<1)|1;
 	}
 	else
 	{
 		// Get a _new_ id for positive child
-		udword NegID = curid++;
+		unsigned int NegID = curid++;
 		// Setup box data
 		linear[boxid].mData2 = (uintptr_t)&linear[NegID];
 		// Make sure it's not marked as leaf
@@ -202,7 +202,7 @@ static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword boxid, udword&
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-AABBCollisionTree::AABBCollisionTree() : mNodes(null)
+AABBCollisionTree::AABBCollisionTree() : mNodes(nullptr)
 {
 }
 
@@ -228,8 +228,8 @@ bool AABBCollisionTree::Build(AABBTree* tree)
 	// Checkings
 	if(!tree)	return false;
 	// Check the input tree is complete
-	udword NbTriangles	= tree->GetNbPrimitives();
-	udword NbNodes		= tree->GetNbNodes();
+	unsigned int NbTriangles	= tree->GetNbPrimitives();
+	unsigned int NbNodes		= tree->GetNbNodes();
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
@@ -239,13 +239,13 @@ bool AABBCollisionTree::Build(AABBTree* tree)
 	ZeroMemory	(mNodes,mNbNodes*sizeof(AABBCollisionNode));
 
 	// Build the tree
-	udword CurID = 1;
+	unsigned int CurID = 1;
 	_BuildCollisionTree(mNodes, 0, CurID, tree);
 	ASSERT(CurID==mNbNodes);
 
 #ifdef __ICECORE_H__
 	Log("Original tree: %d nodes, depth %d\n", NbNodes, tree->ComputeDepth());
-	Log("AABB Collision tree: %d nodes, %d bytes - Alignment: %d\n", mNbNodes, GetUsedBytes(), Alignment(udword(mNodes)));
+	Log("AABB Collision tree: %d nodes, %d bytes - Alignment: %d\n", mNbNodes, GetUsedBytes(), Alignment(unsigned int(mNodes)));
 #endif
 
 	return true;
@@ -256,7 +256,7 @@ bool AABBCollisionTree::Build(AABBTree* tree)
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-AABBNoLeafTree::AABBNoLeafTree() : mNodes(null)
+AABBNoLeafTree::AABBNoLeafTree() : mNodes(nullptr)
 {
 }
 
@@ -282,8 +282,8 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 	// Checkings
 	if(!tree)	return false;
 	// Check the input tree is complete
-	udword NbTriangles	= tree->GetNbPrimitives();
-	udword NbNodes		= tree->GetNbNodes();
+	unsigned int NbTriangles	= tree->GetNbPrimitives();
+	unsigned int NbNodes		= tree->GetNbNodes();
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
@@ -293,13 +293,13 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 	ZeroMemory	(mNodes,mNbNodes*sizeof(AABBNoLeafNode));
 
 	// Build the tree
-	udword CurID = 1;
+	unsigned int CurID = 1;
 	_BuildNoLeafTree(mNodes, 0, CurID, tree);
 	ASSERT(CurID==mNbNodes);
 
 #ifdef __ICECORE_H__
 	Log("Original tree: %d nodes, depth %d\n", NbNodes, tree->ComputeDepth());
-	Log("AABB quantized tree: %d nodes, %d bytes - Alignment: %d\n", mNbNodes, GetUsedBytes(), Alignment(udword(mNodes)));
+	Log("AABB quantized tree: %d nodes, %d bytes - Alignment: %d\n", mNbNodes, GetUsedBytes(), Alignment(unsigned int(mNodes)));
 #endif
 
 	return true;
@@ -323,7 +323,7 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 	/* Get max values */																		\
 	Point CMax(flt_min, flt_min, flt_min);												\
 	Point EMax(flt_min, flt_min, flt_min);												\
-	for(udword i=0;i<mNbNodes;i++)																\
+	for(unsigned int i=0;i<mNbNodes;i++)																\
 	{																							\
 		if(_abs(Nodes[i].mAABB.mCenter.x)>CMax.x)	CMax.x = _abs(Nodes[i].mAABB.mCenter.x);	\
 		if(_abs(Nodes[i].mAABB.mCenter.y)>CMax.y)	CMax.y = _abs(Nodes[i].mAABB.mCenter.y);	\
@@ -334,8 +334,8 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 	}
 
 #define INIT_QUANTIZATION							\
-	udword nbc=15;	/* Keep one bit for sign */		\
-	udword nbe=15;	/* Keep one bit for fix */		\
+	unsigned int nbc=15;	/* Keep one bit for sign */		\
+	unsigned int nbe=15;	/* Keep one bit for fix */		\
 	if(!gFixQuantized) nbe++;						\
 													\
 	/* Compute quantization coeffs */				\
@@ -356,12 +356,12 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 
 #define PERFORM_QUANTIZATION														\
 	/* Quantize */																	\
-	((float*)mNodes[i].mAABB.mCenter)[0] = sword(Nodes[i].mAABB.mCenter.x * CQuantCoeff.x);	\
-	((float*)mNodes[i].mAABB.mCenter)[1] = sword(Nodes[i].mAABB.mCenter.y * CQuantCoeff.y);	\
-	((float*)mNodes[i].mAABB.mCenter)[2] = sword(Nodes[i].mAABB.mCenter.z * CQuantCoeff.z);	\
-	((float*)mNodes[i].mAABB.mExtents)[0] = uword(Nodes[i].mAABB.mExtents.x * EQuantCoeff.x);	\
-	((float*)mNodes[i].mAABB.mExtents)[1] = uword(Nodes[i].mAABB.mExtents.y * EQuantCoeff.y);	\
-	((float*)mNodes[i].mAABB.mExtents)[2] = uword(Nodes[i].mAABB.mExtents.z * EQuantCoeff.z);	\
+	((float*)mNodes[i].mAABB.mCenter)[0] = signed short(Nodes[i].mAABB.mCenter.x * CQuantCoeff.x);	\
+	((float*)mNodes[i].mAABB.mCenter)[1] = signed short(Nodes[i].mAABB.mCenter.y * CQuantCoeff.y);	\
+	((float*)mNodes[i].mAABB.mCenter)[2] = signed short(Nodes[i].mAABB.mCenter.z * CQuantCoeff.z);	\
+	((float*)mNodes[i].mAABB.mExtents)[0] = unsigned short(Nodes[i].mAABB.mExtents.x * EQuantCoeff.x);	\
+	((float*)mNodes[i].mAABB.mExtents)[1] = unsigned short(Nodes[i].mAABB.mExtents.y * EQuantCoeff.y);	\
+	((float*)mNodes[i].mAABB.mExtents)[2] = unsigned short(Nodes[i].mAABB.mExtents.z * EQuantCoeff.z);	\
 	/* Fix quantized boxes */														\
 	if(gFixQuantized)																\
 	{																				\
@@ -369,7 +369,7 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 		Point Max = Nodes[i].mAABB.mCenter + Nodes[i].mAABB.mExtents;				\
 		Point Min = Nodes[i].mAABB.mCenter - Nodes[i].mAABB.mExtents;				\
 		/* For each axis */															\
-		for(udword j=0;j<3;j++)														\
+		for(unsigned int j=0;j<3;j++)														\
 		{	/* Dequantize the box center */											\
 			float qc = float(((float*)mNodes[i].mAABB.mCenter)[j]) * ((float*)mCenterCoeff)[j];			\
 			bool FixMe=true;														\
@@ -406,7 +406,7 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-AABBQuantizedTree::AABBQuantizedTree() : mNodes(null)
+AABBQuantizedTree::AABBQuantizedTree() : mNodes(0)
 {
 }
 
@@ -429,12 +429,12 @@ AABBQuantizedTree::~AABBQuantizedTree()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool AABBQuantizedTree::Build(AABBTree* tree)
 {
-	udword i;
+	unsigned int i;
 	// Checkings
 	if(!tree)	return false;
 	// Check the input tree is complete
-	udword NbTriangles	= tree->GetNbPrimitives();
-	udword NbNodes		= tree->GetNbNodes();
+	unsigned int NbTriangles	= tree->GetNbPrimitives();
+	unsigned int NbNodes		= tree->GetNbNodes();
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
@@ -444,7 +444,7 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
 	ZeroMemory			(Nodes,mNbNodes*sizeof(AABBCollisionNode));
 
 	// Build the tree
-	udword CurID = 1;
+	unsigned int CurID = 1;
 	_BuildCollisionTree(Nodes, 0, CurID, tree);
 
 	// Quantize
@@ -472,7 +472,7 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
 
 #ifdef __ICECORE_H__
 	Log("Original tree: %d nodes, depth %d\n", NbNodes, tree->ComputeDepth());
-	Log("AABB quantized tree: %d nodes, %d bytes - Alignment: %d\n", mNbNodes, GetUsedBytes(), Alignment(udword(mNodes)));
+	Log("AABB quantized tree: %d nodes, %d bytes - Alignment: %d\n", mNbNodes, GetUsedBytes(), Alignment(unsigned int(mNodes)));
 #endif
 	return true;
 }
@@ -484,7 +484,7 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-AABBQuantizedNoLeafTree::AABBQuantizedNoLeafTree() : mNodes(null)
+AABBQuantizedNoLeafTree::AABBQuantizedNoLeafTree() : mNodes(0)
 {
 }
 
@@ -507,12 +507,12 @@ AABBQuantizedNoLeafTree::~AABBQuantizedNoLeafTree()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 {
-	udword i;
+	unsigned int i;
 	// Checkings
 	if(!tree)	return false;
 	// Check the input tree is complete
-	udword NbTriangles	= tree->GetNbPrimitives();
-	udword NbNodes		= tree->GetNbNodes();
+	unsigned int NbTriangles	= tree->GetNbPrimitives();
+	unsigned int NbNodes		= tree->GetNbNodes();
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
@@ -522,7 +522,7 @@ bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 	ZeroMemory		(Nodes,	mNbNodes*sizeof(AABBNoLeafNode));
 
 	// Build the tree
-	udword CurID = 1;
+	unsigned int CurID = 1;
 	_BuildNoLeafTree(Nodes, 0, CurID, tree);
 	ASSERT(CurID==mNbNodes);
 
@@ -552,7 +552,7 @@ bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 
 #ifdef __ICECORE_H__
 	Log("Original tree: %d nodes, depth %d\n", NbNodes, tree->ComputeDepth());
-	Log("AABB quantized no-leaf tree: %d nodes, %d bytes - Alignment: %d\n", mNbNodes, GetUsedBytes(), Alignment(udword(mNodes)));
+	Log("AABB quantized no-leaf tree: %d nodes, %d bytes - Alignment: %d\n", mNbNodes, GetUsedBytes(), Alignment(unsigned int(mNodes)));
 #endif
 
 	return true;

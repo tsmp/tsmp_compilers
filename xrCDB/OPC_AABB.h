@@ -103,9 +103,9 @@
 		inline_			void		GetMax(Point& max)						const		{ max = mMax;								}
 
 		//! Get component of the box's min point along a given axis
-		inline_			float		GetMin(udword axis)						const		{ return ((const float*)mMin)[axis];						}
+		inline_			float		GetMin(unsigned int axis)						const		{ return ((const float*)mMin)[axis];						}
 		//! Get component of the box's max point along a given axis
-		inline_			float		GetMax(udword axis)						const		{ return ((const float*)mMax)[axis];						}
+		inline_			float		GetMax(unsigned int axis)						const		{ return ((const float*)mMax)[axis];						}
 
 		//! Get box center
 		inline_			void		GetCenter(Point& center)				const		{ center = (mMax + mMin)*0.5f;				}
@@ -113,9 +113,9 @@
 		inline_			void		GetExtents(Point& extents)				const		{ extents = (mMax - mMin)*0.5f;				}
 
 		//! Get component of the box's center along a given axis
-		inline_			float		GetCenter(udword axis)					const		{ return (((const float*)mMax)[axis] + ((const float*)mMin)[axis])*0.5f;	}
+		inline_			float		GetCenter(unsigned int axis)					const		{ return (((const float*)mMax)[axis] + ((const float*)mMin)[axis])*0.5f;	}
 		//! Get component of the box's extents along a given axis
-		inline_			float		GetExtents(udword axis)					const		{ return (((const float*)mMax)[axis] - ((const float*)mMin)[axis])*0.5f;	}
+		inline_			float		GetExtents(unsigned int axis)					const		{ return (((const float*)mMax)[axis] - ((const float*)mMin)[axis])*0.5f;	}
 
 		//! Get box diagonal
 		inline_			void		GetDiagonal(Point& diagonal)			const		{ diagonal = mMax - mMin;					}
@@ -153,7 +153,7 @@
 		 *	\return		true on intersection
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_			bool		Intersect(const AABB& a, udword axis)	const
+		inline_			bool		Intersect(const AABB& a, unsigned int axis)	const
 						{
 							if(((const float*)mMax)[axis] < ((const float*)a.mMin)[axis] || ((const float*)a.mMax)[axis] < ((const float*)mMin)[axis])	return false;
 							return true;
@@ -250,7 +250,7 @@
 		if(p.z < min.z)	min.z = p.z;
 	}
 
-	inline_ void ComputeAABB(AABB& aabb, const Point* list, udword nbpts)
+	inline_ void ComputeAABB(AABB& aabb, const Point* list, unsigned int nbpts)
 	{
 		if(list)
 		{

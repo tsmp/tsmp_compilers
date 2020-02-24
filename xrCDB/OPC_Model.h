@@ -26,11 +26,11 @@
 		//! Constructor
 							OPCODECREATE();
 
-		udword				NbTris;			//!< Number of triangles in the input model
-		udword				NbVerts;		//!< Number of vertices in the input model
-		const udword*		Tris;			//!< List of indexed triangles
+		unsigned int				NbTris;			//!< Number of triangles in the input model
+		unsigned int				NbVerts;		//!< Number of vertices in the input model
+		const unsigned int*		Tris;			//!< List of indexed triangles
 		const Point*		Verts;			//!< List of points
-		udword				Rules;			//!< Splitting rules (SPLIT_COMPLETE is mandatory in OPCODE)
+		unsigned int				Rules;			//!< Splitting rules (SPLIT_COMPLETE is mandatory in OPCODE)
 		bool				NoLeaf;			//!< true => discard leaf nodes (else use a normal tree)
 		bool				Quantized;		//!< true => quantize the tree (else use a normal tree)
 		bool				KeepOriginal;	//!< true => keep a copy of the original tree (debug purpose)
@@ -91,7 +91,7 @@
 		 *	\return		number of nodes
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						udword				GetNbNodes()	const	{ return mTree->GetNbNodes();	}
+						unsigned int				GetNbNodes()	const	{ return mTree->GetNbNodes();	}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -99,7 +99,7 @@
 		 *	\return		amount of bytes used
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						udword				GetUsedBytes()	const	{ return mTree->GetUsedBytes();	}
+						unsigned int				GetUsedBytes()	const	{ return mTree->GetUsedBytes();	}
 		private:
 						AABBTree*			mSource;		//!< Original source tree
 						AABBOptimizedTree*	mTree;			//!< Optimized tree

@@ -66,9 +66,6 @@
     <ClCompile Include="OPC_Triangle.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
-    <ClCompile Include="Opcode.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
@@ -81,9 +78,6 @@
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_AABBTree.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_BVTCache.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Common.h">
@@ -132,9 +126,6 @@
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Triangle.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_Types.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="Opcode.h">

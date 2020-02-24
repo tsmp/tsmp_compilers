@@ -21,8 +21,6 @@
 
 	class ICEMATHS_API Matrix4x4
 	{
-//				void	LUBackwardSubstitution( sdword *indx, float* b );
-//				void	LUDecomposition( sdword* indx, float* d );
 
 		public:
 		//! Empty constructor.
@@ -97,29 +95,29 @@
 
 		// Row-column access
 		//! Returns a row.
-//		inline_	void				GetRow(const udword r, HPoint& p)	const	{ p.x=m[r][0];	p.y=m[r][1];	p.z=m[r][2];	p.w=m[r][3];		}
+//		inline_	void				GetRow(const unsigned int r, HPoint& p)	const	{ p.x=m[r][0];	p.y=m[r][1];	p.z=m[r][2];	p.w=m[r][3];		}
 		//! Returns a row.
-		inline_	void				GetRow(const udword r, Point& p)	const	{ p.x=m[r][0];	p.y=m[r][1];	p.z=m[r][2];						}
+		inline_	void				GetRow(const unsigned int r, Point& p)	const	{ p.x=m[r][0];	p.y=m[r][1];	p.z=m[r][2];						}
 		//! Sets a row.
-//		inline_	void				SetRow(const udword r, const HPoint& p)		{ m[r][0]=p.x;	m[r][1]=p.y;	m[r][2]=p.z;	m[r][3]=p.w;		}
+//		inline_	void				SetRow(const unsigned int r, const HPoint& p)		{ m[r][0]=p.x;	m[r][1]=p.y;	m[r][2]=p.z;	m[r][3]=p.w;		}
 		//! Sets a row.
-		inline_	void				SetRow(const udword r, const Point& p)		{ m[r][0]=p.x;	m[r][1]=p.y;	m[r][2]=p.z;	m[r][3]= (r!=3) ? 0.0f : 1.0f;		}
+		inline_	void				SetRow(const unsigned int r, const Point& p)		{ m[r][0]=p.x;	m[r][1]=p.y;	m[r][2]=p.z;	m[r][3]= (r!=3) ? 0.0f : 1.0f;		}
 		//! Returns a column.
-//		inline_	void				GetCol(const udword c, HPoint& p)	const	{ p.x=m[0][c];	p.y=m[1][c];	p.z=m[2][c];	p.w=m[3][c];		}
+//		inline_	void				GetCol(const unsigned int c, HPoint& p)	const	{ p.x=m[0][c];	p.y=m[1][c];	p.z=m[2][c];	p.w=m[3][c];		}
 		//! Returns a column.
-		inline_	void				GetCol(const udword c, Point& p)	const	{ p.x=m[0][c];	p.y=m[1][c];	p.z=m[2][c];						}
+		inline_	void				GetCol(const unsigned int c, Point& p)	const	{ p.x=m[0][c];	p.y=m[1][c];	p.z=m[2][c];						}
 		//! Sets a column.
-//		inline_	void				SetCol(const udword c, const HPoint& p)		{ m[0][c]=p.x;	m[1][c]=p.y;	m[2][c]=p.z;	m[3][c]=p.w;		}
+//		inline_	void				SetCol(const unsigned int c, const HPoint& p)		{ m[0][c]=p.x;	m[1][c]=p.y;	m[2][c]=p.z;	m[3][c]=p.w;		}
 		//! Sets a column.
-		inline_	void				SetCol(const udword c, const Point& p)		{ m[0][c]=p.x;	m[1][c]=p.y;	m[2][c]=p.z;	m[3][c]= (c!=3) ? 0.0f : 1.0f;	}
+		inline_	void				SetCol(const unsigned int c, const Point& p)		{ m[0][c]=p.x;	m[1][c]=p.y;	m[2][c]=p.z;	m[3][c]= (c!=3) ? 0.0f : 1.0f;	}
 
 /*
 		//! Returns a row.
-		inline_	HPoint		GetRow(const udword row)	const			{ return mRow[row];														}
+		inline_	HPoint		GetRow(const unsigned int row)	const			{ return mRow[row];														}
 		//! Sets a row.
-		inline_	Matrix4x4&	SetRow(const udword row, const HPoint& p)	{ mRow[row] = p;	return *this;										}
+		inline_	Matrix4x4&	SetRow(const unsigned int row, const HPoint& p)	{ mRow[row] = p;	return *this;										}
 		//! Sets a row.
-						Matrix4x4&	SetRow(const udword row, const Point& p)
+						Matrix4x4&	SetRow(const unsigned int row, const Point& p)
 						{
 							m[row][0] = p.x;
 							m[row][1] = p.y;
@@ -128,7 +126,7 @@
 							return	*this;
 						}
 		//! Returns a column.
-						HPoint		GetCol(const udword col)		const
+						HPoint		GetCol(const unsigned int col)		const
 						{
 							HPoint	Res;
 							Res.x = m[0][col];
@@ -138,7 +136,7 @@
 							return	Res;
 						}
 		//! Sets a column.
-						Matrix4x4&	SetCol(const udword col, const HPoint& p)
+						Matrix4x4&	SetCol(const unsigned int col, const HPoint& p)
 						{
 							m[0][col] = p.x;
 							m[1][col] = p.y;
@@ -147,7 +145,7 @@
 							return	*this;
 						}
 		//! Sets a column.
-						Matrix4x4&	SetCol(const udword col, const Point& p)
+						Matrix4x4&	SetCol(const unsigned int col, const Point& p)
 						{
 							m[0][col] = p.x;
 							m[1][col] = p.y;
@@ -164,30 +162,7 @@
 		inline_	void				Zero()							{ ZeroMemory(&m,  sizeof(m));							}
 		//! Sets the identity matrix.
 		inline_	void				Identity()						{ Zero(); m[0][0] = m[1][1] = m[2][2] = m[3][3] = 1.0f;	}
-		//! Checks for identity
-		inline_	bool				IsIdentity()	const
-				{
-					if(IR(m[0][0])!=IEEE_1_0)	return false;
-					if(IR(m[0][1])!=0)			return false;
-					if(IR(m[0][2])!=0)			return false;
-					if(IR(m[0][3])!=0)			return false;
-
-					if(IR(m[1][0])!=0)			return false;
-					if(IR(m[1][1])!=IEEE_1_0)	return false;
-					if(IR(m[1][2])!=0)			return false;
-					if(IR(m[1][3])!=0)			return false;
-
-					if(IR(m[2][0])!=0)			return false;
-					if(IR(m[2][1])!=0)			return false;
-					if(IR(m[2][2])!=IEEE_1_0)	return false;
-					if(IR(m[2][3])!=0)			return false;
-
-					if(IR(m[3][0])!=0)			return false;
-					if(IR(m[3][1])!=0)			return false;
-					if(IR(m[3][2])!=0)			return false;
-					if(IR(m[3][3])!=IEEE_1_0)	return false;
-					return true;
-				}
+		
 
 		// Computes a world matrix.
 				Matrix4x4&			World(const PRS& prs);
@@ -223,7 +198,7 @@
 				}
 
 		//! Computes a cofactor. Used for matrix inversion.
-				float				CoFactor(udword row, udword col)	const;
+				float				CoFactor(unsigned int row, unsigned int col)	const;
 		//! Computes the determinant of the matrix.
 				float				Determinant()	const;
 		//! Inverts the matrix. Determinant must be different from zero, else matrix can't be inverted.

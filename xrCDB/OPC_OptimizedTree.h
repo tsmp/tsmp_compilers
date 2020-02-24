@@ -31,7 +31,7 @@
 		/* Data access */																				\
 		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
 		inline_			const baseclass*	GetNeg()		const	{ return ((baseclass*)mData)+1;	}	\
-		inline_			udword				GetPrimitive()	const	{ return udword(mData>>1);		}	\
+		inline_			unsigned int				GetPrimitive()	const	{ return unsigned int(mData>>1);		}	\
 		/* Stats */																						\
 		inline_			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
 																										\
@@ -50,8 +50,8 @@
 		/* Data access */																				\
 		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
 		inline_			const baseclass*	GetNeg()		const	{ return (baseclass*)mData2;	}	\
-		inline_			udword				GetPrimitive()	const	{ return udword(mData>>1);		}	\
-		inline_			udword				GetPrimitive2()	const	{ return udword(mData2>>1);		}	\
+		inline_			unsigned int				GetPrimitive()	const	{ return unsigned int(mData>>1);		}	\
+		inline_			unsigned int				GetPrimitive2()	const	{ return unsigned int(mData2>>1);		}	\
 		/* Stats */																						\
 		inline_			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
 																										\
@@ -65,10 +65,10 @@
 
 		inline_			float				GetVolume()		const	{ return mAABB.mExtents.x * mAABB.mExtents.y * mAABB.mExtents.z;	}
 		inline_			float				GetSize()		const	{ return mAABB.mExtents.SquareMagnitude();	}
-		inline_			udword				GetRadius()		const
+		inline_			unsigned int				GetRadius()		const
 						{
-							udword* Bits = (udword*)&mAABB.mExtents.x;
-							udword Max = Bits[0];
+							unsigned int* Bits = (unsigned int*)&mAABB.mExtents.x;
+							unsigned int Max = Bits[0];
 							if(Bits[1]>Max)	Max = Bits[1];
 							if(Bits[2]>Max)	Max = Bits[2];
 							return Max;
@@ -87,10 +87,10 @@
 	{
 		IMPLEMENT_IMPLICIT_NODE(AABBQuantizedNode, QuantizedAABB)
 
-		inline_			uword				GetSize()		const
+		inline_			unsigned short				GetSize()		const
 						{
-							const uword* Bits = mAABB.mExtents;
-							uword Max = Bits[0];
+							const unsigned short* Bits = mAABB.mExtents;
+							unsigned short Max = Bits[0];
 							if(Bits[1]>Max)	Max = Bits[1];
 							if(Bits[2]>Max)	Max = Bits[2];
 							return Max;
@@ -120,7 +120,7 @@
 		/* Data access */																					\
 		inline_			const volume*		GetNodes()		const	{ return mNodes;					}	\
 		/* Stats */																							\
-		virtual			udword				GetUsedBytes()	const	{ return mNbNodes*sizeof(volume);	}	\
+		virtual			unsigned int				GetUsedBytes()	const	{ return mNbNodes*sizeof(volume);	}	\
 		private:																							\
 						volume*				mNodes;
 
@@ -132,12 +132,12 @@
 		virtual								~AABBOptimizedTree()					{}
 
 		// Data access
-		inline_			udword				GetNbNodes()	const	{ return mNbNodes;	}
+		inline_			unsigned int				GetNbNodes()	const	{ return mNbNodes;	}
 
-		virtual			udword				GetUsedBytes()	const	= 0;
+		virtual			unsigned int				GetUsedBytes()	const	= 0;
 		virtual			bool				Build(AABBTree* tree)	= 0;
 		protected:
-						udword				mNbNodes;
+						unsigned int				mNbNodes;
 	};
 
 	class OPCODE_API AABBCollisionTree : public AABBOptimizedTree

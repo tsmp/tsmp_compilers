@@ -19,7 +19,7 @@
 		public:
 		// Constructor / Destructor
 								Container();
-								Container(udword size, float growth_factor);
+								Container(unsigned int size, float growth_factor);
 								~Container();
 		// Management
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,14 +28,14 @@
 		 *	The method is inline, not the resize. The call overhead happens on resizes only, which is not a problem since the resizing operation
 		 *	costs a lot more than the call overhead...
 		 *
-		 *	\param		entry		[in] a udword to store in the container
+		 *	\param		entry		[in] a unsigned int to store in the container
 		 *	\see		Add(float entry)
 		 *	\see		Empty()
-		 *	\see		Contains(udword entry)
+		 *	\see		Contains(unsigned int entry)
 		 *	\return		Self-Reference
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_	Container&		Add(udword entry)
+		inline_	Container&		Add(unsigned int entry)
 				{
 					// Resize if needed
 					if(mCurNbEntries==mMaxNbEntries)	Resize();
@@ -45,13 +45,13 @@
 					return *this;
 				}
 
-		inline_	Container&		Add(const udword* entries, udword nb)
+		inline_	Container&		Add(const unsigned int* entries, unsigned int nb)
 				{
 					// Resize if needed
 					if(mCurNbEntries+nb>mMaxNbEntries)	Resize(nb);
 
 					// Add _new_ entry
-					CopyMemory(&mEntries[mCurNbEntries], entries, nb*sizeof(udword));
+					CopyMemory(&mEntries[mCurNbEntries], entries, nb*sizeof(unsigned int));
 					mCurNbEntries+=nb;
 					return *this;
 				}
@@ -63,9 +63,9 @@
 		 *	costs a lot more than the call overhead...
 		 *
 		 *	\param		entry		[in] a float to store in the container
-		 *	\see		Add(udword entry)
+		 *	\see		Add(unsigned int entry)
 		 *	\see		Empty()
-		 *	\see		Contains(udword entry)
+		 *	\see		Contains(unsigned int entry)
 		 *	\return		Self-Reference
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@
 					return *this;
 				}
 
-		inline_	Container&		Add(const float* entries, udword nb)
+		inline_	Container&		Add(const float* entries, unsigned int nb)
 				{
 					// Resize if needed
 					if(mCurNbEntries+nb>mMaxNbEntries)	Resize(nb);
@@ -91,7 +91,7 @@
 				}
 
 		//! Add unique [slow]
-				Container&		AddUnique(udword entry)
+				Container&		AddUnique(unsigned int entry)
 				{
 					if(!Contains(entry))	Add(entry);
 					return *this;
@@ -107,7 +107,7 @@
 		inline_	Container&		Empty()
 				{
 					#ifdef CONTAINER_STATS
-					mUsedRam-=mMaxNbEntries*sizeof(udword);
+					mUsedRam-=mMaxNbEntries*sizeof(unsigned int);
 					#endif
 					xr_free			(mEntries);
 					mCurNbEntries	= mMaxNbEntries = 0;
@@ -135,7 +135,7 @@
 		 *	\return		true if success
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				bool			SetSize(udword nb);
+				bool			SetSize(unsigned int nb);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -146,71 +146,60 @@
 				bool			Refit();
 
 		// Checks whether the container already contains a given value.
-				bool			Contains(udword entry, udword* location=null) const;
+				bool			Contains(unsigned int entry, unsigned int* location=nullptr) const;
 		// Deletes an entry - doesn't preserve insertion order.
-				bool			Delete(udword entry);
+				bool			Delete(unsigned int entry);
 		// Deletes an entry - does preserve insertion order.
-				bool			DeleteKeepingOrder(udword entry);
+				bool			DeleteKeepingOrder(unsigned int entry);
 		//! Deletes the very last entry.
 		inline_	void			DeleteLastEntry()						{ if(mCurNbEntries)	mCurNbEntries--;			}
 		//! Deletes the entry whose index is given
-		inline_	void			DeleteIndex(udword index)				{ mEntries[index] = mEntries[--mCurNbEntries];	}
+		inline_	void			DeleteIndex(unsigned int index)				{ mEntries[index] = mEntries[--mCurNbEntries];	}
 
 		// Helpers
-				Container&		FindNext(udword& entry, bool wrap=false);
-				Container&		FindPrev(udword& entry, bool wrap=false);
+				Container&		FindNext(unsigned int& entry, bool wrap=false);
+				Container&		FindPrev(unsigned int& entry, bool wrap=false);
 		// Data access.
-		inline_	udword			GetNbEntries()					const	{ return mCurNbEntries;		}	//!< Returns the current number of entries.
-		inline_	udword			GetEntry(udword i)				const	{ return mEntries[i];		}	//!< Returns ith entry
-		inline_	udword*			GetEntries()					const	{ return mEntries;			}	//!< Returns the list of entries.
+		inline_	unsigned int			GetNbEntries()					const	{ return mCurNbEntries;		}	//!< Returns the current number of entries.
+		inline_	unsigned int			GetEntry(unsigned int i)				const	{ return mEntries[i];		}	//!< Returns ith entry
+		inline_	unsigned int*			GetEntries()					const	{ return mEntries;			}	//!< Returns the list of entries.
 
 		// Growth control
 		inline_	float			GetGrowthFactor()				const	{ return mGrowthFactor;		}	//!< Returns the growth factor
 		inline_	void			SetGrowthFactor(float growth)			{ mGrowthFactor = growth;	}	//!< Sets the growth factor
 
 		//! Access as an array
-		inline_	udword&			operator[](udword i)			const	{ ASSERT(i>=0 && i<mCurNbEntries); return mEntries[i];	}
+		inline_	unsigned int&			operator[](unsigned int i)			const	{ ASSERT(i>=0 && i<mCurNbEntries); return mEntries[i];	}
 
 		// Stats
-				udword			GetUsedRam()					const;
+				unsigned int			GetUsedRam()					const;
 
 		//! Operator for Container A = Container B
 				void			operator = (const Container& object)
 				{
 					SetSize(object.GetNbEntries());
-					CopyMemory(mEntries, object.GetEntries(), mMaxNbEntries*sizeof(udword));
+					CopyMemory(mEntries, object.GetEntries(), mMaxNbEntries*sizeof(unsigned int));
 					mCurNbEntries = mMaxNbEntries;
 				}
 
 #ifdef CONTAINER_STATS
-		inline_	udword			GetNbContainers()				const	{ return mNbContainers;		}
-		inline_	udword			GetTotalBytes()					const	{ return mUsedRam;			}
+		inline_	unsigned int			GetNbContainers()				const	{ return mNbContainers;		}
+		inline_	unsigned int			GetTotalBytes()					const	{ return mUsedRam;			}
 		private:
 
-		static	udword			mNbContainers;		//!< Number of containers around
-		static	udword			mUsedRam;			//!< Amount of bytes used by containers in the system
+		static	unsigned int			mNbContainers;		//!< Number of containers around
+		static	unsigned int			mUsedRam;			//!< Amount of bytes used by containers in the system
 #endif
 		private:
 		// Resizing
-				bool			Resize(udword needed=1);
+				bool			Resize(unsigned int needed=1);
 		// Data
-				udword			mMaxNbEntries;		//!< Maximum possible number of entries
-				udword			mCurNbEntries;		//!< Current number of entries
-				udword*			mEntries;			//!< List of entries
+				unsigned int			mMaxNbEntries;		//!< Maximum possible number of entries
+				unsigned int			mCurNbEntries;		//!< Current number of entries
+				unsigned int*			mEntries;			//!< List of entries
 				float			mGrowthFactor;		//!< Resize: _new_ number of entries = old number * mGrowthFactor
 	};
 
-	class ICECORE_API Pairs : public Container
-	{
-		public:
-		// Constructor / Destructor
-		inline_				Pairs()						{}
-		inline_				~Pairs()					{}
-
-		inline_	udword		GetNbPairs()	const		{ return GetNbEntries()>>1;					}
-		inline_	Pair*		GetPairs()		const		{ return (Pair*)GetEntries();				}
-
-				Pairs&		AddPair(const Pair& p)		{ Add(p.id0).Add(p.id1);	return *this;	}
-	};
+	
 
 #endif // __ICECONTAINER_H__

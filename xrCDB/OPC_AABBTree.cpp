@@ -54,7 +54,7 @@ using namespace Opcode;
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-AABBTreeNode::AABBTreeNode() : mP(null), mN(null), mNbPrimitives(0), mNodePrimitives(null)
+AABBTreeNode::AABBTreeNode() : mP(nullptr), mN(nullptr), mNbPrimitives(0), mNodePrimitives(nullptr)
 {
 }
 
@@ -71,7 +71,7 @@ void  AABBTreeNode::destroy		(AABBTreeBuilder*	_tree)
 {
 	if (mP)	{ mP->destroy		(_tree); _tree->node_destroy	(mP); }
 	if (mN)	{ mN->destroy		(_tree); _tree->node_destroy	(mN); }
-	mNodePrimitives				= null;	// This was just a shortcut to the global list => no release
+	mNodePrimitives				= 0;	// This was just a shortcut to the global list => no release
 	mNbPrimitives				= 0;
 }
 
@@ -85,18 +85,18 @@ void  AABBTreeNode::destroy		(AABBTreeBuilder*	_tree)
  *	\warning	this method reorganizes the internal list of primitives
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-udword AABBTreeNode::Split(udword axis, AABBTreeBuilder* builder)
+unsigned int AABBTreeNode::Split(unsigned int axis, AABBTreeBuilder* builder)
 {
 	// Get node split value
 	float SplitValue = builder->GetSplittingValueEx(mNodePrimitives, mNbPrimitives, mBV, axis);
 
-	udword NbPos = 0;
+	unsigned int NbPos = 0;
 	// Loop through all node-related primitives. Their indices range from mNodePrimitives[0] to mNodePrimitives[mNbPrimitives-1].
 	// Those indices map the global list in the tree builder.
-	for(udword i=0;i<mNbPrimitives;i++)
+	for(unsigned int i=0;i<mNbPrimitives;i++)
 	{
 		// Get index in global list
-		udword Index = mNodePrimitives[i];
+		unsigned int Index = mNodePrimitives[i];
 
 		// Test against the splitting value. The primitive value is tested against the enclosing-box center.
 		// [We only need an approximate partition of the enclosing box here.]
@@ -106,7 +106,7 @@ udword AABBTreeNode::Split(udword axis, AABBTreeBuilder* builder)
 		if(PrimitiveValue > SplitValue)
 		{
 			// Swap entries
-			udword Tmp = mNodePrimitives[i];
+			unsigned int Tmp = mNodePrimitives[i];
 			mNodePrimitives[i] = mNodePrimitives[NbPos];
 			mNodePrimitives[NbPos] = Tmp;
 			// Count primitives assigned to positive space
@@ -148,12 +148,12 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 	if(mNbPrimitives<=builder->mLimit)	return true;
 
 	bool ValidSplit = true;	// Optimism...
-	udword NbPos	= 0;
+	unsigned int NbPos	= 0;
 	if(builder->mRules&SPLIT_LARGESTAXIS)
 	{
 		// Find the largest axis to split along
 		Point Extents;	mBV.GetExtents(Extents);	// Box extents
-		udword Axis	= Extents.LargestAxis();		// Index of largest axis
+		unsigned int Axis	= Extents.LargestAxis();		// Index of largest axis
 
 		// Split along the axis
 		NbPos = Split(Axis, builder);
@@ -165,10 +165,10 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 	{
 		// Compute the means
 		Point Means(0.0f, 0.0f, 0.0f);
-		udword i;
+		unsigned int i;
 		for(i=0;i<mNbPrimitives;i++)
 		{
-			udword Index = mNodePrimitives[i];
+			unsigned int Index = mNodePrimitives[i];
 			Means.x+=builder->GetSplittingValue(Index, 0);
 			Means.y+=builder->GetSplittingValue(Index, 1);
 			Means.z+=builder->GetSplittingValue(Index, 2);
@@ -179,7 +179,7 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 		Point Vars(0.0f, 0.0f, 0.0f);
 		for(i=0;i<mNbPrimitives;i++)
 		{
-			udword Index = mNodePrimitives[i];
+			unsigned int Index = mNodePrimitives[i];
 			float Cx = builder->GetSplittingValue(Index, 0);
 			float Cy = builder->GetSplittingValue(Index, 1);
 			float Cz = builder->GetSplittingValue(Index, 2);
@@ -190,7 +190,7 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 		Vars/=float(mNbPrimitives-1);
 
 		// Choose axis with greatest variance
-		udword Axis = Vars.LargestAxis();
+		unsigned int Axis = Vars.LargestAxis();
 
 		// Split along the axis
 		NbPos = Split(Axis, builder);
@@ -208,7 +208,7 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 		Results[0]-=0.5f;	Results[0]*=Results[0];
 		Results[1]-=0.5f;	Results[1]*=Results[1];
 		Results[2]-=0.5f;	Results[2]*=Results[2];
-		udword Min=0;
+		unsigned int Min=0;
 		if(Results[1]<Results[Min])	Min = 1;
 		if(Results[2]<Results[Min])	Min = 2;
 		
@@ -224,15 +224,15 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 
 		// Sort axis
 		Point Extents;	mBV.GetExtents(Extents);	// Box extents
-		udword SortedAxis[] = { 0, 1, 2 };
+		unsigned int SortedAxis[] = { 0, 1, 2 };
 		float* Keys = (float*)&Extents.x;
-		for(udword j=0;j<3;j++)
+		for(unsigned int j=0;j<3;j++)
 		{
-			for(udword i=0;i<2;i++)
+			for(unsigned int i=0;i<2;i++)
 			{
 				if(Keys[SortedAxis[i]]<Keys[SortedAxis[i+1]])
 				{
-					udword Tmp = SortedAxis[i];
+					unsigned int Tmp = SortedAxis[i];
 					SortedAxis[i] = SortedAxis[i+1];
 					SortedAxis[i+1] = Tmp;
 				}
@@ -240,7 +240,7 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 		}
 
 		// Find the largest axis to split along
-		udword CurAxis = 0;
+		unsigned int CurAxis = 0;
 		ValidSplit = false;
 		while(!ValidSplit && CurAxis!=3)
 		{
@@ -313,7 +313,7 @@ void AABBTreeNode::_BuildHierarchy(AABBTreeBuilder* builder)
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-AABBTree::AABBTree() : mIndices(null), mTotalNbNodes(0)
+AABBTree::AABBTree() : mIndices(nullptr), mTotalNbNodes(0)
 {
 }
 
@@ -345,9 +345,9 @@ bool AABBTree::Build(AABBTreeBuilder* builder)
 
 	// Initialize indices. This list will be modified during build.
 	xr_free(mIndices);
-	mIndices	= xr_alloc<udword>(builder->mNbPrimitives);
+	mIndices	= xr_alloc<unsigned int>(builder->mNbPrimitives);
 	CHECKALLOC(mIndices);
-	for(udword i=0;i<builder->mNbPrimitives;i++)	mIndices[i] = i;
+	for(unsigned int i=0;i<builder->mNbPrimitives;i++)	mIndices[i] = i;
 
 	// Setup initial box
 	mNodePrimitives	= mIndices;
@@ -369,14 +369,14 @@ bool AABBTree::Build(AABBTreeBuilder* builder)
  *	\return		depth of the tree
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-udword AABBTree::ComputeDepth() const
+unsigned int AABBTree::ComputeDepth() const
 {
-	udword Depth = 0;
-	udword Current = 0;
+	unsigned int Depth = 0;
+	unsigned int Current = 0;
 
 	struct Local
 	{
-		static void _UpdateDepth(const AABBTreeNode* curnode, udword& depth, udword& current)
+		static void _UpdateDepth(const AABBTreeNode* curnode, unsigned int& depth, unsigned int& current)
 		{
 			// Checkings
 			if(!curnode)	return;
@@ -399,10 +399,10 @@ udword AABBTree::ComputeDepth() const
  *	\return		number of bytes used
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-udword AABBTree::GetUsedBytes() const
+unsigned int AABBTree::GetUsedBytes() const
 {
-	udword TotalSize = mTotalNbNodes*GetNodeSize();
-	if(mIndices)	TotalSize+=mNbPrimitives*sizeof(udword);
+	unsigned int TotalSize = mTotalNbNodes*GetNodeSize();
+	if(mIndices)	TotalSize+=mNbPrimitives*sizeof(unsigned int);
 	return TotalSize;
 }
 

@@ -36,7 +36,7 @@
 		inline_	bool				IsLeaf()		const	{ return (!mP && !mN);	}									\
 																														\
 		/* Stats */																										\
-		inline_	udword				GetNodeSize()	const	{ return SIZEOFOBJECT;	}									\
+		inline_	unsigned int				GetNodeSize()	const	{ return SIZEOFOBJECT;	}									\
 		protected:																										\
 		/* Tree-independent data */																						\
 		/* Following data always belong to the BV-tree, regardless of what the tree actually contains.*/				\
@@ -50,16 +50,16 @@
 									IMPLEMENT_TREE(AABBTreeNode, AABB)
 		public:
 		// Data access
-		inline_	const udword*		GetPrimitives()		const	{ return mNodePrimitives;	}
-		inline_	udword				GetNbPrimitives()	const	{ return mNbPrimitives;		}
+		inline_	const unsigned int*		GetPrimitives()		const	{ return mNodePrimitives;	}
+		inline_	unsigned int				GetNbPrimitives()	const	{ return mNbPrimitives;		}
 				void				destroy				(AABBTreeBuilder*	_tree);
 
 		protected:
 		// Tree-dependent data
-				udword*				mNodePrimitives;	//!< Node-related primitives (shortcut to a position in mIndices below)
-				udword				mNbPrimitives;		//!< Number of primitives for this node
+				unsigned int*				mNodePrimitives;	//!< Node-related primitives (shortcut to a position in mIndices below)
+				unsigned int				mNbPrimitives;		//!< Number of primitives for this node
 		// Internal methods
-				udword				Split(udword axis, AABBTreeBuilder* builder);
+				unsigned int				Split(unsigned int axis, AABBTreeBuilder* builder);
 				bool				Subdivide(AABBTreeBuilder* builder);
 				void				_BuildHierarchy(AABBTreeBuilder* builder);
 	};
@@ -73,18 +73,18 @@
 		// Build
 				bool				Build(AABBTreeBuilder* builder);
 		// Data access
-		inline_	const udword*		GetIndices()		const	{ return mIndices;		}	//!< Catch the indices
-		inline_	udword				GetNbNodes()		const	{ return mTotalNbNodes;	}	//!< Catch the number of nodes
+		inline_	const unsigned int*		GetIndices()		const	{ return mIndices;		}	//!< Catch the indices
+		inline_	unsigned int				GetNbNodes()		const	{ return mTotalNbNodes;	}	//!< Catch the number of nodes
 
 		// Infos
 				bool				IsComplete()		const;
 		// Stats
-				udword				ComputeDepth()		const;
-				udword				GetUsedBytes()		const;
+				unsigned int				ComputeDepth()		const;
+				unsigned int				GetUsedBytes()		const;
 		private:
-				udword*				mIndices;			//!< Indices in the app list. Indices are reorganized during build.
+				unsigned int*				mIndices;			//!< Indices in the app list. Indices are reorganized during build.
 		// Stats
-				udword				mTotalNbNodes;		//!< Number of nodes in the tree.
+				unsigned int				mTotalNbNodes;		//!< Number of nodes in the tree.
 	};
 
 #endif // __OPC_AABBTREE_H__

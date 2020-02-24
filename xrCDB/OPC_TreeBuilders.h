@@ -63,7 +63,7 @@
 		 *	\return		true if success
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		virtual						bool		ComputeGlobalBox(const udword* primitives, udword nb_prims, AABB& global_box)	const	= 0;
+		virtual						bool		ComputeGlobalBox(const unsigned int* primitives, unsigned int nb_prims, AABB& global_box)	const	= 0;
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -73,7 +73,7 @@
 		 *	\return		splitting value
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		virtual						float		GetSplittingValue(udword index, udword axis)	const	= 0;
+		virtual						float		GetSplittingValue(unsigned int index, unsigned int axis)	const	= 0;
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -85,26 +85,26 @@
 		 *	\return		splitting value
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		virtual						float		GetSplittingValueEx(const udword* primitives, udword nb_prims, const AABB& global_box, udword axis)	const
+		virtual						float		GetSplittingValueEx(const unsigned int* primitives, unsigned int nb_prims, const AABB& global_box, unsigned int axis)	const
 									{
 										// Default split value = middle of the axis (using only the box)
 										return global_box.GetCenter(axis);
 									}
 
-									udword		mLimit;				//!< Limit number of primitives / node
-									udword		mRules;				//!< Building/Splitting rules (a combination of flags)
-									udword		mNbPrimitives;		//!< Total number of primitives.
+									unsigned int		mLimit;				//!< Limit number of primitives / node
+									unsigned int		mRules;				//!< Building/Splitting rules (a combination of flags)
+									unsigned int		mNbPrimitives;		//!< Total number of primitives.
 		// Stats
-		inline_						void		SetCount(udword nb)				{ mCount=nb;				}
-		inline_						void		IncreaseCount(udword nb)		{ mCount+=nb;				}
-		inline_						udword		GetCount()				const	{ return mCount;			}
-		inline_						void		SetNbInvalidSplits(udword nb)	{ mNbInvalidSplits=nb;		}
+		inline_						void		SetCount(unsigned int nb)				{ mCount=nb;				}
+		inline_						void		IncreaseCount(unsigned int nb)		{ mCount+=nb;				}
+		inline_						unsigned int		GetCount()				const	{ return mCount;			}
+		inline_						void		SetNbInvalidSplits(unsigned int nb)	{ mNbInvalidSplits=nb;		}
 		inline_						void		IncreaseNbInvalidSplits()		{ mNbInvalidSplits++;		}
-		inline_						udword		GetNbInvalidSplits()	const	{ return mNbInvalidSplits;	}
+		inline_						unsigned int		GetNbInvalidSplits()	const	{ return mNbInvalidSplits;	}
 
 		private:					
-									udword		mCount;				//!< Stats: number of nodes created
-									udword		mNbInvalidSplits;	//!< Stats: number of invalid splits
+									unsigned int		mCount;				//!< Stats: number of nodes created
+									unsigned int		mNbInvalidSplits;	//!< Stats: number of invalid splits
 		public:
 				poolSS<AABBTreeNode,16*1024>	mPOOL		;
 		inline_					AABBTreeNode*	node_alloc	()					{return mPOOL.create();		}
@@ -115,12 +115,12 @@
 	{
 		public:
 		//! Constructor
-												AABBTreeOfAABBsBuilder() : mAABBList(null)	{}
+												AABBTreeOfAABBsBuilder() : mAABBList(nullptr)	{}
 		//! Destructor
 		virtual									~AABBTreeOfAABBsBuilder()					{}
 
-		override(AABBTreeBuilder)	bool		ComputeGlobalBox(const udword* primitives, udword nb_prims, AABB& global_box)	const;
-		virtual	float		GetSplittingValue(udword index, udword axis)	const;
+		override(AABBTreeBuilder)	bool		ComputeGlobalBox(const unsigned int* primitives, unsigned int nb_prims, AABB& global_box)	const;
+		virtual	float		GetSplittingValue(unsigned int index, unsigned int axis)	const;
 
 		const						AABB*		mAABBList;			//!< Shortcut to an app-controlled list of AABBs.
 	};
@@ -130,17 +130,17 @@
 	{
 		public:
 		//! Constructor
-												AABBTreeOfTrianglesBuilder() : mTriList(null), mVerts(null), mNbTriangles(0)	{}
+												AABBTreeOfTrianglesBuilder() : mTriList(nullptr), mVerts(nullptr), mNbTriangles(0)	{}
 		//! Destructor
 		virtual									~AABBTreeOfTrianglesBuilder()													{}
 
-		override(AABBTreeBuilder)	bool		ComputeGlobalBox(const udword* primitives, udword nb_prims, AABB& global_box)	const;
-		override(AABBTreeBuilder)	float		GetSplittingValue(udword index, udword axis)	const;
-		override(AABBTreeBuilder)	float		GetSplittingValue(const udword* primitives, udword nb_prims, const AABB& global_box, udword axis)	const;
+		override(AABBTreeBuilder)	bool		ComputeGlobalBox(const unsigned int* primitives, unsigned int nb_prims, AABB& global_box)	const;
+		override(AABBTreeBuilder)	float		GetSplittingValue(unsigned int index, unsigned int axis)	const;
+		override(AABBTreeBuilder)	float		GetSplittingValue(const unsigned int* primitives, unsigned int nb_prims, const AABB& global_box, unsigned int axis)	const;
 
 		const				IndexedTriangle*	mTriList;			//!< Shortcut to an app-controlled list of triangles.
 		const						Point*		mVerts;				//!< Shortcut to an app-controlled list of vertices.
-		const						udword		mNbTriangles;		//!< Total number of triangles.
+		const						unsigned int		mNbTriangles;		//!< Total number of triangles.
 	};
 #pragma warning(default:4512)
 

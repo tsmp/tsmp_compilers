@@ -59,7 +59,7 @@
  *	Ex:
  *
  *	\code
- *		static void ColCallback(udword triangleindex, VertexPointers& triangle, udword user_data)
+ *		static void ColCallback(unsigned int triangleindex, VertexPointers& triangle, unsigned int user_data)
  *		{
  *			// Get back Mesh0 or Mesh1 (you also can use 2 different callbacks)
  *			Mesh* MyMesh = (Mesh*)user_data;
@@ -72,8 +72,8 @@
  *		}
  *
  *		// Setup callbacks
- *		TC.SetCallback0(ColCallback, udword(Mesh0));
- *		TC.SetCallback1(ColCallback, udword(Mesh1));
+ *		TC.SetCallback0(ColCallback, unsigned int(Mesh0));
+ *		TC.SetCallback1(ColCallback, unsigned int(Mesh1));
  *	\endcode
  *
  *	Of course, you should make this callback as fast as possible. And you're also not supposed
@@ -105,7 +105,7 @@
  *		BOOL Status = TC.GetContactStatus();
  *
  *		// Number of colliding pairs and list of pairs
- *		udword NbPairs = TC.GetNbPairs();
+ *		unsigned int NbPairs = TC.GetNbPairs();
  *		const Pair* p = TC.GetPairs()
  *	\endcode
  *
@@ -136,8 +136,8 @@ OPCODECREATE::OPCODECREATE()
 {
 	NbTris			= 0;
 	NbVerts			= 0;
-	Tris			= null;
-	Verts			= null;
+	Tris			= nullptr;
+	Verts			= nullptr;
 	Rules			= SPLIT_COMPLETE | SPLIT_LARGESTAXIS;
 	NoLeaf			= true;
 	Quantized		= true;
@@ -149,7 +149,7 @@ OPCODECREATE::OPCODECREATE()
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-OPCODE_Model::OPCODE_Model() : mSource(null), mTree(null), mNoLeaf(false), mQuantized(false)
+OPCODE_Model::OPCODE_Model() : mSource(nullptr), mTree(nullptr), mNoLeaf(false), mQuantized(false)
 {
 }
 
@@ -183,8 +183,8 @@ bool OPCODE_Model::Build(const OPCODECREATE& create)
 	// e.g. it happens with the standard MAX teapot. So clean your meshes first... If you don't have a mesh cleaner
 	// you can try this: www.codercorner.com/Consolidation.zip
 	const IndexedTriangle* Tris = (const IndexedTriangle*)create.Tris;
-	udword NbDegenerate = 0;
-	for(udword i=0;i<create.NbTris;i++)
+	unsigned int NbDegenerate = 0;
+	for(unsigned int i=0;i<create.NbTris;i++)
 	{
 		if(Tris[i].IsDegenerate())	NbDegenerate++;
 	}

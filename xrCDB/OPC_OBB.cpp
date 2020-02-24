@@ -150,9 +150,9 @@ bool OBB::ComputePoints(Point* pts)	const
  *	\return		48 indices for the list returned by ComputePoints()
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const udword* OBB::GetLineIndices() const
+const unsigned int* OBB::GetLineIndices() const
 {
-	static udword Indices[] = {
+	static unsigned int Indices[] = {
 	0, 1, 1, 2, 2, 3, 3, 0,
 	1, 5, 5, 6, 6, 2, 2, 1,
 	7, 6, 6, 5, 5, 4, 4, 7,

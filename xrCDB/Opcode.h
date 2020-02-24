@@ -46,7 +46,6 @@
 	#include "OPC_Preprocessor.h"
 	#define ICECORE_API	OPCODE_API
 
-	#include "OPC_Types.h"
 	#include "OPC_FPU.h"
 	#include "OPC_MemoryMacros.h"
 	namespace IceCore
@@ -88,7 +87,6 @@
 		#include "OPC_AABBTree.h"
 		#include "OPC_OptimizedTree.h"
 		#include "OPC_Model.h"
-		#include "OPC_BVTCache.h"
 	}
 
 #endif // __OPCODE_H__

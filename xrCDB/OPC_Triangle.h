@@ -19,7 +19,7 @@
 		//! Constructor
 		inline_					IndexedTriangle()									{}
 		//! Constructor
-		inline_					IndexedTriangle(udword r0, udword r1, udword r2)	{ mVRef[0]=r0; mVRef[1]=r1; mVRef[2]=r2; }
+		inline_					IndexedTriangle(unsigned int r0, unsigned int r1, unsigned int r2)	{ mVRef[0]=r0; mVRef[1]=r1; mVRef[2]=r2; }
 		//! Copy constructor
 		inline_					IndexedTriangle(const IndexedTriangle& triangle)
 								{
@@ -30,7 +30,7 @@
 		//! Destructor
 		inline_					~IndexedTriangle()									{}
 		//! Vertex-references
-				udword			mVRef[3];
+				unsigned int			mVRef[3];
 
 		// Methods
 				bool			IsDegenerate()	const;
