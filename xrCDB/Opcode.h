@@ -60,8 +60,6 @@
 	namespace IceMaths
 	{
 		#include "OPC_Point.h"
-		#include "OPC_Matrix3x3.h"
-		#include "OPC_Matrix4x4.h"
 		#include "OPC_Plane.h"
 	}
 	using namespace IceMaths;
