@@ -45,9 +45,6 @@
     <ClCompile Include="OPC_Model.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
-    <ClCompile Include="OPC_OBB.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
     <ClCompile Include="OPC_OptimizedTree.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
@@ -83,9 +80,6 @@
     <ClInclude Include="OPC_Container.h">
       <Filter>Opcode</Filter>
     </ClInclude>
-    <ClInclude Include="OPC_FPU.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
     <ClInclude Include="OPC_Matrix3x3.h">
       <Filter>Opcode</Filter>
     </ClInclude>
@@ -98,9 +92,6 @@
     <ClInclude Include="OPC_Model.h">
       <Filter>Opcode</Filter>
     </ClInclude>
-    <ClInclude Include="OPC_OBB.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
     <ClInclude Include="OPC_OptimizedTree.h">
       <Filter>Opcode</Filter>
     </ClInclude>
@@ -111,9 +102,6 @@
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Preprocessor.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_Settings.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_TreeBuilders.h">

@@ -185,25 +185,13 @@
 
 		//! Makes a rotation matrix about an arbitrary angle
 				Matrix4x4&			Rot(float angle, Point& p1, Point& p2);
-
-		//! Transposes the matrix.
-				void				Transpose()
-				{
-					IR(m[1][0]) ^= IR(m[0][1]);		IR(m[0][1]) ^= IR(m[1][0]);		IR(m[1][0]) ^= IR(m[0][1]);
-					IR(m[2][0]) ^= IR(m[0][2]);		IR(m[0][2]) ^= IR(m[2][0]);		IR(m[2][0]) ^= IR(m[0][2]);
-					IR(m[3][0]) ^= IR(m[0][3]);		IR(m[0][3]) ^= IR(m[3][0]);		IR(m[3][0]) ^= IR(m[0][3]);
-					IR(m[1][2]) ^= IR(m[2][1]);		IR(m[2][1]) ^= IR(m[1][2]);		IR(m[1][2]) ^= IR(m[2][1]);
-					IR(m[1][3]) ^= IR(m[3][1]);		IR(m[3][1]) ^= IR(m[1][3]);		IR(m[1][3]) ^= IR(m[3][1]);
-					IR(m[2][3]) ^= IR(m[3][2]);		IR(m[3][2]) ^= IR(m[2][3]);		IR(m[2][3]) ^= IR(m[3][2]);
-				}
-
+							   
 		//! Computes a cofactor. Used for matrix inversion.
 				float				CoFactor(unsigned int row, unsigned int col)	const;
 		//! Computes the determinant of the matrix.
 				float				Determinant()	const;
 		//! Inverts the matrix. Determinant must be different from zero, else matrix can't be inverted.
 				Matrix4x4&			Invert();
-//				Matrix&	ComputeAxisMatrix(Point& axis, float angle);
 
 		// Cast operators
 		//! Casts a Matrix4x4 to a Matrix3x3.

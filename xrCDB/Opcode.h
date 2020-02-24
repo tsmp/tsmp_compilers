@@ -46,7 +46,6 @@
 	#include "OPC_Preprocessor.h"
 	#define ICECORE_API	OPCODE_API
 
-	#include "OPC_FPU.h"
 	#include "OPC_MemoryMacros.h"
 	namespace IceCore
 	{
@@ -72,7 +71,6 @@
 	{
 		#include "OPC_Triangle.h"
 		#include "OPC_AABB.h"
-		#include "OPC_OBB.h"
 	}
 	using namespace Meshmerizer;
 
@@ -80,7 +78,6 @@
 	namespace Opcode
 	{
 		// Bulk-of-the-work
-		#include "OPC_Settings.h"
 		#include "OPC_Common.h"
 		#include "OPC_TreeBuilders.h"
 		#include "OPC_AABBTree.h"

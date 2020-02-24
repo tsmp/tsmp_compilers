@@ -111,19 +111,6 @@
 		inline_						void		node_destroy(AABBTreeNode* &n)	{return mPOOL.destroy(n);	}
 	};
 
-	class OPCODE_API AABBTreeOfAABBsBuilder : public AABBTreeBuilder
-	{
-		public:
-		//! Constructor
-												AABBTreeOfAABBsBuilder() : mAABBList(nullptr)	{}
-		//! Destructor
-		virtual									~AABBTreeOfAABBsBuilder()					{}
-
-		override(AABBTreeBuilder)	bool		ComputeGlobalBox(const unsigned int* primitives, unsigned int nb_prims, AABB& global_box)	const;
-		virtual	float		GetSplittingValue(unsigned int index, unsigned int axis)	const;
-
-		const						AABB*		mAABBList;			//!< Shortcut to an app-controlled list of AABBs.
-	};
 
 #pragma warning(disable:4512)
 	class OPCODE_API AABBTreeOfTrianglesBuilder : public AABBTreeBuilder

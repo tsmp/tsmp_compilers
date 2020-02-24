@@ -12,6 +12,8 @@
 #ifndef __ICEPOINT_H__
 #define __ICEPOINT_H__
 
+#define IR(x)					((unsigned int&)(x))
+
 	enum PointComponent
 	{
 		_X				= 0,
@@ -234,32 +236,6 @@
 		//! Checks the point is near zero
 				bool			ApproxZero()		const		{ return SquareMagnitude() < EPSILON2;									}
 
-		//! Slighty moves the point
-				void			Tweak(unsigned int coordmask, unsigned int tweakmask)
-								{
-									if(coordmask&1)		{ unsigned int Dummy = IR(x);	Dummy^=tweakmask;	x = FR(Dummy); }
-									if(coordmask&2)		{ unsigned int Dummy = IR(y);	Dummy^=tweakmask;	y = FR(Dummy); }
-									if(coordmask&4)		{ unsigned int Dummy = IR(z);	Dummy^=tweakmask;	z = FR(Dummy); }
-								}
-
-		#define TWEAKMASK		0x3fffff
-		#define TWEAKNOTMASK	~TWEAKMASK
-		//! Slighty moves the point out
-		inline_	void			TweakBigger()
-								{
-									unsigned int	Dummy = (IR(x)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
-											Dummy = (IR(y)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(y))	Dummy+=TWEAKMASK+1;	y = FR(Dummy);
-											Dummy = (IR(z)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(z))	Dummy+=TWEAKMASK+1;	z = FR(Dummy);
-								}
-
-		//! Slighty moves the point in
-		inline_	void			TweakSmaller()
-								{
-									unsigned int	Dummy = (IR(x)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
-											Dummy = (IR(y)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(y))	Dummy+=TWEAKMASK+1;	y = FR(Dummy);
-											Dummy = (IR(z)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(z))	Dummy+=TWEAKMASK+1;	z = FR(Dummy);
-								}
-
 		//! Normalizes the vector3
 		inline_	Point&			Normalize()
 								{
@@ -308,11 +284,7 @@
 									return *this;
 								}
 
-		//! Vector code ( bitmask = sign(z) | sign(y) | sign(x) )
-		inline_	unsigned int			VectorCode()						const
-								{
-									return (IR(x)>>31) | ((IR(y)&SIGN_BITMASK)>>30) | ((IR(z)&SIGN_BITMASK)>>29);
-								}
+
 
 		//! Returns largest axis
 		inline_	PointComponent	LargestAxis()						const
@@ -324,15 +296,6 @@
 									return m;
 								}
 
-		//! Returns closest axis
-		inline_	PointComponent	ClosestAxis()						const
-								{
-									const float* Vals = &x;
-									PointComponent m = _X;
-									if(AIR(Vals[_Y]) > AIR(Vals[m])) m = _Y;
-									if(AIR(Vals[_Z]) > AIR(Vals[m])) m = _Z;
-									return m;
-								}
 
 		//! Returns smallest axis
 		inline_	PointComponent	SmallestAxis()						const
@@ -353,8 +316,6 @@
 		//! Projects the point onto the screen
 				void			ProjectToScreen(float halfrenderwidth, float halfrenderheight, const Matrix4x4& mat, HPoint& projected) const;
 
-		//! Unfolds the point onto a plane according to edge(a,b)
-				Point&			Unfold(Plane& p, Point& a, Point& b);
 
 		//! Hash function from Ville Miettinen
 		inline_	unsigned int			GetHashValue()						const

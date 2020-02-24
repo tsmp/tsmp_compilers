@@ -159,38 +159,7 @@
 							return true;
 						}
 
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/**
-		 *	Recomputes the AABB after an arbitrary transform by a 4x4 matrix.
-		 *	Original code by Charles Bloom on the GD-Algorithm list. (I slightly modified it)
-		 *	\param		mtx			[in] the transform matrix
-		 *	\param		aabb		[out] the transformed AABB [can be *this]
-		 */
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_			void		Rotate(const Matrix4x4& mtx, AABB& aabb)	const
-						{
-							// The three edges transformed: you can efficiently transform an X-only vector3
-							// by just getting the "X" column of the matrix
-							Point vx,vy,vz;
-							mtx.GetRow(0, vx);	vx *= (mMax.x - mMin.x);
-							mtx.GetRow(1, vy);	vy *= (mMax.y - mMin.y);
-							mtx.GetRow(2, vz);	vz *= (mMax.z - mMin.z);
-
-							// Transform the min point
-							aabb.mMin = aabb.mMax = mMin * mtx;
-
-							// Take the transformed min & axes and find _new_ extents
-							// Using CPU code in the right place is faster...
-							if(IS_NEGATIVE_FLOAT(vx.x))	aabb.mMin.x += vx.x; else aabb.mMax.x += vx.x;
-							if(IS_NEGATIVE_FLOAT(vx.y))	aabb.mMin.y += vx.y; else aabb.mMax.y += vx.y;
-							if(IS_NEGATIVE_FLOAT(vx.z))	aabb.mMin.z += vx.z; else aabb.mMax.z += vx.z;
-							if(IS_NEGATIVE_FLOAT(vy.x))	aabb.mMin.x += vy.x; else aabb.mMax.x += vy.x;
-							if(IS_NEGATIVE_FLOAT(vy.y))	aabb.mMin.y += vy.y; else aabb.mMax.y += vy.y;
-							if(IS_NEGATIVE_FLOAT(vy.z))	aabb.mMin.z += vy.z; else aabb.mMax.z += vy.z;
-							if(IS_NEGATIVE_FLOAT(vz.x))	aabb.mMin.x += vz.x; else aabb.mMax.x += vz.x;
-							if(IS_NEGATIVE_FLOAT(vz.y))	aabb.mMin.y += vz.y; else aabb.mMax.y += vz.y;
-							if(IS_NEGATIVE_FLOAT(vz.z))	aabb.mMin.z += vz.z; else aabb.mMax.z += vz.z;
-						}
+		
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**

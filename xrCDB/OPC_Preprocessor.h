@@ -29,22 +29,7 @@
 	#endif
 
 	// Check compiler options
-	#ifdef COMPILER_VISUAL_CPP
-		#if defined(_CHAR_UNSIGNED)
-		#endif
 
-		#if defined(_CPPRTTI)
-			// #error Please disable RTTI...
-		#endif
-
-		#if defined(_CPPUNWIND)
-			// #error Please disable exceptions...
-		#endif
-
-		#if defined(_MT)
-			// Multithreading
-		#endif
-	#endif
 
 	// Check debug mode
 	#ifdef	DEBUG			// May be defined instead of _DEBUG. Let's fix it.
@@ -56,9 +41,7 @@
 	// Here you may define items for debug builds
 	#endif
 
-	#ifndef THIS_FILE
-		#define THIS_FILE			__FILE__
-	#endif
+
 /*
 	#ifdef ICECORE_EXPORTS
 		#define ICECORE_API			__declspec(dllexport)

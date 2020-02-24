@@ -233,14 +233,6 @@
 		//! Make a rotation matrix about an arbitrary angle
 				Matrix3x3&		Rot(float angle, const Point& axis);
 
-		//! Transpose the matrix.
-				void			Transpose()
-				{
-					IR(m[1][0]) ^= IR(m[0][1]);	IR(m[0][1]) ^= IR(m[1][0]);	IR(m[1][0]) ^= IR(m[0][1]);
-					IR(m[2][0]) ^= IR(m[0][2]);	IR(m[0][2]) ^= IR(m[2][0]);	IR(m[2][0]) ^= IR(m[0][2]);
-					IR(m[2][1]) ^= IR(m[1][2]);	IR(m[1][2]) ^= IR(m[2][1]);	IR(m[2][1]) ^= IR(m[1][2]);
-				}
-
 		//! this = Transpose(a)
 				void			Transpose(const Matrix3x3& a)
 				{

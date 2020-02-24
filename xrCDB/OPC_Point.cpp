@@ -83,66 +83,6 @@ Point& Point::ProjectToPlane(const Plane& p)
 	return *this;
 }
 
-//### could be optimized
-Point& Point::Unfold(Plane& p, Point& a, Point& b)
-{
-	ASSERT(!"Obsolete code");
-/*	Point v = *this;
-
-	// Form the plane of the triangle
-	Plane TriPlane(a, b, v);
-
-	// Compute rotation angle
-	float CosAngle = p.n|TriPlane.n;
-	float Angle = acosf(CosAngle);
-	if(FastFabs(Angle)<0.0001f)	return *this;	// Point is already on plane // ## project
-
-	// Rotate around (a,b)
-	// 1) Move to origin
-	Point p0t(0.0f, 0.0f, 0.0f);
-	Point p1t = b - a;
-	Point p2t = v - a;
-
-	// 2) Rotate so that rotation axis = Z axis
-	Matrix3x3 M;
-	Point Axis = (p1t - p0t).Normalize();
-	float DpX = FastFabs(Axis.x);
-	float DpY = FastFabs(Axis.y);
-	float DpZ = FastFabs(Axis.z);
-			if(FastFabs((Axis|Point(0.0f, 0.0f, 1.0f)) - 1.0f) < 0.0001f)	M.Identity();
-	else	if(FastFabs((Axis|Point(0.0f, 0.0f, 1.0f)) + 1.0f) < 0.0001f)	{ M.Identity(); Angle = -Angle; }
-	else																	M.MapToZ(Axis);
-
-	Point p0r = M * p0t;
-	Point p1r = M * p1t;
-	Point p2r = M * p2t;
-
-	// 3) Rotate around original angle
-	Matrix3x3 RotZ;
-	RotZ.RotZ(-Angle);
-	p0r *= RotZ;
-	p1r *= RotZ;
-	p2r *= RotZ;
-
-	// 4) Rotate back (since M is a rotation matrix we don't invert or transpose it, just swap mul conventions)
-	p0t = p0r * M;
-	p1t = p1r * M;
-	p2t = p2r * M;
-
-	// 5) Translate back
-	p0t += a;
-	p1t += a;
-	p2t += a;
-
-	// 6) Check _new_ plane
-	Plane pipo(p0t, p1t, p2t);
-	Angle = p.n|pipo.n;	// Must be 1
-
-	*this = p2t;
-*/
-	return *this;
-}
-
 Point& Point::Mult(const Matrix3x3& mat, const Point& a)
 {
 	x = a.x * mat.m[0][0] + a.y * mat.m[0][1] + a.z * mat.m[0][2];
