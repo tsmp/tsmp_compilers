@@ -40,16 +40,16 @@
 	{
 		public:
 		//! Constructor
-		inline_				CollisionAABB()						{}
+		inline				CollisionAABB()						{}
 		//! Constructor
-		inline_				CollisionAABB(const AABB& b)		{ b.GetCenter(mCenter);	b.GetExtents(mExtents);	}
+		inline				CollisionAABB(const AABB& b)		{ b.GetCenter(mCenter);	b.GetExtents(mExtents);	}
 		//! Destructor
-		inline_				~CollisionAABB()					{}
+		inline				~CollisionAABB()					{}
 
 		//! Get component of the box's min point along a given axis
-		inline_	float		GetMin(unsigned int axis)		const		{ return ((const float*)mCenter)[axis] - ((const float*)mExtents)[axis];	}
+		inline	float		GetMin(unsigned int axis)		const		{ return ((const float*)mCenter)[axis] - ((const float*)mExtents)[axis];	}
 		//! Get component of the box's max point along a given axis
-		inline_	float		GetMax(unsigned int axis)		const		{ return ((const float*)mCenter)[axis] + ((const float*)mExtents)[axis];	}
+		inline	float		GetMax(unsigned int axis)		const		{ return ((const float*)mCenter)[axis] + ((const float*)mExtents)[axis];	}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -58,7 +58,7 @@
 		 *	\return		true if current box is inside input box
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_	bool		IsInside(const CollisionAABB& box) const
+		inline	bool		IsInside(const CollisionAABB& box) const
 							{
 								if(box.GetMin(0)>GetMin(0))	return false;
 								if(box.GetMin(1)>GetMin(1))	return false;
@@ -77,9 +77,9 @@
 	{
 		public:
 		//! Constructor
-		inline_				QuantizedAABB()			{}
+		inline				QuantizedAABB()			{}
 		//! Destructor
-		inline_				~QuantizedAABB()		{}
+		inline				~QuantizedAABB()		{}
 
 		signed short		mCenter[3];				//!< Quantized center
 		unsigned short		mExtents[3];			//!< Quantized extents
@@ -89,9 +89,9 @@
 	{
 		public:
 		//! Constructor
-		inline_				CollisionFace()			{}
+		inline				CollisionFace()			{}
 		//! Destructor
-		inline_				~CollisionFace()		{}
+		inline				~CollisionFace()		{}
 
 				unsigned int		mFaceID;				//!< Index of touched face
 				float		mDistance;				//!< Distance from collider to hitpoint
@@ -102,16 +102,16 @@
 	{
 		public:
 		//! Constructor
-		inline_							CollisionFaces()						{}
+		inline							CollisionFaces()						{}
 		//! Destructor
-		inline_							~CollisionFaces()						{}
+		inline							~CollisionFaces()						{}
 
-		inline_	unsigned int					GetNbFaces()					const	{ return GetNbEntries()>>2;						}
-		inline_	const CollisionFace*	GetFaces()						const	{ return (const CollisionFace*)GetEntries();	}
+		inline	unsigned int					GetNbFaces()					const	{ return GetNbEntries()>>2;						}
+		inline	const CollisionFace*	GetFaces()						const	{ return (const CollisionFace*)GetEntries();	}
 
-		inline_	void					Reset()									{ Container::Reset();							}
+		inline	void					Reset()									{ Container::Reset();							}
 
-		inline_	void					AddFace(const CollisionFace& face)		{ Add(face.mFaceID).Add(face.mDistance).Add(face.mU).Add(face.mV);	}
+		inline	void					AddFace(const CollisionFace& face)		{ Add(face.mFaceID).Add(face.mDistance).Add(face.mU).Add(face.mV);	}
 	};
 
 #endif //__OPC_COMMON_H__

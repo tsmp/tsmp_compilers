@@ -29,14 +29,14 @@
 									baseclass();																		\
 									~baseclass();																		\
 		/* Data access */																								\
-		inline_	const volume*		Get##volume()	const	{ return &mBV;			}									\
-		inline_	const baseclass*	GetPos()		const	{ return mP;			}									\
-		inline_	const baseclass*	GetNeg()		const	{ return mN;			}									\
+		inline	const volume*		Get##volume()	const	{ return &mBV;			}									\
+		inline	const baseclass*	GetPos()		const	{ return mP;			}									\
+		inline	const baseclass*	GetNeg()		const	{ return mN;			}									\
 																														\
-		inline_	bool				IsLeaf()		const	{ return (!mP && !mN);	}									\
+		inline	bool				IsLeaf()		const	{ return (!mP && !mN);	}									\
 																														\
 		/* Stats */																										\
-		inline_	unsigned int				GetNodeSize()	const	{ return SIZEOFOBJECT;	}									\
+		inline	unsigned int				GetNodeSize()	const	{ return SIZEOFOBJECT;	}									\
 		protected:																										\
 		/* Tree-independent data */																						\
 		/* Following data always belong to the BV-tree, regardless of what the tree actually contains.*/				\
@@ -50,8 +50,8 @@
 									IMPLEMENT_TREE(AABBTreeNode, AABB)
 		public:
 		// Data access
-		inline_	const unsigned int*		GetPrimitives()		const	{ return mNodePrimitives;	}
-		inline_	unsigned int				GetNbPrimitives()	const	{ return mNbPrimitives;		}
+		inline	const unsigned int*		GetPrimitives()		const	{ return mNodePrimitives;	}
+		inline	unsigned int				GetNbPrimitives()	const	{ return mNbPrimitives;		}
 				void				destroy				(AABBTreeBuilder*	_tree);
 
 		protected:
@@ -73,8 +73,8 @@
 		// Build
 				bool				Build(AABBTreeBuilder* builder);
 		// Data access
-		inline_	const unsigned int*		GetIndices()		const	{ return mIndices;		}	//!< Catch the indices
-		inline_	unsigned int				GetNbNodes()		const	{ return mTotalNbNodes;	}	//!< Catch the number of nodes
+		inline	const unsigned int*		GetIndices()		const	{ return mIndices;		}	//!< Catch the indices
+		inline	unsigned int				GetNbNodes()		const	{ return mTotalNbNodes;	}	//!< Catch the number of nodes
 
 		// Infos
 				bool				IsComplete()		const;

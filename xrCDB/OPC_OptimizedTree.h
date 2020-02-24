@@ -24,16 +24,16 @@
 	#define IMPLEMENT_IMPLICIT_NODE(baseclass, volume)													\
 		public:																							\
 		/* Constructor / Destructor */																	\
-		inline_								baseclass() : mData(0)	{}									\
-		inline_								~baseclass()			{}									\
+		inline								baseclass() : mData(0)	{}									\
+		inline								~baseclass()			{}									\
 		/* Leaf test */																					\
-		inline_			BOOL				IsLeaf()		const	{ return (BOOL)(mData&1);		}	\
+		inline			BOOL				IsLeaf()		const	{ return (BOOL)(mData&1);		}	\
 		/* Data access */																				\
-		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
-		inline_			const baseclass*	GetNeg()		const	{ return ((baseclass*)mData)+1;	}	\
-		inline_			unsigned int				GetPrimitive()	const	{ return unsigned int(mData>>1);		}	\
+		inline			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
+		inline			const baseclass*	GetNeg()		const	{ return ((baseclass*)mData)+1;	}	\
+		inline			unsigned int				GetPrimitive()	const	{ return unsigned int(mData>>1);		}	\
 		/* Stats */																						\
-		inline_			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
+		inline			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
 																										\
 						volume				mAABB;														\
 						uintptr_t			mData;
@@ -42,18 +42,18 @@
 	#define IMPLEMENT_NOLEAF_NODE(baseclass, volume)													\
 		public:																							\
 		/* Constructor / Destructor */																	\
-		inline_								baseclass() : mData(0), mData2(0)	{}						\
-		inline_								~baseclass()						{}						\
+		inline								baseclass() : mData(0), mData2(0)	{}						\
+		inline								~baseclass()						{}						\
 		/* Leaf tests */																				\
-		inline_			BOOL				HasLeaf()		const	{ return (BOOL)(mData&1);		}	\
-		inline_			BOOL				HasLeaf2()		const	{ return (BOOL)(mData2&1);		}	\
+		inline			BOOL				HasLeaf()		const	{ return (BOOL)(mData&1);		}	\
+		inline			BOOL				HasLeaf2()		const	{ return (BOOL)(mData2&1);		}	\
 		/* Data access */																				\
-		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
-		inline_			const baseclass*	GetNeg()		const	{ return (baseclass*)mData2;	}	\
-		inline_			unsigned int				GetPrimitive()	const	{ return unsigned int(mData>>1);		}	\
-		inline_			unsigned int				GetPrimitive2()	const	{ return unsigned int(mData2>>1);		}	\
+		inline			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
+		inline			const baseclass*	GetNeg()		const	{ return (baseclass*)mData2;	}	\
+		inline			unsigned int				GetPrimitive()	const	{ return unsigned int(mData>>1);		}	\
+		inline			unsigned int				GetPrimitive2()	const	{ return unsigned int(mData2>>1);		}	\
 		/* Stats */																						\
-		inline_			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
+		inline			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
 																										\
 						volume				mAABB;														\
 						uintptr_t			mData;														\
@@ -63,9 +63,9 @@
 	{
 		IMPLEMENT_IMPLICIT_NODE(AABBCollisionNode, CollisionAABB)
 
-		inline_			float				GetVolume()		const	{ return mAABB.mExtents.x * mAABB.mExtents.y * mAABB.mExtents.z;	}
-		inline_			float				GetSize()		const	{ return mAABB.mExtents.SquareMagnitude();	}
-		inline_			unsigned int				GetRadius()		const
+		inline			float				GetVolume()		const	{ return mAABB.mExtents.x * mAABB.mExtents.y * mAABB.mExtents.z;	}
+		inline			float				GetSize()		const	{ return mAABB.mExtents.SquareMagnitude();	}
+		inline			unsigned int				GetRadius()		const
 						{
 							unsigned int* Bits = (unsigned int*)&mAABB.mExtents.x;
 							unsigned int Max = Bits[0];
@@ -87,7 +87,7 @@
 	{
 		IMPLEMENT_IMPLICIT_NODE(AABBQuantizedNode, QuantizedAABB)
 
-		inline_			unsigned short				GetSize()		const
+		inline			unsigned short				GetSize()		const
 						{
 							const unsigned short* Bits = mAABB.mExtents;
 							unsigned short Max = Bits[0];
@@ -118,7 +118,7 @@
 		/* Build from a standard tree */																	\
 		virtual			bool				Build(AABBTree* tree);											\
 		/* Data access */																					\
-		inline_			const volume*		GetNodes()		const	{ return mNodes;					}	\
+		inline			const volume*		GetNodes()		const	{ return mNodes;					}	\
 		/* Stats */																							\
 		virtual			unsigned int				GetUsedBytes()	const	{ return mNbNodes*sizeof(volume);	}	\
 		private:																							\
@@ -132,7 +132,7 @@
 		virtual								~AABBOptimizedTree()					{}
 
 		// Data access
-		inline_			unsigned int				GetNbNodes()	const	{ return mNbNodes;	}
+		inline			unsigned int				GetNbNodes()	const	{ return mNbNodes;	}
 
 		virtual			unsigned int				GetUsedBytes()	const	= 0;
 		virtual			bool				Build(AABBTree* tree)	= 0;

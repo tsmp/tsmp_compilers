@@ -35,7 +35,7 @@
 		 *	\return		Self-Reference
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_	Container&		Add(unsigned int entry)
+		inline	Container&		Add(unsigned int entry)
 				{
 					// Resize if needed
 					if(mCurNbEntries==mMaxNbEntries)	Resize();
@@ -45,7 +45,7 @@
 					return *this;
 				}
 
-		inline_	Container&		Add(const unsigned int* entries, unsigned int nb)
+		inline	Container&		Add(const unsigned int* entries, unsigned int nb)
 				{
 					// Resize if needed
 					if(mCurNbEntries+nb>mMaxNbEntries)	Resize(nb);
@@ -71,7 +71,7 @@
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define IR(x)					((unsigned int&)(x))
 		
-		inline_	Container&		Add(float entry)
+		inline	Container&		Add(float entry)
 				{
 					// Resize if needed
 					if(mCurNbEntries==mMaxNbEntries)	Resize();
@@ -81,7 +81,7 @@
 					return *this;
 				}
 
-		inline_	Container&		Add(const float* entries, unsigned int nb)
+		inline	Container&		Add(const float* entries, unsigned int nb)
 				{
 					// Resize if needed
 					if(mCurNbEntries+nb>mMaxNbEntries)	Resize(nb);
@@ -106,7 +106,7 @@
 		 *	\return		Self-Reference
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_	Container&		Empty()
+		inline	Container&		Empty()
 				{
 					#ifdef CONTAINER_STATS
 					mUsedRam-=mMaxNbEntries*sizeof(unsigned int);
@@ -123,7 +123,7 @@
 		 *	\see		Empty()
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_	void			Reset()
+		inline	void			Reset()
 				{
 					// Avoid the write if possible
 					// ### CMOV
@@ -154,24 +154,24 @@
 		// Deletes an entry - does preserve insertion order.
 				bool			DeleteKeepingOrder(unsigned int entry);
 		//! Deletes the very last entry.
-		inline_	void			DeleteLastEntry()						{ if(mCurNbEntries)	mCurNbEntries--;			}
+		inline	void			DeleteLastEntry()						{ if(mCurNbEntries)	mCurNbEntries--;			}
 		//! Deletes the entry whose index is given
-		inline_	void			DeleteIndex(unsigned int index)				{ mEntries[index] = mEntries[--mCurNbEntries];	}
+		inline	void			DeleteIndex(unsigned int index)				{ mEntries[index] = mEntries[--mCurNbEntries];	}
 
 		// Helpers
 				Container&		FindNext(unsigned int& entry, bool wrap=false);
 				Container&		FindPrev(unsigned int& entry, bool wrap=false);
 		// Data access.
-		inline_	unsigned int			GetNbEntries()					const	{ return mCurNbEntries;		}	//!< Returns the current number of entries.
-		inline_	unsigned int			GetEntry(unsigned int i)				const	{ return mEntries[i];		}	//!< Returns ith entry
-		inline_	unsigned int*			GetEntries()					const	{ return mEntries;			}	//!< Returns the list of entries.
+		inline	unsigned int			GetNbEntries()					const	{ return mCurNbEntries;		}	//!< Returns the current number of entries.
+		inline	unsigned int			GetEntry(unsigned int i)				const	{ return mEntries[i];		}	//!< Returns ith entry
+		inline	unsigned int*			GetEntries()					const	{ return mEntries;			}	//!< Returns the list of entries.
 
 		// Growth control
-		inline_	float			GetGrowthFactor()				const	{ return mGrowthFactor;		}	//!< Returns the growth factor
-		inline_	void			SetGrowthFactor(float growth)			{ mGrowthFactor = growth;	}	//!< Sets the growth factor
+		inline	float			GetGrowthFactor()				const	{ return mGrowthFactor;		}	//!< Returns the growth factor
+		inline	void			SetGrowthFactor(float growth)			{ mGrowthFactor = growth;	}	//!< Sets the growth factor
 
 		//! Access as an array
-		inline_	unsigned int&			operator[](unsigned int i)			const	{ ASSERT(i>=0 && i<mCurNbEntries); return mEntries[i];	}
+		inline	unsigned int&			operator[](unsigned int i)			const	{ ASSERT(i>=0 && i<mCurNbEntries); return mEntries[i];	}
 
 		// Stats
 				unsigned int			GetUsedRam()					const;
@@ -185,8 +185,8 @@
 				}
 
 #ifdef CONTAINER_STATS
-		inline_	unsigned int			GetNbContainers()				const	{ return mNbContainers;		}
-		inline_	unsigned int			GetTotalBytes()					const	{ return mUsedRam;			}
+		inline	unsigned int			GetNbContainers()				const	{ return mNbContainers;		}
+		inline	unsigned int			GetTotalBytes()					const	{ return mUsedRam;			}
 		private:
 
 		static	unsigned int			mNbContainers;		//!< Number of containers around

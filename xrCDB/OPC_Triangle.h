@@ -17,18 +17,18 @@
 	{
 		public:
 		//! Constructor
-		inline_					IndexedTriangle()									{}
+		inline					IndexedTriangle()									{}
 		//! Constructor
-		inline_					IndexedTriangle(unsigned int r0, unsigned int r1, unsigned int r2)	{ mVRef[0]=r0; mVRef[1]=r1; mVRef[2]=r2; }
+		inline					IndexedTriangle(unsigned int r0, unsigned int r1, unsigned int r2)	{ mVRef[0]=r0; mVRef[1]=r1; mVRef[2]=r2; }
 		//! Copy constructor
-		inline_					IndexedTriangle(const IndexedTriangle& triangle)
+		inline					IndexedTriangle(const IndexedTriangle& triangle)
 								{
 									mVRef[0] = triangle.mVRef[0];
 									mVRef[1] = triangle.mVRef[1];
 									mVRef[2] = triangle.mVRef[2];
 								}
 		//! Destructor
-		inline_					~IndexedTriangle()									{}
+		inline					~IndexedTriangle()									{}
 		//! Vertex-references
 				unsigned int			mVRef[3];
 

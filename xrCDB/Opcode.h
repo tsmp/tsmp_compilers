@@ -43,7 +43,6 @@
 	#define	EC_OUTOFMEMORY	"Out of memory"
 	#define	Alignment
 
-	#include "OPC_Preprocessor.h"
 	#define ICECORE_API	OPCODE_API
 
 	#include "OPC_MemoryMacros.h"

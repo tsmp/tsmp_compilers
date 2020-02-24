@@ -21,7 +21,7 @@
 	//!	\see		CopyMemory
 	//!	\see		MoveMemory
 	//!	\warning	writes nb*4 bytes !
-/*	inline_ void StoreDwords(unsigned int* dest, unsigned int nb, unsigned int value)
+/*	inline void StoreDwords(unsigned int* dest, unsigned int nb, unsigned int value)
 	{
 		// The asm code below **SHOULD** be equivalent to one of those C versions
 		// or the other if your compiled is good: (checked on VC++ 6.0)

@@ -89,9 +89,6 @@
     <ClInclude Include="OPC_Point.h">
       <Filter>Opcode</Filter>
     </ClInclude>
-    <ClInclude Include="OPC_Preprocessor.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
     <ClInclude Include="OPC_TreeBuilders.h">
       <Filter>Opcode</Filter>
     </ClInclude>

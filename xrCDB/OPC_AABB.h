@@ -14,7 +14,7 @@
 
 //! Declarations of type-independent methods (implemented in the .cpp)
 #define AABB_COMMON_METHODS																							\
-	AABB&	Add(const AABB& aabb);																					\
+																					\
 	float	CalculateBoxArea(const icePoint& eye, const Matrix4x4& mat, float width, float height, int& num)	const;	\
 	bool	IsInside(const AABB& box)																		const;
 
@@ -30,9 +30,9 @@
 	{
 		public:
 		//! Constructor
-		inline_						AABB()	{}
+		inline						AABB()	{}
 		//! Destructor
-		inline_						~AABB()	{}
+		inline						~AABB()	{}
 
 		//! Type-independent methods
 									AABB_COMMON_METHODS;
@@ -98,33 +98,33 @@
 		// Data access
 
 		//! Get min point of the box
-		inline_			void		GetMin(Point& min)						const		{ min = mMin;								}
+		inline			void		GetMin(Point& min)						const		{ min = mMin;								}
 		//! Get max point of the box
-		inline_			void		GetMax(Point& max)						const		{ max = mMax;								}
+		inline			void		GetMax(Point& max)						const		{ max = mMax;								}
 
 		//! Get component of the box's min point along a given axis
-		inline_			float		GetMin(unsigned int axis)						const		{ return ((const float*)mMin)[axis];						}
+		inline			float		GetMin(unsigned int axis)						const		{ return ((const float*)mMin)[axis];						}
 		//! Get component of the box's max point along a given axis
-		inline_			float		GetMax(unsigned int axis)						const		{ return ((const float*)mMax)[axis];						}
+		inline			float		GetMax(unsigned int axis)						const		{ return ((const float*)mMax)[axis];						}
 
 		//! Get box center
-		inline_			void		GetCenter(Point& center)				const		{ center = (mMax + mMin)*0.5f;				}
+		inline			void		GetCenter(Point& center)				const		{ center = (mMax + mMin)*0.5f;				}
 		//! Get box extents
-		inline_			void		GetExtents(Point& extents)				const		{ extents = (mMax - mMin)*0.5f;				}
+		inline			void		GetExtents(Point& extents)				const		{ extents = (mMax - mMin)*0.5f;				}
 
 		//! Get component of the box's center along a given axis
-		inline_			float		GetCenter(unsigned int axis)					const		{ return (((const float*)mMax)[axis] + ((const float*)mMin)[axis])*0.5f;	}
+		inline			float		GetCenter(unsigned int axis)					const		{ return (((const float*)mMax)[axis] + ((const float*)mMin)[axis])*0.5f;	}
 		//! Get component of the box's extents along a given axis
-		inline_			float		GetExtents(unsigned int axis)					const		{ return (((const float*)mMax)[axis] - ((const float*)mMin)[axis])*0.5f;	}
+		inline			float		GetExtents(unsigned int axis)					const		{ return (((const float*)mMax)[axis] - ((const float*)mMin)[axis])*0.5f;	}
 
 		//! Get box diagonal
-		inline_			void		GetDiagonal(Point& diagonal)			const		{ diagonal = mMax - mMin;					}
-		inline_			float		GetWidth()								const		{ return mMax.x - mMin.x;					}
-		inline_			float		GetHeight()								const		{ return mMax.y - mMin.y;					}
-		inline_			float		GetDepth()								const		{ return mMax.z - mMin.z;					}
+		inline			void		GetDiagonal(Point& diagonal)			const		{ diagonal = mMax - mMin;					}
+		inline			float		GetWidth()								const		{ return mMax.x - mMin.x;					}
+		inline			float		GetHeight()								const		{ return mMax.y - mMin.y;					}
+		inline			float		GetDepth()								const		{ return mMax.z - mMin.z;					}
 
 		//! Volume
-		inline_			float		GetVolume()								const		{ return GetWidth() * GetHeight() * GetDepth();		}
+		inline			float		GetVolume()								const		{ return GetWidth() * GetHeight() * GetDepth();		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -133,7 +133,7 @@
 		 *	\return		true on intersection
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_			bool		Intersect(const AABB& a)				const
+		inline			bool		Intersect(const AABB& a)				const
 						{
 							if(mMax.x < a.mMin.x
 							|| a.mMax.x < mMin.x
@@ -153,7 +153,7 @@
 		 *	\return		true on intersection
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_			bool		Intersect(const AABB& a, unsigned int axis)	const
+		inline			bool		Intersect(const AABB& a, unsigned int axis)	const
 						{
 							if(((const float*)mMax)[axis] < ((const float*)a.mMin)[axis] || ((const float*)a.mMax)[axis] < ((const float*)mMin)[axis])	return false;
 							return true;
@@ -167,7 +167,7 @@
 		 *	\return		true if the box is valid
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_			bool		IsValid()	const
+		inline			bool		IsValid()	const
 						{
 							// Consistency condition for (Min, Max) boxes: min < max
 							if(mMin.x > mMax.x)	return false;
@@ -177,7 +177,7 @@
 						}
 
 		//! Operator for AABB *= float. Scales the extents, keeps same center.
-		inline_			AABB&		operator*=(float s)
+		inline			AABB&		operator*=(float s)
 						{
 							Point Center;	GetCenter(Center);
 							Point Extents;	GetExtents(Extents);
@@ -186,7 +186,7 @@
 						}
 
 		//! Operator for AABB /= float. Scales the extents, keeps same center.
-		inline_			AABB&		operator/=(float s)
+		inline			AABB&		operator/=(float s)
 						{
 							Point Center;	GetCenter(Center);
 							Point Extents;	GetExtents(Extents);
@@ -195,7 +195,7 @@
 						}
 
 		//! Operator for AABB += Point. Translates the box.
-		inline_			AABB&		operator+=(const Point& trans)
+		inline			AABB&		operator+=(const Point& trans)
 						{
 							mMin+=trans;
 							mMax+=trans;
@@ -207,7 +207,7 @@
 						Point		mMax;			//!< Max point
 	};
 
-	inline_ void ComputeMinMax(const Point& p, Point& min, Point& max)
+	inline void ComputeMinMax(const Point& p, Point& min, Point& max)
 	{
 		if(p.x > max.x)	max.x = p.x;
 		if(p.x < min.x)	min.x = p.x;
@@ -219,7 +219,7 @@
 		if(p.z < min.z)	min.z = p.z;
 	}
 
-	inline_ void ComputeAABB(AABB& aabb, const Point* list, unsigned int nbpts)
+	inline void ComputeAABB(AABB& aabb, const Point* list, unsigned int nbpts)
 	{
 		if(list)
 		{

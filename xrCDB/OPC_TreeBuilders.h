@@ -95,20 +95,20 @@
 									unsigned int		mRules;				//!< Building/Splitting rules (a combination of flags)
 									unsigned int		mNbPrimitives;		//!< Total number of primitives.
 		// Stats
-		inline_						void		SetCount(unsigned int nb)				{ mCount=nb;				}
-		inline_						void		IncreaseCount(unsigned int nb)		{ mCount+=nb;				}
-		inline_						unsigned int		GetCount()				const	{ return mCount;			}
-		inline_						void		SetNbInvalidSplits(unsigned int nb)	{ mNbInvalidSplits=nb;		}
-		inline_						void		IncreaseNbInvalidSplits()		{ mNbInvalidSplits++;		}
-		inline_						unsigned int		GetNbInvalidSplits()	const	{ return mNbInvalidSplits;	}
+		inline						void		SetCount(unsigned int nb)				{ mCount=nb;				}
+		inline						void		IncreaseCount(unsigned int nb)		{ mCount+=nb;				}
+		inline						unsigned int		GetCount()				const	{ return mCount;			}
+		inline						void		SetNbInvalidSplits(unsigned int nb)	{ mNbInvalidSplits=nb;		}
+		inline						void		IncreaseNbInvalidSplits()		{ mNbInvalidSplits++;		}
+		inline						unsigned int		GetNbInvalidSplits()	const	{ return mNbInvalidSplits;	}
 
 		private:					
 									unsigned int		mCount;				//!< Stats: number of nodes created
 									unsigned int		mNbInvalidSplits;	//!< Stats: number of invalid splits
 		public:
 				poolSS<AABBTreeNode,16*1024>	mPOOL		;
-		inline_					AABBTreeNode*	node_alloc	()					{return mPOOL.create();		}
-		inline_						void		node_destroy(AABBTreeNode* &n)	{return mPOOL.destroy(n);	}
+		inline					AABBTreeNode*	node_alloc	()					{return mPOOL.create();		}
+		inline						void		node_destroy(AABBTreeNode* &n)	{return mPOOL.destroy(n);	}
 	};
 
 
@@ -121,9 +121,9 @@
 		//! Destructor
 		virtual									~AABBTreeOfTrianglesBuilder()													{}
 
-		override(AABBTreeBuilder)	bool		ComputeGlobalBox(const unsigned int* primitives, unsigned int nb_prims, AABB& global_box)	const;
-		override(AABBTreeBuilder)	float		GetSplittingValue(unsigned int index, unsigned int axis)	const;
-		override(AABBTreeBuilder)	float		GetSplittingValue(const unsigned int* primitives, unsigned int nb_prims, const AABB& global_box, unsigned int axis)	const;
+		virtual	bool		ComputeGlobalBox(const unsigned int* primitives, unsigned int nb_prims, AABB& global_box)	const;
+		virtual	float		GetSplittingValue(unsigned int index, unsigned int axis)	const;
+		virtual	float		GetSplittingValue(const unsigned int* primitives, unsigned int nb_prims, const AABB& global_box, unsigned int axis)	const;
 
 		const				IndexedTriangle*	mTriList;			//!< Shortcut to an app-controlled list of triangles.
 		const						Point*		mVerts;				//!< Shortcut to an app-controlled list of vertices.

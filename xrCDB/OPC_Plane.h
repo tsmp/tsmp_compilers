@@ -18,29 +18,29 @@
 	{
 		public:
 		//! Constructor
-		inline_			Plane()															{													}
+		inline			Plane()															{													}
 		//! Constructor
-		inline_			Plane(float nx, float ny, float nz, float d)					{ Set(nx, ny, nz, d);								}
+		inline			Plane(float nx, float ny, float nz, float d)					{ Set(nx, ny, nz, d);								}
 		//! Constructor
-		inline_			Plane(const Point& p, const Point& n)							{ Set(p, n);										}
+		inline			Plane(const Point& p, const Point& n)							{ Set(p, n);										}
 		//! Constructor
-		inline_			Plane(const Point& p0, const Point& p1, const Point& p2)		{ Set(p0, p1, p2);									}
+		inline			Plane(const Point& p0, const Point& p1, const Point& p2)		{ Set(p0, p1, p2);									}
 		//! Constructor
-		inline_			Plane(const Point& n, float d)									{ this->n = n; this->d = d;							}
+		inline			Plane(const Point& n, float d)									{ this->n = n; this->d = d;							}
 		//! Copy constructor
-		inline_			Plane(const Plane& plane) : n(plane.n), d(plane.d)				{													}
+		inline			Plane(const Plane& plane) : n(plane.n), d(plane.d)				{													}
 		//! Destructor
-		inline_			~Plane()														{													}
+		inline			~Plane()														{													}
 
-		inline_	Plane&	Zero()															{ n.Zero(); d = 0.0f;				return *this;	}
-		inline_	Plane&	Set(float nx, float ny, float nz, float dd)						{ n.Set(nx, ny, nz); this->d = dd;	return *this;	}
-		inline_	Plane&	Set(const Point& p, const Point& nn)								{ this->n = nn; d = - p | nn;			return *this;	}
+		inline	Plane&	Zero()															{ n.Zero(); d = 0.0f;				return *this;	}
+		inline	Plane&	Set(float nx, float ny, float nz, float dd)						{ n.Set(nx, ny, nz); this->d = dd;	return *this;	}
+		inline	Plane&	Set(const Point& p, const Point& nn)								{ this->n = nn; d = - p | nn;			return *this;	}
 				Plane&	Set(const Point& p0, const Point& p1, const Point& p2);
 
-		inline_	float	Distance(const Point& p)			const						{ return (p | n) + d;								}
-		inline_	bool	Belongs(const Point& p)				const						{ return _abs(Distance(p)) < PLANE_EPSILON;		}
+		inline	float	Distance(const Point& p)			const						{ return (p | n) + d;								}
+		inline	bool	Belongs(const Point& p)				const						{ return _abs(Distance(p)) < PLANE_EPSILON;		}
 
-		inline_	void	Normalize()
+		inline	void	Normalize()
 		{
 			float Denom = 1.0f / n.Magnitude();
 			n.x	*= Denom;
@@ -55,18 +55,18 @@
 				float	d;		//!< The distance from the origin
 
 		// Cast operators
-		inline_			operator Point()					const	{ return n;											}
-/*		inline_			operator HPoint()					const	{ return HPoint(n, d);								}
+		inline			operator Point()					const	{ return n;											}
+/*		inline			operator HPoint()					const	{ return HPoint(n, d);								}
 
 		// Arithmetic operators
-		inline_	Plane	operator*(const Matrix4x4& m)		const
+		inline	Plane	operator*(const Matrix4x4& m)		const
 						{
 							// Old code from Irion. Kept for reference.
 							Plane Ret(*this);
 							return Ret *= m;
 						}
 
-		inline_	Plane&	operator*=(const Matrix4x4& m)
+		inline	Plane&	operator*=(const Matrix4x4& m)
 						{
 							// Old code from Irion. Kept for reference.
 							Point n2 = HPoint(n, 0.0f) * m;
