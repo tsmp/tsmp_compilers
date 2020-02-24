@@ -57,9 +57,6 @@
     <ClCompile Include="OPC_Point.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
-    <ClCompile Include="OPC_Ray.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
     <ClCompile Include="OPC_TreeBuilders.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
@@ -114,9 +111,6 @@
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Preprocessor.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_Ray.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Settings.h">

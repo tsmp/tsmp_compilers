@@ -64,7 +64,6 @@
 		#include "OPC_Matrix3x3.h"
 		#include "OPC_Matrix4x4.h"
 		#include "OPC_Plane.h"
-		#include "OPC_Ray.h"
 	}
 	using namespace IceMaths;
 #endif
