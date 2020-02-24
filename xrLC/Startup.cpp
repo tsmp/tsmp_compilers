@@ -40,6 +40,7 @@ static const char* h_str =
 	"-nolmaps		== disable lightmaps calculating\n"
 	"-skipinvalid	== skip crash if invalid faces exists\n"
 	"-lmap_quality	== lightmap quality\n"
+	"-lmap_rgba     == save lightmaps with lossless format\n"
 	"-f<NAME>		== compile level in GameData\\Levels\\<NAME>\\\n"
 	"\n"
 	"NOTE: The last key is required for any functionality\n";
@@ -81,6 +82,7 @@ void Startup(LPSTR     lpCmdLine)
 	if (strstr(cmd, "-gi"))						b_radiosity = TRUE;
 	if (strstr(cmd, "-noise"))					b_noise = TRUE;
 	if (strstr(cmd, "-nosun"))					b_nosun = TRUE;
+	if (strstr(cmd, "-lmap_rgba"))				b_lmap_rgba = TRUE;
 	if (strstr(cmd, "-priority_highest"))		b_highest_priority = TRUE;
 	if (strstr(cmd, "-silent"))					bIsSilent = true;
 

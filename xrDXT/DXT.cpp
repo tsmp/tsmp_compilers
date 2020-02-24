@@ -96,7 +96,7 @@ bool dds_writer::writeData(const void* data, int size)
 }
 
 
-int DXTCompressImage(LPCSTR out_name, u8* raw_data, u32 w, u32 h)
+int DXTCompressImage(LPCSTR out_name, u8* raw_data, u32 w, u32 h,bool useRgba)
 {
 	R_ASSERT((0 != w) && (0 != h));
 
@@ -123,7 +123,7 @@ int DXTCompressImage(LPCSTR out_name, u8* raw_data, u32 w, u32 h)
 
 	CompressionOptions comp_opts;
 
-	comp_opts.setFormat(Format_DXT5); 
+	comp_opts.setFormat(useRgba? Format_RGBA:Format_DXT5); 
 	comp_opts.setQuality(Quality_Highest);
 	comp_opts.setQuantization(false, false, false);
 
@@ -162,9 +162,9 @@ int DXTCompressImage(LPCSTR out_name, u8* raw_data, u32 w, u32 h)
 		return 4;
 }
 
-void DXTCompress(LPCSTR out_name, u8* raw_data, u32 w, u32 h)
+void DXTCompress(LPCSTR out_name, u8* raw_data, u32 w, u32 h, bool useRgba)
 {
-	int i = DXTCompressImage(out_name, raw_data, w, h);
+	int i = DXTCompressImage(out_name, raw_data, w, h,useRgba);
 
 	Msg("result %i",i);
 }

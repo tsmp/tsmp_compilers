@@ -276,7 +276,7 @@ void CBuild::ImplicitLighting()
 			u32	w					=	TEX.dwWidth;
 			u32	h					=	TEX.dwHeight;
 	
-			DXTCompress				(out_name,raw_data,w,h);
+			DXTCompress				(out_name,raw_data,w,h, b_lmap_rgba);
 		}
 
 		// lmap
@@ -296,7 +296,7 @@ void CBuild::ImplicitLighting()
 			u32	w					= TEX.dwWidth;
 			u32	h					= TEX.dwHeight;
 
-			DXTCompress				(out_name,raw_data,w,h);
+			DXTCompress				(out_name,raw_data,w,h, b_lmap_rgba);
 		}
 		defl.Deallocate				();
 	}

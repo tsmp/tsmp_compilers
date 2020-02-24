@@ -12,6 +12,7 @@ BOOL					b_R2		= FALSE;
 BOOL					b_noise		= FALSE;
 BOOL					b_radiosity	= FALSE;
 BOOL					b_nosun		= FALSE;
+BOOL					b_lmap_rgba = FALSE;
 
 // KD start
 BOOL					b_norgb		= FALSE;

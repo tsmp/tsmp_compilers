@@ -152,7 +152,7 @@ void CLightmap::Save()
 		u32	h					= lm.height;
 		
 
-		DXTCompress				(FN,raw_data,w,h);
+		DXTCompress				(FN,raw_data,w,h, b_lmap_rgba);
 	}
 
 	Status			("Compression hemi..."); //.
@@ -168,7 +168,7 @@ void CLightmap::Save()
 		sprintf					(FN,"%s%s_2.dds",	pBuild->path,lm_texture.name);
 		BYTE*	raw_data		= LPBYTE(&*packed.begin());
 
-		DXTCompress				(FN,raw_data,w,h);
+		DXTCompress				(FN,raw_data,w,h, b_lmap_rgba);
 	}
 
 	lm_texture.bHasAlpha		= TRUE;

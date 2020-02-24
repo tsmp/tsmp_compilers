@@ -57,7 +57,7 @@ void	CBuild::xrPhase_UVmap()
 
 	for (int SP = 0; SP<int(g_XSplit.size()); SP++) 
 	{
-		Progress(p_total += p_cost);
+		Progress(1.f * SP / g_XSplit.size());
 	//	IsolateVertices		(FALSE);
 		
 		// Detect vertex-lighting and avoid this subdivision
