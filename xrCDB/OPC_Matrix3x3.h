@@ -43,12 +43,6 @@
 					m[2][0] = m20;	m[2][1] = m21;	m[2][2] = m22;
 				}
 
-		//! Sets the scale from a Point. The point is put on the diagonal.
-		inline_	void			SetScale(const Point& p)					{ m[0][0] = p.x;	m[1][1] = p.y;	m[2][2] = p.z;	}
-
-		//! Sets the scale from floats. Values are put on the diagonal.
-		inline_	void			SetScale(float sx, float sy, float sz)		{ m[0][0] = sx;		m[1][1] = sy;	m[2][2] = sz;	}
-
 		//! Scales from a Point. Each row is multiplied by a component.
 		inline_	void			Scale(const Point& p)
 				{

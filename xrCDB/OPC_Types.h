@@ -12,29 +12,8 @@
 #ifndef __ICETYPES_H__
 #define __ICETYPES_H__
 
-	// Constants
-    #ifndef PI
-	#define PI					3.1415926535897932384626433832795028841971693993751f	//!<	PI
-    #endif
-	#define HALFPI				1.57079632679489661923f									//!<	0.5 * PI
-	#define TWOPI				6.28318530717958647692f									//!<	2.0 * PI
-	#define INVPI				0.31830988618379067154f									//!<	1.0 / PI
-
-	#define RADTODEG			57.2957795130823208768f									//!<	180.0 / PI, convert radians to degrees
-	#define DEGTORAD			0.01745329251994329577f									//!<	PI / 180.0, convert degrees to radians
-
-	#define EXP					2.71828182845904523536f									//!<	e
-	#define INVLOG2				3.32192809488736234787f									//!<	1.0 / log10(2)
-	#define LN2					0.693147180559945f										//!<	ln(2)
-	#define	INVLN2				1.44269504089f											//!<	1.0f / ln(2)
-
-	#define INV3				0.33333333333333333333f									//!<	1/3
-	#define INV6				0.16666666666666666666f									//!<	1/6
-	#define INV7				0.14285714285714285714f									//!<	1/7
-	#define INV9				0.11111111111111111111f									//!<	1/9
-	#define INV255				0.00392156862745098039f									//!<	1/255
-
-	#define null				0														//!<	our own NULL pointer
+#define INV3				0.33333333333333333333f									//!<	1/3
+#define null				0														//!<	our own NULL pointer
 
 	// New types
 	typedef signed char			sbyte;		//!<	sizeof(sbyte)	must be 1

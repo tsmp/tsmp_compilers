@@ -77,11 +77,6 @@
 		//! Sets the translation part of the matrix, from floats.
 		inline_	void				SetTrans(float tx, float ty, float tz)		{ m[3][0]=tx;	m[3][1]=ty;		m[3][2]=tz;		}
 
-		// Scale
-		//! Sets the scale from a Point. The point is put on the diagonal.
-		inline_	void				SetScale(const Point& p)					{ m[0][0]=p.x;	m[1][1]=p.y;	m[2][2]=p.z;	}
-		//! Sets the scale from floats. Values are put on the diagonal.
-		inline_	void				SetScale(float sx, float sy, float sz)		{ m[0][0]=sx;	m[1][1]=sy;		m[2][2]=sz;		}
 		//! Scales from a Point. Each row is multiplied by a component.
 				void				Scale(const Point& p)
 				{
