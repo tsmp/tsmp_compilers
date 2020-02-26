@@ -6,11 +6,6 @@
 #define XRCDB_API __declspec(dllimport)
 #endif
 
-#ifdef M_VISUAL
-#define ALIGN(a) __declspec(align(a))
-#else
-#define ALIGN(a)
-#endif
 
 namespace Opcode 
 {
@@ -19,6 +14,7 @@ namespace Opcode
 };
 
 #pragma pack(push,8)
+
 namespace CDB
 {
 	// Triangle
@@ -26,25 +22,36 @@ namespace CDB
 	{
 	public:
 		u32				verts[3];		// 3*4 = 12b
+
 #ifdef _WIN64
-		union {
-			u64			dummy;				// 8b
-			struct {
+
+		union 
+		{
+			u64	dummy;				// 8b
+
+			struct 
+			{
 				u64		material : 14;		// 
 				u64		suppress_shadows : 1;	// 
 				u64		suppress_wm : 1;		// 
 				u64		sector : 16;			// 
 				u64		dumb : 32;
 			};
-			struct {
+
+			struct 
+			{
 				u32 dummy_low;
 				u32 dummy_high;
 			};
 		};
 #else
-		union {
-			u32			dummy;				// 4b
-			struct {
+
+		union 
+		{
+			u32	dummy;				// 4b
+
+			struct 
+			{
 				u32		material : 14;		// 
 				u32		suppress_shadows : 1;	// 
 				u32		suppress_wm : 1;		// 
@@ -52,12 +59,11 @@ namespace CDB
 			};
 		};
 #endif
+
 	public:
 		IC u32			IDvert(u32 ID) { return verts[ID]; }
 	};
 
-	// Build callback
-	typedef		void __stdcall	build_callback(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* params);
 
 	// Model definition
 	class		XRCDB_API		MODEL
@@ -99,9 +105,8 @@ namespace CDB
 			}
 		}
 
-		static	void			build_thread(void*);
-		void					build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc = NULL, void* bcp = NULL);
-		void					build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc = NULL, void* bcp = NULL);
+		void					build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* bcp = NULL);
+		void					build(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* bcp = NULL);
 		u32						memory();
 	};
 
@@ -109,25 +114,35 @@ namespace CDB
 	struct XRCDB_API RESULT
 	{
 		Fvector			verts[3];
+
 #ifdef _WIN64
-		union {
+
+		union 
+		{
 			u64			dummy;				// 8b
-			struct {
+
+			struct 
+			{
 				u64		material : 14;		// 
 				u64		suppress_shadows : 1;	// 
 				u64		suppress_wm : 1;		// 
 				u64		sector : 16;			// 
 				u64		dumb : 32;
 			};
-			struct {
+
+			struct 
+			{
 				u32 dummy_low;
 				u32 dummy_high;
 			};
 		};
 #else
-		union {
+
+		union 
+		{
 			u32			dummy;				// 4b
-			struct {
+			struct 
+			{
 				u32		material : 14;		// 
 				u32		suppress_shadows : 1;	// 
 				u32		suppress_wm : 1;		// 
@@ -135,13 +150,15 @@ namespace CDB
 			};
 		};
 #endif
-		int				id;
-		float			range;
-		float			u, v;
+
+		int	id;
+		float range;
+		float u, v;
 	};
 
 	// Collider Options
-	enum {
+	enum 
+	{
 		OPT_CULL = (1 << 0),
 		OPT_ONLYFIRST = (1 << 1),
 		OPT_ONLYNEAREST = (1 << 2),
@@ -152,9 +169,9 @@ namespace CDB
 	class XRCDB_API COLLIDER
 	{
 		// Ray data and methods
-		u32				ray_mode;
-		u32				box_mode;
-		u32				frustum_mode;
+		u32	ray_mode;
+		u32	box_mode;
+		u32	frustum_mode;
 
 		// Result management
 		xr_vector<RESULT>	rd;
@@ -177,7 +194,8 @@ namespace CDB
 		ICF void		r_clear_compact() { rd.clear_and_free(); };
 	};
 
-	struct non_copyable {
+	struct non_copyable 
+	{
 		non_copyable() {}
 	private:
 		non_copyable(const non_copyable &) {}
@@ -186,8 +204,11 @@ namespace CDB
 
 #pragma warning(push)
 #pragma warning(disable:4275)
+
 	const u32 clpMX = 24, clpMY = 16, clpMZ = 24;
-	class XRCDB_API CollectorPacked : public non_copyable {
+
+	class XRCDB_API CollectorPacked : public non_copyable 
+	{
 		typedef xr_vector<u32>		DWORDList;
 		typedef DWORDList::iterator	DWORDIt;
 

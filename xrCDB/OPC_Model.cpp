@@ -141,8 +141,6 @@ OPCODECREATE::OPCODECREATE()
 	Tris			= nullptr;
 	Verts			= nullptr;
 	Rules			= SPLIT_COMPLETE | SPLIT_LARGESTAXIS;
-	NoLeaf			= true;
-	Quantized		= true;
 	KeepOriginal	= false;
 }
 
@@ -151,7 +149,7 @@ OPCODECREATE::OPCODECREATE()
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-OPCODE_Model::OPCODE_Model() : mSource(nullptr), mTree(nullptr), mNoLeaf(false), mQuantized(false)
+OPCODE_Model::OPCODE_Model() : mSource(nullptr), mTree(nullptr)
 {
 }
 
@@ -206,21 +204,7 @@ bool OPCODE_Model::Build(const OPCODECREATE& create)
 	TB.mNbPrimitives	= create.NbTris;
 	if(!mSource->Build(&TB))	return false;
 
-	// 3) Create an optimized tree according to user-settings
-	// 3-1) Create the correct class
-	mNoLeaf		= create.NoLeaf;
-	mQuantized	= create.Quantized;
-
-	if(mNoLeaf)
-	{
-		if(mQuantized)	mTree = xr_new<AABBQuantizedNoLeafTree>();
-		else			mTree = xr_new<AABBNoLeafTree>();
-	}
-	else
-	{
-		if(mQuantized)	mTree = xr_new<AABBQuantizedTree>();
-		else			mTree = xr_new<AABBCollisionTree>();
-	}
+    mTree = xr_new<AABBNoLeafTree>();
 
 	// 3-2) Create optimized tree
 	if(!mTree->Build(mSource))	return false;

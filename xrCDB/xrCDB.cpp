@@ -48,74 +48,43 @@ MODEL::~MODEL()
 	xr_free		(verts);	verts_count= 0;
 }
 
-struct	BTHREAD_params
-{
-	MODEL*				M;
-	Fvector*			V;
-	int					Vcnt;
-	TRI*				T;
-	int					Tcnt;
-	build_callback*		BC;
-	void*				BCP;
-};
 
-void	MODEL::build_thread		(void *params)
-{
-	_initialize_cpu_thread		();
-	FPU::m64r					();
-	BTHREAD_params	P			= *( (BTHREAD_params*)params );
-	P.M->cs.Enter				();
-	P.M->build_internal			(P.V,P.Vcnt,P.T,P.Tcnt,P.BC,P.BCP);
-	P.M->status					= S_READY;
-	P.M->cs.Leave				();
-	//Msg						("* xrCDB: cform build completed, memory usage: %d K",P.M->memory()/1024);
-}
-
-void	MODEL::build			(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc, void* bcp)
+void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* bcp)
 {
 	R_ASSERT					(S_INIT == status);
     R_ASSERT					((Vcnt>=4)&&(Tcnt>=2));
 
-	_initialize_cpu_thread		();
-
-	if(!strstr(Core.Params, "-mt_cdb"))
-		build_internal(V,Vcnt,T,Tcnt,bc,bcp);
-	else
-	{
-		BTHREAD_params				P = { this, V, Vcnt, T, Tcnt, bc, bcp };
-		thread_spawn				(build_thread,"CDB-construction",0,&P);
-
-		while(S_INIT	== status)	
-			Sleep(5);
-	}
+	_initialize_cpu_thread();	
+	build_internal(V,Vcnt,T,Tcnt,bcp);
 }
 
-void	MODEL::build_internal	(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc, void* bcp)
+void	MODEL::build_internal	(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* bcp)
 {
 	// verts
 	verts_count	= Vcnt;
-	verts		= xr_alloc<Fvector>	(verts_count);
-	CopyMemory	(verts,V,verts_count*sizeof(Fvector));
+	verts = xr_alloc<Fvector>(verts_count);
+	CopyMemory(verts,V,verts_count*sizeof(Fvector));
 	
 	// tris
-	tris_count	= Tcnt;
-	tris		= xr_alloc<TRI>		(tris_count);
-	CopyMemory	(tris,T,tris_count*sizeof(TRI));
-
-	// callback
-	if (bc)		bc	(verts,Vcnt,tris,Tcnt,bcp);
-
+	tris_count = Tcnt;
+	tris = xr_alloc<TRI> (tris_count);
+	CopyMemory (tris,T,tris_count*sizeof(TRI));
+	
 	// Release data pointers
-	status		= S_BUILD;
+	status = S_BUILD;
 	
 	// Allocate temporary "OPCODE" tris + convert tris to 'pointer' form
-	u32*		temp_tris	= xr_alloc<u32>	(tris_count*3);
-	if (0==temp_tris)	{
-		xr_free		(verts);
-		xr_free		(tris);
+	u32* temp_tris = xr_alloc<u32> (tris_count*3);
+	
+	if (!temp_tris)
+	{
+		xr_free (verts);
+		xr_free	(tris);
 		return;
 	}
-	u32*		temp_ptr	= temp_tris;
+
+	u32* temp_ptr = temp_tris;
+	
 	for (int i=0; i<tris_count; i++)
 	{
 		*temp_ptr++	= tris[i].verts[0];
@@ -132,50 +101,59 @@ void	MODEL::build_internal	(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callba
 	OPCC.Rules		= SPLIT_COMPLETE | SPLIT_SPLATTERPOINTS | SPLIT_GEOMCENTER;
 	OPCC.NoLeaf		= true;
 	OPCC.Quantized	= false;
-	// if (Memory.debug_mode) OPCC.KeepOriginal = true;
 
-	tree			= xr_new<OPCODE_Model> ();
-	if (!tree->Build(OPCC)) {
+	tree = xr_new<OPCODE_Model> ();
+
+	if (!tree->Build(OPCC)) 
+	{
 		xr_free		(verts);
 		xr_free		(tris);
 		xr_free		(temp_tris);
 		return;
-	};
+	}
 
 	// Free temporary tris
-	xr_free			(temp_tris);
+	xr_free(temp_tris);
 	return;
 }
 
 u32 MODEL::memory	()
 {
-	if (S_BUILD==status)	{ Msg	("! xrCDB: model still isn't ready"); return 0; }
-	u32 V					= verts_count*sizeof(Fvector);
-	u32 T					= tris_count *sizeof(TRI);
-	return tree->GetUsedBytes()+V+T+sizeof(*this)+sizeof(*tree);
+	if (S_BUILD==status)
+	{ 
+		Msg	("! xrCDB: model still isn't ready"); 
+		return 0; 
+	}
+
+	u32 V = verts_count*sizeof(Fvector);
+	u32 T = tris_count *sizeof(TRI);
+
+	return
+		tree->GetUsedBytes() + V + T + sizeof(*this) + sizeof(*tree);
 }
 
 // This is the constructor of a class that has been exported.
 // see xrCDB.h for the class definition
+
 COLLIDER::COLLIDER()
 { 
-	ray_mode		= 0;
-	box_mode		= 0;
-	frustum_mode	= 0;
+	ray_mode = 0;
+	box_mode = 0;
+	frustum_mode = 0;
 }
 
 COLLIDER::~COLLIDER()
 {
-	r_free			();
+	r_free();
 }
 
 RESULT& COLLIDER::r_add	()
 {
-	rd.push_back		(RESULT());
-	return rd.back		();
+	rd.push_back(RESULT());
+	return rd.back();
 }
 
-void COLLIDER::r_free	()
+void COLLIDER::r_free()
 {
-	rd.clear_and_free	();
+	rd.clear_and_free();
 }
