@@ -20,22 +20,6 @@
 #ifndef __OPC_COMMON_H__
 #define __OPC_COMMON_H__
 
-
-	struct VertexPointers
-	{
-		const Point*	Vertex[3];
-	};
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 *	User-callback, called by OPCODE to request vertices from the app.
-	 *	\param		triangle_index	[in] face index for which the system is requesting the vertices
-	 *	\param		triangle		[out] triangle's vertices (must be provided by the user)
-	 *	\param		user_data		[in] user-defined data from SetCallback()
-	 */
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	typedef void	(*OPC_CALLBACK)	(unsigned int triangle_index, VertexPointers& triangle, unsigned int user_data);
-
 	class OPCODE_API CollisionAABB
 	{
 		public:
@@ -51,23 +35,7 @@
 		//! Get component of the box's max point along a given axis
 		inline	float		GetMax(unsigned int axis)		const		{ return ((const float*)mCenter)[axis] + ((const float*)mExtents)[axis];	}
 
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/**
-		 *	Checks a box is inside another box.
-		 *	\param		box		[in] the other box
-		 *	\return		true if current box is inside input box
-		 */
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline	bool		IsInside(const CollisionAABB& box) const
-							{
-								if(box.GetMin(0)>GetMin(0))	return false;
-								if(box.GetMin(1)>GetMin(1))	return false;
-								if(box.GetMin(2)>GetMin(2))	return false;
-								if(box.GetMax(0)<GetMax(0))	return false;
-								if(box.GetMax(1)<GetMax(1))	return false;
-								if(box.GetMax(2)<GetMax(2))	return false;
-								return true;
-							}
+
 
 				Point		mCenter;				//!< Box center
 				Point		mExtents;				//!< Box extents
@@ -84,34 +52,5 @@
 		signed short		mCenter[3];				//!< Quantized center
 		unsigned short		mExtents[3];			//!< Quantized extents
 	};
-
-	class OPCODE_API CollisionFace
-	{
-		public:
-		//! Constructor
-		inline				CollisionFace()			{}
-		//! Destructor
-		inline				~CollisionFace()		{}
-
-				unsigned int		mFaceID;				//!< Index of touched face
-				float		mDistance;				//!< Distance from collider to hitpoint
-				float		mU, mV;					//!< Impact barycentric coordinates
-	};
-
-	class OPCODE_API CollisionFaces : private Container
-	{
-		public:
-		//! Constructor
-		inline							CollisionFaces()						{}
-		//! Destructor
-		inline							~CollisionFaces()						{}
-
-		inline	unsigned int					GetNbFaces()					const	{ return GetNbEntries()>>2;						}
-		inline	const CollisionFace*	GetFaces()						const	{ return (const CollisionFace*)GetEntries();	}
-
-		inline	void					Reset()									{ Container::Reset();							}
-
-		inline	void					AddFace(const CollisionFace& face)		{ Add(face.mFaceID).Add(face.mDistance).Add(face.mU).Add(face.mV);	}
-	};
-
+	   
 #endif //__OPC_COMMON_H__

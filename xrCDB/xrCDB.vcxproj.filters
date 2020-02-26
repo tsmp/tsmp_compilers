@@ -30,9 +30,6 @@
     <ClCompile Include="OPC_AABBTree.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
-    <ClCompile Include="OPC_Common.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
     <ClCompile Include="OPC_Container.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
