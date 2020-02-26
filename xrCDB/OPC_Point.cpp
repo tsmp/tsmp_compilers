@@ -77,10 +77,5 @@ Point& Point::Refract(const Point& eye, const Point& n, float refractindex, Poin
 	return *this;
 }
 
-Point& Point::ProjectToPlane(const Plane& p)
-{
-	*this-= (p.d + (*this|p.n))*p.n;
-	return *this;
-}
 
 

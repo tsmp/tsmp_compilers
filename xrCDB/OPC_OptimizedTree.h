@@ -33,7 +33,7 @@
 		inline			const baseclass*	GetNeg()		const	{ return ((baseclass*)mData)+1;	}	\
 		inline			unsigned int				GetPrimitive()	const	{ return unsigned int(mData>>1);		}	\
 		/* Stats */																						\
-		inline			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
+		inline			size_t				GetNodeSize()	const	{ return sizeof(*this);			}	\
 																										\
 						volume				mAABB;														\
 						uintptr_t			mData;
@@ -53,7 +53,7 @@
 		inline			unsigned int				GetPrimitive()	const	{ return unsigned int(mData>>1);		}	\
 		inline			unsigned int				GetPrimitive2()	const	{ return unsigned int(mData2>>1);		}	\
 		/* Stats */																						\
-		inline			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
+		inline			size_t				GetNodeSize()	const	{ return sizeof(*this);			}	\
 																										\
 						volume				mAABB;														\
 						uintptr_t			mData;														\

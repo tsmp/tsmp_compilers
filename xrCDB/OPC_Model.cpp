@@ -132,6 +132,8 @@
 
 using namespace Opcode;
 
+#define CHECKALLOC(x)		if(!x) return false;
+
 OPCODECREATE::OPCODECREATE()
 {
 	NbTris			= 0;

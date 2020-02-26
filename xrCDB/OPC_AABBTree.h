@@ -36,7 +36,7 @@
 		inline	bool				IsLeaf()		const	{ return (!mP && !mN);	}									\
 																														\
 		/* Stats */																										\
-		inline	unsigned int				GetNodeSize()	const	{ return SIZEOFOBJECT;	}									\
+		inline	unsigned int				GetNodeSize()	const	{ return sizeof(*this);	}									\
 		protected:																										\
 		/* Tree-independent data */																						\
 		/* Following data always belong to the BV-tree, regardless of what the tree actually contains.*/				\

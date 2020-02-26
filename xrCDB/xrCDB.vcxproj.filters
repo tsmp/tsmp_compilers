@@ -24,9 +24,6 @@
     <ClCompile Include="xrCDB_ray.cpp">
       <Filter>Kernel</Filter>
     </ClCompile>
-    <ClCompile Include="OPC_AABB.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
     <ClCompile Include="OPC_AABBTree.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
@@ -37,9 +34,6 @@
       <Filter>Opcode</Filter>
     </ClCompile>
     <ClCompile Include="OPC_OptimizedTree.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
-    <ClCompile Include="OPC_Plane.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
     <ClCompile Include="OPC_Point.cpp">
@@ -71,16 +65,10 @@
     <ClInclude Include="OPC_Container.h">
       <Filter>Opcode</Filter>
     </ClInclude>
-    <ClInclude Include="OPC_MemoryMacros.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
     <ClInclude Include="OPC_Model.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_OptimizedTree.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_Plane.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Point.h">

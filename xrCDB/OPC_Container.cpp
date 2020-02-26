@@ -27,6 +27,8 @@
 
 using namespace IceCore;
 
+#define CHECKALLOC(x)		if(!x) return false;
+
 // Static members
 #ifdef CONTAINER_STATS
 unsigned int Container::mNbContainers = 0;

@@ -45,7 +45,6 @@
 
 	#define ICECORE_API	OPCODE_API
 
-	#include "OPC_MemoryMacros.h"
 	namespace IceCore
 	{
 		#include "OPC_Container.h"
@@ -59,7 +58,6 @@
 	namespace IceMaths
 	{
 		#include "OPC_Point.h"
-		#include "OPC_Plane.h"
 	}
 	using namespace IceMaths;
 #endif
