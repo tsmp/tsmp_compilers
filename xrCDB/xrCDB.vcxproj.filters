@@ -27,9 +27,6 @@
     <ClCompile Include="OPC_AABBTree.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
-    <ClCompile Include="OPC_Container.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
     <ClCompile Include="OPC_Model.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
@@ -40,9 +37,6 @@
       <Filter>Opcode</Filter>
     </ClCompile>
     <ClCompile Include="OPC_TreeBuilders.cpp">
-      <Filter>Opcode</Filter>
-    </ClCompile>
-    <ClCompile Include="OPC_Triangle.cpp">
       <Filter>Opcode</Filter>
     </ClCompile>
   </ItemGroup>
@@ -60,9 +54,6 @@
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Common.h">
-      <Filter>Opcode</Filter>
-    </ClInclude>
-    <ClInclude Include="OPC_Container.h">
       <Filter>Opcode</Filter>
     </ClInclude>
     <ClInclude Include="OPC_Model.h">
