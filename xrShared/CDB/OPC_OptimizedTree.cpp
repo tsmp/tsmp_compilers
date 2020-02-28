@@ -63,8 +63,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
+//#include "stdafx.h"
 #pragma hdrstop
+
+#include "Opcode.h"
 
 using namespace Opcode;
 
@@ -75,58 +77,7 @@ using namespace Opcode;
 //! - false to see the effects of quantization errors (faster, but wrong results in some cases)
 static bool gFixQuantized = true;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- *	Builds an implicit tree from a standard one. An implicit tree is a complete tree (2*N-1 nodes) whose negative
- *	box pointers and primitive pointers have been made implicit, hence packing 3 pointers in one.
- *
- *	Layout for implicit trees:
- *	Node:
- *			- box
- *			- data (32-bits value)
- *
- *	if data's LSB = 1 =>	remaining bits are a primitive pointer
- *	else					remaining bits are a P-node pointer, and N = P + 1
- *
- *	\relates	AABBCollisionNode
- *	\fn			_BuildCollisionTree(AABBCollisionNode* linear, const unsigned int boxid, unsigned int& curid, const AABBTreeNode* curnode)
- *	\param		linear		[in] base address of destination nodes
- *	\param		boxid		[in] index of destination node
- *	\param		curid		[in] current running index
- *	\param		curnode		[in] current node from input tree
- */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static void _BuildCollisionTree(AABBCollisionNode* linear, const unsigned int boxid, unsigned int& curid, const AABBTreeNode* curnode)
-{
-	// Current node from input tree is "curnode". Must be flattened into "linear[boxid]".
 
-	// Store the AABB
-	curnode->GetAABB()->GetCenter(linear[boxid].mAABB.mCenter);
-	curnode->GetAABB()->GetExtents(linear[boxid].mAABB.mExtents);
-	// Store remaining info
-	if(curnode->IsLeaf())
-	{
-		// The input tree must be complete => i.e. one primitive/leaf
-		ASSERT(curnode->GetNbPrimitives()==1);
-		// Get the primitive index from the input tree
-		unsigned int PrimitiveIndex = curnode->GetPrimitives()[0];
-		// Setup box data as the primitive index, marked as leaf
-		linear[boxid].mData = (PrimitiveIndex<<1)|1;
-	}
-	else
-	{
-		// To make the negative one implicit, we must store P and N in successive order
-		unsigned int PosID = curid++;	// Get a _new_ id for positive child
-		unsigned int NegID = curid++;	// Get a _new_ id for negative child
-		// Setup box data as the forthcoming _new_ P pointer
-		linear[boxid].mData = (uintptr_t)&linear[PosID];
-		// Make sure it's not marked as leaf
-		ASSERT(!(linear[boxid].mData&1));
-		// Recurse with _new_ IDs
-		_BuildCollisionTree(linear, PosID, curid, curnode->GetPos());
-		_BuildCollisionTree(linear, NegID, curid, curnode->GetNeg());
-	}
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**

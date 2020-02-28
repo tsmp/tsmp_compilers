@@ -1,14 +1,17 @@
 // xrCDB.cpp : Defines the entry point for the DLL application.
 //
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #pragma hdrstop
+
+#include "Opcode.h"
 
 #include "xrCDB.h"
 
 using namespace CDB;
 using namespace Opcode;
 
+/*
 BOOL APIENTRY DllMain( HANDLE hModule, 
 					  u32  ul_reason_for_call, 
 					  LPVOID lpReserved
@@ -24,6 +27,8 @@ BOOL APIENTRY DllMain( HANDLE hModule,
     }
     return TRUE;
 }
+
+*/
 
 // Model building
 MODEL::MODEL	()

@@ -12,7 +12,6 @@ extern void DoCompiler();
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"IMAGEHLP.LIB")
 #pragma comment(lib,"winmm.LIB")
-#pragma comment(lib,"xrCDB.lib")
 #pragma comment(lib,"xrShared.lib")
 
 #define PROTECTED_BUILD

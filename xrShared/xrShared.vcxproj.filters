@@ -70,6 +70,9 @@
     <Filter Include="Compression\lzo">
       <UniqueIdentifier>{1a74ef6b-1e5a-492e-b813-ae9c439e586a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CDB">
+      <UniqueIdentifier>{e298c437-9d0b-4d11-99bc-e62ca16820d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -235,6 +238,33 @@
       <Filter>Compression\lzo</Filter>
     </ClCompile>
     <ClCompile Include="xrSyncronize.cpp" />
+    <ClCompile Include="CDB\OPC_AABBTree.cpp">
+      <Filter>CDB</Filter>
+    </ClCompile>
+    <ClCompile Include="CDB\OPC_Model.cpp">
+      <Filter>CDB</Filter>
+    </ClCompile>
+    <ClCompile Include="CDB\OPC_OptimizedTree.cpp">
+      <Filter>CDB</Filter>
+    </ClCompile>
+    <ClCompile Include="CDB\OPC_Point.cpp">
+      <Filter>CDB</Filter>
+    </ClCompile>
+    <ClCompile Include="CDB\OPC_TreeBuilders.cpp">
+      <Filter>CDB</Filter>
+    </ClCompile>
+    <ClCompile Include="CDB\xrCDB.cpp">
+      <Filter>CDB</Filter>
+    </ClCompile>
+    <ClCompile Include="CDB\xrCDB_box.cpp">
+      <Filter>CDB</Filter>
+    </ClCompile>
+    <ClCompile Include="CDB\xrCDB_Collector.cpp">
+      <Filter>CDB</Filter>
+    </ClCompile>
+    <ClCompile Include="CDB\xrCDB_ray.cpp">
+      <Filter>CDB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -502,6 +532,36 @@
       <Filter>Compression\lzo</Filter>
     </ClInclude>
     <ClInclude Include="xrSyncronize.h" />
+    <ClInclude Include="CDB\OPC_AABB.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
+    <ClInclude Include="CDB\OPC_AABBTree.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
+    <ClInclude Include="CDB\OPC_Common.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
+    <ClInclude Include="CDB\OPC_Model.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
+    <ClInclude Include="CDB\OPC_OptimizedTree.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
+    <ClInclude Include="CDB\OPC_Point.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
+    <ClInclude Include="CDB\OPC_TreeBuilders.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
+    <ClInclude Include="CDB\OPC_Triangle.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
+    <ClInclude Include="CDB\Opcode.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
+    <ClInclude Include="CDB\xrCDB.h">
+      <Filter>CDB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCore.rc">

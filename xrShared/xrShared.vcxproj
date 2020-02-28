@@ -254,7 +254,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(SolutionDir)\output\pch_x64\$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
@@ -284,6 +284,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CDB\OPC_AABBTree.cpp" />
+    <ClCompile Include="CDB\OPC_Model.cpp" />
+    <ClCompile Include="CDB\OPC_OptimizedTree.cpp" />
+    <ClCompile Include="CDB\OPC_Point.cpp" />
+    <ClCompile Include="CDB\OPC_TreeBuilders.cpp" />
+    <ClCompile Include="CDB\xrCDB.cpp" />
+    <ClCompile Include="CDB\xrCDB_box.cpp" />
+    <ClCompile Include="CDB\xrCDB_Collector.cpp" />
+    <ClCompile Include="CDB\xrCDB_ray.cpp" />
     <ClCompile Include="FTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -472,6 +481,16 @@
     <ClCompile Include="xrSyncronize.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CDB\Opcode.h" />
+    <ClInclude Include="CDB\OPC_AABB.h" />
+    <ClInclude Include="CDB\OPC_AABBTree.h" />
+    <ClInclude Include="CDB\OPC_Common.h" />
+    <ClInclude Include="CDB\OPC_Model.h" />
+    <ClInclude Include="CDB\OPC_OptimizedTree.h" />
+    <ClInclude Include="CDB\OPC_Point.h" />
+    <ClInclude Include="CDB\OPC_TreeBuilders.h" />
+    <ClInclude Include="CDB\OPC_Triangle.h" />
+    <ClInclude Include="CDB\xrCDB.h" />
     <ClInclude Include="FTimer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />

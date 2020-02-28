@@ -1,4 +1,7 @@
-#include "stdafx.h"
+//#include "stdafx.h"
+
+#include "Opcode.h"
+
 #pragma hdrstop
 
 #include "xrCDB.h"

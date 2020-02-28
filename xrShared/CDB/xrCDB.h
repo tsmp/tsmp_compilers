@@ -1,9 +1,9 @@
 #pragma once
 
-#ifdef XRCDB_EXPORTS
-#define XRCDB_API __declspec(dllexport)
+#ifdef XRCORE_EXPORTS
+#define XRCDB_API XRCORE_API
 #else
-#define XRCDB_API __declspec(dllimport)
+#define XRCDB_API XRCORE_API
 #endif
 
 

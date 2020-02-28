@@ -20,6 +20,8 @@
 #ifndef __OPCODE_H__
 #define __OPCODE_H__
 
+#include "..\xrcore.h"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Preprocessor
 #define OPCODE_API 
@@ -45,11 +47,7 @@
 
 	#define ICECORE_API	OPCODE_API
 
-	namespace IceCore
-	{
-		#include "OPC_Container.h"
-	}
-	using namespace IceCore;
+
 #endif
 
 #ifndef __ICEMATHS_H__

@@ -16,7 +16,7 @@ BOOL	exact_normalize					(float*		a);
 
 #include "xrPool.h"
 #include "xrFace.h"
-#include "xrCDB.h"
+#include "CDB\xrCDB.h"
 #include "xrDeflector.h"
 #include "vbm.h"
 #include "OGF_Face.h"
