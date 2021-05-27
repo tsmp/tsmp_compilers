@@ -35,7 +35,7 @@
 #define LUABIND_DONT_COPY_STRINGS
 
 #include "../xrCore/xrCore.h"
-#include <boost/config.hpp>
+#include <../boost/config.hpp>
 
 //namespace std {
 //	void terminate();

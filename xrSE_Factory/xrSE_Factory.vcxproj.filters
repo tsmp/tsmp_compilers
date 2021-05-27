@@ -620,8 +620,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="X:\ogsr_engine\xr_3da\xrGame\script_additional_libs.cpp">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClCompile>
+    <ClCompile Include="..\xr_3da\xrGame\script_additional_libs.cpp" />
   </ItemGroup>
 </Project>
