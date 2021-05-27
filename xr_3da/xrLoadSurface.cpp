@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include <freeimage.h>
+//#include <freeimage.h>
+#include "..\FreeImage\FreeImage.h"
 
 struct SExts{
 	xr_vector<LPSTR>	exts;
