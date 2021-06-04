@@ -106,7 +106,12 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\output\binaries_x64_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)\;$(SolutionDir)\xrSe_Factory;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\output\libraries_x64_$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
@@ -400,7 +405,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>luajit.lib;luabind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\$(ProjectName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

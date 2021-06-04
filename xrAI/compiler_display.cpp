@@ -274,6 +274,6 @@ static BOOL CALLBACK disp_proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 void xrDisplay		()
 {
 	InternalRender	();
-	DialogBox		(HINSTANCE(GetModuleHandle(0)),MAKEINTRESOURCE(IDD_NVIEW),logWindow,disp_proc);
+	DialogBox		(HINSTANCE(GetModuleHandle(0)),MAKEINTRESOURCE(IDD_NVIEW),logWindow,(DLGPROC)disp_proc);
 	xr_free			(texels);
 }

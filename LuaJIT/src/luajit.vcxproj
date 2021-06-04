@@ -37,25 +37,25 @@
 			call msvcbuild.bat $(PlatformShortName)
 		)
 
-		if not exist "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.dll" (
-			if not exist "$(SolutionDir)\output\binaries_$(Configuration)\*.*" (
-				md "$(SolutionDir)\output\binaries_$(Configuration)"
+		if not exist "$(SolutionDir)\output\binaries_$(platform)_$(Configuration)\LuaJIT.dll" (
+			if not exist "$(SolutionDir)\output\binaries_$(platform)_$(Configuration)\*.*" (
+				md "$(SolutionDir)\output\binaries_$(platform)_$(Configuration)"
 			)
-			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.dll" "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.dll"
-			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.pdb" "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.pdb"
+			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.dll" "$(SolutionDir)\output\binaries_$(platform)_$(Configuration)\LuaJIT.dll"
+			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.pdb" "$(SolutionDir)\output\binaries_$(platform)_$(Configuration)\LuaJIT.pdb"
 		)
 
-		if not exist "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.lib" (
-			if not exist "$(SolutionDir)\output\libraries_$(Configuration)\*.*" (
-				md "$(SolutionDir)\output\libraries_$(Configuration)\"
+		if not exist "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\LuaJIT.lib" (
+			if not exist "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\*.*" (
+				md "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\"
 			)
-			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.lib" "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.lib"
+			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.lib" "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\LuaJIT.lib"
 		)
-		if not exist "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.exp" (
-			if not exist "$(SolutionDir)\output\libraries_$(Configuration)\*.*" (
-				md "$(SolutionDir)\output\libraries_$(Configuration)\"
+		if not exist "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\LuaJIT.exp" (
+			if not exist "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\*.*" (
+				md "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\"
 			)
-			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.exp" "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.exp"
+			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.exp" "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\LuaJIT.exp"
 		)
 	
     </NMakeBuildCommandLine>
@@ -63,19 +63,19 @@
 		RD /S/Q ..\bin
 		call msvcbuild.bat $(PlatformShortName)
 
-		if not exist "$(SolutionDir)\output\binaries_$(Configuration)\*.*" (
-			md "$(SolutionDir)\output\binaries_$(Configuration)\"
+		if not exist "$(SolutionDir)\output\binaries_$(platform)_$(Configuration)\*.*" (
+			md "$(SolutionDir)\output\binaries_$(platform)_$(Configuration)\"
 		)
-		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.dll" "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.dll"
-		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.pdb" "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.pdb"
-		if not exist "$(SolutionDir)\output\libraries_$(Configuration)\*.*" (
-			md "$(SolutionDir)\output\libraries_$(Configuration)\"
+		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.dll" "$(SolutionDir)\output\binaries_$(platform)_$(Configuration)\LuaJIT.dll"
+		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.pdb" "$(SolutionDir)\output\binaries_$(platform)_$(Configuration)\LuaJIT.pdb"
+		if not exist "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\*.*" (
+			md "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\"
 		)
-		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.lib" "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.lib"
-		if not exist "$(SolutionDir)\output\libraries_$(Configuration)\*.*" (
-			md "$(SolutionDir)\output\libraries_$(Configuration)\"
+		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.lib" "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\LuaJIT.lib"
+		if not exist "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\*.*" (
+			md "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\"
 		)
-		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.exp" "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.exp"
+		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.exp" "$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\LuaJIT.exp"
 	</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RD /S/Q ..\bin</NMakeCleanCommandLine>
   </PropertyGroup>

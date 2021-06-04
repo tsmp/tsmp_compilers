@@ -64,6 +64,11 @@
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\output\binaries_x64_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
+    <LibraryPath>$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -108,6 +113,7 @@
     </Link>
     <Link Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       <TargetMachine>MachineX64</TargetMachine>
+      <ImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\$(ProjectName).lib</ImportLibrary>
     </Link>
     <Link Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       <TargetMachine>MachineX64</TargetMachine>

@@ -121,6 +121,11 @@
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\output\libraries_$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\output\binaries_x64_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
+    <LibraryPath>$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -324,7 +329,7 @@
       <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
       <BrowseInformation>
       </BrowseInformation>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>.\;..\COMMON_COMPILERS;..\..\3rd_party\Src\loki;..\xrCDB\;..\xrNetServer\;..\xrCore\;..\..\3rd_party\Src\d3dx\include;..\..\3rd_party\Src\FreeImage;..\editors\ECore\Engine;..\editors\LevelEditor\Edit;..\xrSound;..\xr_3da;..\xr_3da\xrGame;..\..\3rd_party\Src\MagicSoftware\FreeMagic\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -346,6 +351,7 @@
       <StackCommitSize>0</StackCommitSize>
       <LargeAddressAware>true</LargeAddressAware>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <ImportLibrary>$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\$(ProjectName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
