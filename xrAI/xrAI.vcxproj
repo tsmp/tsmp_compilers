@@ -329,7 +329,7 @@
       <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
       <BrowseInformation>
       </BrowseInformation>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>.\;..\COMMON_COMPILERS;..\..\3rd_party\Src\loki;..\xrCDB\;..\xrNetServer\;..\xrCore\;..\..\3rd_party\Src\d3dx\include;..\..\3rd_party\Src\FreeImage;..\editors\ECore\Engine;..\editors\LevelEditor\Edit;..\xrSound;..\xr_3da;..\xr_3da\xrGame;..\..\3rd_party\Src\MagicSoftware\FreeMagic\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
