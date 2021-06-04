@@ -207,9 +207,6 @@ void Startup(LPSTR     lpCmdLine)
 
 #include "factory_api.h"
 
-Factory_Create	*create_entity	= 0;
-Factory_Destroy	*destroy_entity	= 0;
-
 int APIENTRY WinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      LPSTR     lpCmdLine,
@@ -223,9 +220,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	hFactory				= LoadLibrary	(g_name);
 	if (0==hFactory)		R_CHK			(GetLastError());
 	R_ASSERT2				(hFactory,"Factory DLL raised exception during loading or there is no factory DLL at all");
-
-	create_entity			= (Factory_Create*)		GetProcAddress(hFactory,"_create_entity@4");	R_ASSERT(create_entity);
-	destroy_entity			= (Factory_Destroy*)	GetProcAddress(hFactory,"_destroy_entity@4");	R_ASSERT(destroy_entity);
 
 	Startup					(lpCmdLine);
 
