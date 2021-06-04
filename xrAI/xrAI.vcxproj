@@ -119,7 +119,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(SolutionDir)\output\libraries_$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\;$(SolutionDir)\output\libraries_$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\output\binaries_x64_$(Configuration)\</OutDir>
@@ -270,6 +270,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>.\;..\COMMON_COMPILERS;..\..\3rd_party\Src\loki;..\xrCDB\;..\xrNetServer\;..\xrCore\;..\..\3rd_party\Src\d3dx\include;..\..\3rd_party\Src\FreeImage;..\editors\ECore\Engine;..\editors\LevelEditor\Edit;..\xrSound;..\xr_3da;..\xr_3da\xrGame;..\..\3rd_party\Src\MagicSoftware\FreeMagic\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4577</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -334,6 +335,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>.\;..\COMMON_COMPILERS;..\..\3rd_party\Src\loki;..\xrCDB\;..\xrNetServer\;..\xrCore\;..\..\3rd_party\Src\d3dx\include;..\..\3rd_party\Src\FreeImage;..\editors\ECore\Engine;..\editors\LevelEditor\Edit;..\xrSound;..\xr_3da;..\xr_3da\xrGame;..\..\3rd_party\Src\MagicSoftware\FreeMagic\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4577</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

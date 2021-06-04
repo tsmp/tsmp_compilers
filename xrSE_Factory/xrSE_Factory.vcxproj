@@ -128,7 +128,7 @@
     <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)\xrSe_Factory;$(SolutionDir)\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\output\libraries_$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\output\libraries_$(platform)_$(Configuration)\;$(SolutionDir)\output\libraries_$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -346,6 +346,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>x:\ogsr_engine\xrSE_Factory;..\Luabind;..\LuaJIT\src;..\editors\EProps\;..\xrNetServer\;..\xr_3da\;..\xr_3da\xrGame\ui\;..\xr_3da\xrGame\;..\xrSound\;X:\3rd_party\Src\d3dx\include;..\xrCDB\;..\xrCore\;X:\3rd_party\Src\boost;X:\3rd_party\Src\loki;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4457;4458;4595;</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -393,6 +394,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>x:\ogsr_engine\xrSE_Factory;..\Luabind;..\LuaJIT\src;..\editors\EProps\;..\xrNetServer\;..\xr_3da\;..\xr_3da\xrGame\ui\;..\xr_3da\xrGame\;..\xrSound\;X:\3rd_party\Src\d3dx\include;..\xrCDB\;..\xrCore\;X:\3rd_party\Src\boost;X:\3rd_party\Src\loki;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4457;4458;4595;4457;4458;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
