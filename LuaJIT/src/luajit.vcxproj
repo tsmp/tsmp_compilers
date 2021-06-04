@@ -37,45 +37,51 @@
 			call msvcbuild.bat $(PlatformShortName)
 		)
 
-		if not exist "$(OutDir)LuaJIT.dll" (
-			if not exist "$(OutDir)*.*" (
-				md "$(OutDir)"
+		if not exist "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.dll" (
+			if not exist "$(SolutionDir)\output\binaries_$(Configuration)\*.*" (
+				md "$(SolutionDir)\output\binaries_$(Configuration)"
 			)
-			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.dll" "$(OutDir)LuaJIT.dll"
-			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.pdb" "$(OutDir)LuaJIT.pdb"
+			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.dll" "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.dll"
+			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.pdb" "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.pdb"
 		)
-		if not exist "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\LuaJIT.lib" (
-			if not exist "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\*.*" (
-				md "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\"
+
+		if not exist "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.lib" (
+			if not exist "$(SolutionDir)\output\libraries_$(Configuration)\*.*" (
+				md "$(SolutionDir)\output\libraries_$(Configuration)\"
 			)
-			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.lib" "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\LuaJIT.lib"
+			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.lib" "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.lib"
 		)
-		if not exist "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\LuaJIT.exp" (
-			if not exist "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\*.*" (
-				md "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\"
+		if not exist "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.exp" (
+			if not exist "$(SolutionDir)\output\libraries_$(Configuration)\*.*" (
+				md "$(SolutionDir)\output\libraries_$(Configuration)\"
 			)
-			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.exp" "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\LuaJIT.exp"
+			copy /Y "..\bin\$(PlatformShortName)\LuaJIT.exp" "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.exp"
 		)
-	</NMakeBuildCommandLine>
+	
+    </NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>
 		RD /S/Q ..\bin
 		call msvcbuild.bat $(PlatformShortName)
 
-		if not exist "$(OutDir)*.*" (
-			md "$(OutDir)"
+		if not exist "$(SolutionDir)\output\binaries_$(Configuration)\*.*" (
+			md "$(SolutionDir)\output\binaries_$(Configuration)\"
 		)
-		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.dll" "$(OutDir)LuaJIT.dll"
-		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.pdb" "$(OutDir)LuaJIT.pdb"
-		if not exist "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\*.*" (
-			md "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\"
+		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.dll" "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.dll"
+		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.pdb" "$(SolutionDir)\output\binaries_$(Configuration)\LuaJIT.pdb"
+		if not exist "$(SolutionDir)\output\libraries_$(Configuration)\*.*" (
+			md "$(SolutionDir)\output\libraries_$(Configuration)\"
 		)
-		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.lib" "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\LuaJIT.lib"
-		if not exist "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\*.*" (
-			md "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\"
+		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.lib" "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.lib"
+		if not exist "$(SolutionDir)\output\libraries_$(Configuration)\*.*" (
+			md "$(SolutionDir)\output\libraries_$(Configuration)\"
 		)
-		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.exp" "$(OutDir)..\ogsr_engine\_LIB\Engine\$(Configuration)\$(Platform)\LuaJIT.exp"
+		copy /Y "..\bin\$(PlatformShortName)\LuaJIT.exp" "$(SolutionDir)\output\libraries_$(Configuration)\LuaJIT.exp"
 	</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>RD /S/Q ..\bin</NMakeCleanCommandLine>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)\output\binaries_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\output\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

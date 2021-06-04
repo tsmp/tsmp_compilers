@@ -16,7 +16,7 @@
 extern "C" {
 	#include <lua.h>
 	#include <luajit.h>
-	#include <lcoco.h>
+	//#include <lcoco.h>
 };
 //#define DBG_DISABLE_SCRIPTS
 

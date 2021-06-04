@@ -156,10 +156,26 @@ void CScriptEngine::setup_auto_load		()
 	// lua_settop							(lua(),-0);
 }
 
+static void* __cdecl luabind_allocator(luabind::memory_allocation_function_parameter, const void* pointer, size_t const size) //Раньше всего инитится здесь, поэтому пусть здесь и будет
+{
+	if (!size)
+	{
+		void* non_const_pointer = const_cast<LPVOID>(pointer);
+		xr_free(non_const_pointer);
+		return nullptr;
+	}
+
+	if (!pointer)
+		return Memory.mem_alloc(size);
+
+	void* non_const_pointer = const_cast<LPVOID>(pointer);
+	return Memory.mem_realloc(non_const_pointer, size);
+}
+
 void CScriptEngine::init				()
 {
 	CScriptStorage::reinit				();
-
+	luabind::allocator = &luabind_allocator;
 	luabind::open						(lua());
 	setup_callbacks						();
 	export_classes						(lua());

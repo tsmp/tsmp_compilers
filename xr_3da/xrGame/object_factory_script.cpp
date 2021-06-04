@@ -11,6 +11,7 @@
 #include "ai_space.h"
 #include "script_engine.h"
 #include "object_item_script.h"
+#include <type_traits>
 
 void CObjectFactory::register_script_class	(LPCSTR client_class, LPCSTR server_class, LPCSTR clsid, LPCSTR script_clsid)
 {
@@ -85,9 +86,9 @@ void CObjectFactory::register_script	() const
 	const_iterator				I = clsids().begin(), B = I;
 	const_iterator				E = clsids().end();
 	for ( ; I != E; ++I)
-		instance.enum_			("_clsid")[luabind::value(*(*I)->script_clsid(),int(I - B))];
+		instance = std::move(instance).enum_("_clsid")[luabind::value(*(*I)->script_clsid(),int(I - B))];
 
-	luabind::module				(ai().script_engine().lua())[instance];
+	luabind::module				(ai().script_engine().lua())[std::move(instance)];
 }
 
 #pragma optimize("s",on)
