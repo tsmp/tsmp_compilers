@@ -25,7 +25,7 @@ BOOL					b_norgb = FALSE;
 BOOL					b_nosun = FALSE;
 // KD end
 
-float					i_ThreadCount = 1;
+int						i_ThreadCount = 1;
 
 float	color_intensity(Fcolor& c)
 {
