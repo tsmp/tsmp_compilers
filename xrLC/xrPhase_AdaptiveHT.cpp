@@ -118,7 +118,6 @@ void CBuild::xrPhase_AdaptiveHT()
 	CThreadManager TMPrecalcilatingBaseHemisphere;
 
 	u32 count = g_vertices.size();
-	u32 threads_count = 16;
 
 	if (count)
 	{
@@ -130,7 +129,7 @@ void CBuild::xrPhase_AdaptiveHT()
 
 		for (u32 it = 0; it<count; it++)	hemi_task_pool.push_back(it);
 
-		for (u32 thID = 0; thID < threads_count; thID++)
+		for (u32 thID = 0; thID < i_ThreadCount; thID++)
 			TMPrecalcilatingBaseHemisphere.start(xr_new<CPrecalcHemisphereThr>(thID));
 
 		TMPrecalcilatingBaseHemisphere.wait(500);

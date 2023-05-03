@@ -230,13 +230,12 @@ void CBuild::ImplicitLighting()
 		CTimer	implicit_time;
 		implicit_time.Start();
 
-		u32 threads_count = 16;
 		u32 count = defl.Height();
 
 		for (u32 itr = 0; itr<count; itr++)	implicit_task_pool.push_back(itr);
 
 		CThreadManager			tmanager;
-		for (u32 thID=0; thID<threads_count; thID++)
+		for (u32 thID=0; thID<i_ThreadCount; thID++)
 			tmanager.start		(xr_new<ImplicitThread>(thID, &defl,count));
 		tmanager.wait			(500);
 

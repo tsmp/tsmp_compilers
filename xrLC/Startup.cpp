@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "math.h"
 #include "build.h"
+#include <thread>
 
 XRCORE_API void ComputeBuildID(LPCSTR Date);
 
@@ -99,6 +100,7 @@ void Startup(LPSTR     lpCmdLine)
 	// Faster FPU 
 	SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
 	if (b_highest_priority) SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+	i_ThreadCount = std::thread::hardware_concurrency();
 
 	// Load project
 	name[0] = 0;				sscanf(strstr(cmd, "-f") + 2, "%s", name);

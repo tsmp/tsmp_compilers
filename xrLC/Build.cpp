@@ -22,6 +22,8 @@ float					f_lmap_quality = 4.f;
 // KD end
 BOOL					gl_linear	= FALSE;
 
+float					i_ThreadCount = 1;
+
 //////////////////////////////////////////////////////////////////////
 
 class CMULightHiddenThread : public CThread

@@ -11,8 +11,6 @@
 #include "global_options.h"
 #include "DXT.h"
 
-#define NUM_THREADS		16
-
 enum
 {
 	LP_DEFAULT = 0,
@@ -26,6 +24,8 @@ enum
 BOOL					b_norgb = FALSE;
 BOOL					b_nosun = FALSE;
 // KD end
+
+float					i_ThreadCount = 1;
 
 float	color_intensity(Fcolor& c)
 {
@@ -783,11 +783,10 @@ void	xrLight()
 	Timer.Start();
 
 	DO_count = range;
-	const int threads_count = 16;
 
 	for (u32 it = 0; it < range; it++)	DO_task_pool.push_back(it);
 
-	for (u32 thID = 0; thID < threads_count; thID++)
+	for (u32 thID = 0; thID < i_ThreadCount; thID++)
 		Threads.start(xr_new<LightThread>(thID));
 
 	Threads.wait(500);

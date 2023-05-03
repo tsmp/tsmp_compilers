@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "process.h"
 #include "global_options.h"
+#include <thread>
 
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(lib,"winmm.LIB")
@@ -48,6 +49,8 @@ void Startup(LPSTR lpCmdLine)
 	thread_spawn		(logThread,	"log-update", 1024*1024,0);
 	Sleep				(150);
 	
+	i_ThreadCount = std::thread::hardware_concurrency();
+
 	// Load project
 	name[0]=0; sscanf	(strstr(cmd,"-f")+2,"%s",name);
 	//FS.update_path	(name,"$game_levels$",name);

@@ -77,10 +77,9 @@ void CBuild::Light()
 		// Main process (4 threads)
 		Status			("Lighting...");
 		CThreadManager	threads;
-		const	u32	thNUM	= 16;
 		CTimer	start_time;	
 		start_time.Start();				
-		for				(int L=0; L<thNUM; L++)	threads.start(xr_new<CLMThread> (L));
+		for				(int L=0; L<i_ThreadCount; L++)	threads.start(xr_new<CLMThread> (L));
 		threads.wait	(500);
 		clMsg			("%f seconds",start_time.GetElapsed_sec());
 	}
@@ -234,7 +233,6 @@ public:
 	}
 };
 
-#define NUM_THREADS			4
 void CBuild::LightVertex	()
 {
 	g_trans				= xr_new<mapVert>	();
@@ -244,7 +242,7 @@ void CBuild::LightVertex	()
 	CThreadManager		Threads;
 	VLT.init			();
 	CTimer	start_time;	start_time.Start();				
-	for (u32 thID=0; thID<NUM_THREADS; thID++)	Threads.start(xr_new<CVertexLightThread>(thID));
+	for (u32 thID=0; thID<i_ThreadCount; thID++)	Threads.start(xr_new<CVertexLightThread>(thID));
 	Threads.wait		();
 	clMsg				("%f seconds",start_time.GetElapsed_sec());
 

@@ -57,3 +57,4 @@ extern BOOL						b_nolmaps;
 extern BOOL						b_skipinvalid;
 extern float					f_lmap_quality;
 // KD end
+extern float					i_ThreadCount;
