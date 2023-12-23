@@ -21,6 +21,7 @@
 #include "..\xrLC\COMMON_COMPILERS\guid_generator.h"
 #include "game_graph_builder.h"
 #include <direct.h>
+#include <random>
 
 extern LPCSTR GAME_CONFIG;
 extern LPCSTR LEVEL_GRAPH_NAME;
@@ -223,7 +224,9 @@ public:
 			IReader									*F = FS.r_open(fName);
 			u32										id;
 			IReader									*O = F->open_chunk_iterator(id);
-			for (int i=0; O; O = F->open_chunk_iterator(id,O))	{
+			int i;
+			for (i = 0; O; O = F->open_chunk_iterator(id, O))
+			{
 				NET_Packet							P;
 				P.B.count							= O->length();
 				O->r								(P.B.data,P.B.count);
@@ -393,7 +396,7 @@ public:
 
 		R_ASSERT2				(!l_dwaNodes.empty(),"Can't create at least one death point for specified graph point");
 
-		std::random_shuffle		(l_dwaNodes.begin(),l_dwaNodes.end());
+		std::shuffle(l_dwaNodes.begin(),l_dwaNodes.end(), std::default_random_engine{});
 
 		u32						m = l_dwaNodes.size() > 10 ? _min(iFloor(.1f*l_dwaNodes.size()),255) : l_dwaNodes.size(), l_dwStartIndex = m_tpLevelPoints.size();
 		m_tpLevelPoints.resize	(l_dwStartIndex + m);

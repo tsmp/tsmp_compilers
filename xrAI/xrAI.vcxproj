@@ -43,8 +43,6 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <PreprocessorDefinitions>NDEBUG;AI_COMPILER;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
-      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateMapFile>false</GenerateMapFile>
