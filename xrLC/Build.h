@@ -3,9 +3,9 @@
 #include "common_compilers\communicate.h"
 #include "b_globals.h"
 #include "fs.h"
-#include "xrLevel.h"
-#include "Etextureparams.h"
-#include "shader_xrlc.h"
+#include "..\xr_3da\xrLevel.h"
+#include "COMMON_COMPILERS\ETextureParams.h"
+#include "..\xr_3da\shader_xrlc.h"
 #include "xrMU_Model.h"
 
 #pragma comment(lib,"dxt.lib")

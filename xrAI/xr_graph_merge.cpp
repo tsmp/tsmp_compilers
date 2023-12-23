@@ -8,7 +8,7 @@
 
 #include "stdafx.h"
 #include "xr_ini.h"
-#include "xrLevel.h"
+#include "..\xr_3da\xrLevel.h"
 #include "xrAI.h"
 #include "xrServer_Objects_ALife_All.h"
 #include "factory_api.h"
@@ -18,7 +18,7 @@
 #include "object_broker.h"
 #include "xr_graph_merge.h"
 #include "spawn_constructor_space.h"
-#include "guid_generator.h"
+#include "..\xrLC\COMMON_COMPILERS\guid_generator.h"
 #include "game_graph_builder.h"
 #include <direct.h>
 

@@ -19,8 +19,8 @@
 #endif
 
 #ifndef XRGAME_EXPORTS
-#	include "bone.h"
-#	include "defines.h"
+#	include "..\bone.h"
+#	include "..\defines.h"
 	LPCSTR GAME_CONFIG = "game.ltx";
 #else
 #	include "..\bone.h"

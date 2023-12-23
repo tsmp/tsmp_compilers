@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "defines.h"
+#include "..\xr_3da\defines.h"
 #include "xrCrossTable.h"
 
 LPCSTR GAME_LEVEL_GRAPH = "level.graph";

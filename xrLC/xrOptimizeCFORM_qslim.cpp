@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "build.h"
-#include <MxStdModel.h>
-#include <MxQSlim.h>
+#include "..\xrQSlim\src\MxStdModel.h"
+#include "..\xrQSlim\src\MxQSlim.h"
 
 #pragma comment (lib,"xrQSlim.lib")
 

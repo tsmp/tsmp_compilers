@@ -2,7 +2,7 @@
 #include "build.h"
 #include "common_compilers\xrThread.h"
 #include "hash2D.h"
-#include "DXT.h"
+#include "..\xrDXT\DXT.h"
 
 xrCriticalSection	implicit_CS;
 xr_vector<int>		implicit_task_pool;

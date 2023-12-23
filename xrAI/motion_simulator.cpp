@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "cl_intersect.h"
+#include "..\xr_3da\cl_intersect.h"
 #include "motion_simulator.h"
 #include "compiler.h"
 

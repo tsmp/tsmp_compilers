@@ -13,7 +13,7 @@
 #include "../../xrNetServer/net_utils.h"
 
 #ifdef AI_COMPILER
-#	include "factory_api.h"
+#include "..\xrAI\factory_api.h"
 #endif
 
 struct ISE_Abstract;

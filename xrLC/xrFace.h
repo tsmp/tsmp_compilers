@@ -1,6 +1,5 @@
 #pragma once
-
-#include "shader_xrlc.h"
+#include "..\xr_3da\Shader_xrLC.h"
 #include "r_light.h"
 
 template<u32 range>

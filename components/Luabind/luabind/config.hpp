@@ -30,7 +30,7 @@
 #else
 #	define LUABIND_NO_ERROR_CHECKING //Закомментировать только при отладке проблемных мест или для дампа lua_help! С некоторыми скриптами проверка ошибок несовместима, т.к воспринимает как ошибки то, что ошибками не является, да и производительность жрёт довольно сильно.
 #endif
-#define LUABIND_NO_EXCEPTIONS //Не рекомендую закомментировать.
+//#define LUABIND_NO_EXCEPTIONS //Не рекомендую закомментировать.
 #ifdef LUABIND_NO_EXCEPTIONS
 #	define LUABIND_DTOR_NOEXCEPT noexcept
 #else

@@ -14,7 +14,7 @@
 #include "clsid_game.h"
 
 #ifndef XRGAME_EXPORTS
-#	include "bone.h"
+#	include "..\bone.h"
 #else
 #	include "..\bone.h"
 #	ifdef DEBUG

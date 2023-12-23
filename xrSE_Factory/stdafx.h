@@ -21,6 +21,10 @@
 
 #define BOOST_THROW_EXCEPTION_HPP_INCLUDED
 
+#ifdef DEBUG
+#define OGSE_DEBUG
+#endif
+
 namespace boost {void throw_exception(const std::exception &A);};
 
 #include "smart_cast.h"

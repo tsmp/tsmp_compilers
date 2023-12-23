@@ -51,7 +51,7 @@ struct DDS_HEADER
 	DWORD dwReserved2[3];
 	};
 
-#include "nvtt.h"
+#include "NVTT/nvtt.h"
 
 #pragma warning(pop)
 #include "DXT.h"

@@ -3,7 +3,7 @@
 #include "ogf_face.h"
 
 #pragma warning(disable:4995)
-#include "MgcCont3DMinSphere.h"
+#include "MagicFm/MgcCont3DMinSphere.h"
 
 #pragma comment(lib,"MagicFM.lib")
 

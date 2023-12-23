@@ -16,10 +16,10 @@
 #define ECORE_API
 #define XR_EPROPS_API
 #include "clsid.h"
-#include "defines.h"
-#include "cl_log.h"
+#include "..\xr_3da\defines.h"
+#include "..\COMMON_COMPILERS\cl_log.h"
 #include "CDB\xrCDB.h"
-#include "_d3d_extensions.h"
+#include "..\xr_3da\_d3d_extensions.h"
 
 #include <fcntl.h>
 #include <sys/types.h>

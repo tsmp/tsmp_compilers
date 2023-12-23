@@ -1,7 +1,5 @@
-#ifndef _XR_COMM_
-#define _XR_COMM_
-
-#include "xrLevel.h"
+#pragma once
+#include "..\xr_3da\xrLevel.h"
 
 #pragma pack(push,4)
 
@@ -207,5 +205,3 @@ enum EBUILD_CHUNKS
 
 	EB_FORCE_DWORD = u32(-1)
 };
-
-#endif

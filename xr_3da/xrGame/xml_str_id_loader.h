@@ -116,8 +116,9 @@ TEMPLATE_SPECIALIZATION
 const typename ITEM_DATA* CSXML_IdToIndex::GetById (const shared_str& str_id, bool no_assert)
 {
 	T_INIT::InitXmlIdToIndex();
+	T_VECTOR::iterator it;
 		
-	for(T_VECTOR::iterator it = m_pItemDataVector->begin();
+	for(it = m_pItemDataVector->begin();
 		m_pItemDataVector->end() != it; it++)
 	{
 		if( (*it).id == str_id)
@@ -127,8 +128,8 @@ const typename ITEM_DATA* CSXML_IdToIndex::GetById (const shared_str& str_id, bo
 	if(m_pItemDataVector->end() == it)
 	{
 		int i=0;
-		for(T_VECTOR::iterator it = m_pItemDataVector->begin();	m_pItemDataVector->end() != it; it++,i++)
-			Msg("[%d]=[%s]",i,*(*it).id );
+		for(T_VECTOR::iterator it2 = m_pItemDataVector->begin();	m_pItemDataVector->end() != it2; it2++,i++)
+			Msg("[%d]=[%s]",i,*(*it2).id );
 
 		R_ASSERT3(no_assert, "item not found, id", *str_id);
 		return NULL;

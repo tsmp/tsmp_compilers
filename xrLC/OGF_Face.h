@@ -1,10 +1,9 @@
 #pragma once
-
 #include "common_compilers\communicate.h"
 #include "xruvpoint.h"
 #include "progmesh.h"
 #include "xrSpherical.h"
-#include "..\PropSlimTools.h"
+#include "PropSlimTools.h"
 
 struct OGF_Texture
 {

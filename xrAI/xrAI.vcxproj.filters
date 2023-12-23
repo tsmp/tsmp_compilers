@@ -163,9 +163,7 @@
     <ClInclude Include="FTimer.h">
       <Filter>Kernel</Filter>
     </ClInclude>
-    <ClInclude Include="..\COMMON_COMPILERS\resource.h">
-      <Filter>Kernel\Resource Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\xrLc\COMMON_COMPILERS\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -240,11 +238,6 @@
     <ClCompile Include="verify_level_graph.cpp">
       <Filter>ALife\Verify</Filter>
     </ClCompile>
-    <ClCompile Include="..\COMMON_COMPILERS\cl_collector.cpp" />
-    <ClCompile Include="..\COMMON_COMPILERS\cl_log.cpp" />
-    <ClCompile Include="..\COMMON_COMPILERS\guid_generator.cpp" />
-    <ClCompile Include="..\COMMON_COMPILERS\tga.cpp" />
-    <ClCompile Include="..\COMMON_COMPILERS\xrThread.cpp" />
     <ClCompile Include="..\xr_3da\xrGame\alife_human_brain.cpp" />
     <ClCompile Include="..\xr_3da\xrGame\alife_monster_brain.cpp" />
     <ClCompile Include="..\xr_3da\xrGame\alife_space.cpp" />
@@ -265,8 +258,13 @@
     <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Items.cpp" />
     <ClCompile Include="..\xr_3da\xrGame\xrServer_Objects_ALife_Monsters.cpp" />
     <ClCompile Include="..\xr_3da\xrGame\xrServer_Object_Base.cpp" />
+    <ClCompile Include="..\xrLc\COMMON_COMPILERS\cl_collector.cpp" />
+    <ClCompile Include="..\xrLc\COMMON_COMPILERS\cl_log.cpp" />
+    <ClCompile Include="..\xrLc\COMMON_COMPILERS\guid_generator.cpp" />
+    <ClCompile Include="..\xrLc\COMMON_COMPILERS\tga.cpp" />
+    <ClCompile Include="..\xrLc\COMMON_COMPILERS\xrThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\COMMON_COMPILERS\resource.rc" />
+    <ResourceCompile Include="..\xrLc\COMMON_COMPILERS\resource.rc" />
   </ItemGroup>
 </Project>

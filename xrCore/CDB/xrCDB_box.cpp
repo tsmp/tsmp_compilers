@@ -1,14 +1,9 @@
-//#include "stdafx.h"
-
+#include "stdafx.h"
 #include "Opcode.h"
-
-#pragma hdrstop
-
 #include "xrCDB.h"
 
 using namespace CDB;
 using namespace Opcode;
-
 
 //! This macro quickly finds the min & max values among 3 variables
 #define FINDMINMAX(x0, x1, x2, min, max)	\

@@ -1,8 +1,5 @@
-//#include "stdafx.h"
-#pragma hdrstop
-
+#include "stdafx.h"
 #include "Opcode.h"
-
 #include "xrCDB.h"
 
 namespace CDB

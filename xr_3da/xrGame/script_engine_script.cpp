@@ -41,7 +41,7 @@ void FlushLogs()
 {
 #ifdef DEBUG
 	FlushLog();
-	ai().script_engine().flush_log();
+	//ai().script_engine().flush_log();
 #endif // DEBUG
 }
 

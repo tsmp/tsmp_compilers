@@ -3,11 +3,11 @@
 #pragma comment(lib,"FreeImage.lib")
 
 #include "..\xrCore\CDB\xrCDB.h"
-#include "xrLevel.h"
+#include "..\xr_3da\xrLevel.h"
 #include "AIMapExport.h"
-#include "Shader_xrLC.h"
-#include "communicate.h"
-#include "Etextureparams.h"
+#include "..\xr_3da\Shader_xrLC.h"
+#include "..\xrLC\COMMON_COMPILERS\communicate.h"
+#include "..\xrLC\COMMON_COMPILERS\ETextureParams.h"
 
 // base patch used all the time up to merging
 const u32 InvalidNode		= (1<<24)-1;

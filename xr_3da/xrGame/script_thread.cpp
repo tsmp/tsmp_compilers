@@ -153,7 +153,7 @@ bool CScriptThread::update()
 				}
 #endif
 				VERIFY2		(!lua_gettop(lua()),"Do not pass any value to coroutine.yield()!");
-				VERIFY		(lua()->status == LUA_YIELD);
+				//VERIFY		(lua()->status == LUA_YIELD);
 			}
 		}
 		

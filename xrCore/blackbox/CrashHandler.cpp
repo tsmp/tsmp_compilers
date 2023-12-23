@@ -12,6 +12,7 @@ CONDITIONAL COMPILATION :
                               versions.
 ----------------------------------------------------------------------*/
 
+#include "stdafx.h"
 #include "stdafx_.h"
 #include "BugslayerUtil.h"
 #include "CrashHandler.h"
@@ -1233,4 +1234,3 @@ void CleanupSymEng ( void )
         g_bSymEngInit = FALSE ;
     }
 }
-

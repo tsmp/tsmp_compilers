@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "elight_def.h"
-#include "DXT.h"
+#include "..\xrDXT\DXT.h"
 
 b_params				g_params;
 extern volatile u32		dwInvalidFaces;

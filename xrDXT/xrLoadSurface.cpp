@@ -1,7 +1,5 @@
 #include "stdafx.h"
-#pragma hdrstop
-
-#include "freeimage.h"
+#include "FreeImage/FreeImage.h"
 #include "DXT.h"
 #include <fcntl.h>
 

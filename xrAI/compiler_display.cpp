@@ -3,6 +3,7 @@
 
 //-------------------------------------------------------------------------------------------------------
 #include "resource.h"
+#include "../xrLC/COMMON_COMPILERS/resource.h"
 
 extern HWND logWindow;
 

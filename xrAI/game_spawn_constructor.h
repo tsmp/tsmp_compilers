@@ -10,12 +10,12 @@
 
 #include "alife_space.h"
 #include "xr_graph_merge.h"
-#include "xrthread.h"
+#include "..\xrLC\COMMON_COMPILERS\xrthread.h"
 #include "graph_abstract.h"
 #include "xrServer_Object_Base.h"
 #include "spawn_constructor_space.h"
 #include "server_entity_wrapper.h"
-#include "guid_generator.h"
+#include "..\xrLC\COMMON_COMPILERS\guid_generator.h"
 
 class CSE_Abstract;
 class CLevelSpawnConstructor;

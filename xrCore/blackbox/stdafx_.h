@@ -30,4 +30,7 @@ long atol( const char* nptr );
 #   define min(a,b) ((a) < (b) ? (a) : (b))
 #endif // _EDITOR
 
+using std::min;
+using std::max;
+
 #endif //
