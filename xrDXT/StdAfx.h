@@ -14,6 +14,6 @@
 }
 #endif
 
-#pragma comment(lib,"xrShared.lib")
+#pragma comment(lib,"xrCore.lib")
 #pragma comment(lib, "nvtt.lib")
 #pragma comment(lib,"FreeImage.lib")

@@ -17,7 +17,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A4ABD75E-825B-4D09-B3B2-2709682E40C8}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Compiler</ProjectName>
+    <ProjectName>xrLc</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -109,7 +109,7 @@
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
     <IntDir>$(SolutionDir)\output\intermediate_x64\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)\components\MagicFm\x64;$(SolutionDir)\components\dx9sdk\lib64;$(SolutionDir)\output\libraries_x64_release\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\xrdxt;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrQSlim\src;$(SolutionDir)\xrcdb;$(SolutionDir)\xr_3da;$(SolutionDir)\xrShared;$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\MagicFm;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\xrdxt;$(SolutionDir)\xrLC\COMMON_COMPILERS;$(SolutionDir)\xrQSlim\src;$(SolutionDir)\xrcdb;$(SolutionDir)\xr_3da;$(SolutionDir)\xrCore;$(SolutionDir)\components\FreeImage;$(SolutionDir)\components\MagicFm;$(SolutionDir)\components\dx9sdk\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\output\binaries_x64_release\</OutDir>
@@ -641,9 +641,6 @@
     <ProjectReference Include="..\xrQSlim\xrQSlim.vcxproj">
       <Project>{f1836ce2-59ef-4189-8b9c-d103a511cb27}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\xrShared\xrShared.vcxproj">
-      <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

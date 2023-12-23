@@ -5,7 +5,7 @@
 
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(lib,"winmm.LIB")
-#pragma comment(lib,"xrShared.lib")
+#pragma comment(lib,"xrCore.lib")
 
 extern void	xrCompiler(LPCSTR name);
 extern void logThread(void *dummy);
