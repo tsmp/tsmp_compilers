@@ -20,37 +20,45 @@
 #ifndef __OPC_COMMON_H__
 #define __OPC_COMMON_H__
 
-	class OPCODE_API CollisionAABB
+class OPCODE_API CollisionAABB
+{
+public:
+	//! Constructor
+	inline CollisionAABB() {}
+	//! Constructor
+	inline CollisionAABB(const AABB &b)
 	{
-		public:
-		//! Constructor
-		inline				CollisionAABB()						{}
-		//! Constructor
-		inline				CollisionAABB(const AABB& b)		{ b.GetCenter(mCenter);	b.GetExtents(mExtents);	}
-		//! Destructor
-		inline				~CollisionAABB()					{}
+		b.GetCenter(mCenter);
+		b.GetExtents(mExtents);
+	}
+	//! Destructor
+	inline ~CollisionAABB() {}
 
-		//! Get component of the box's min point along a given axis
-		inline	float		GetMin(unsigned int axis)		const		{ return ((const float*)mCenter)[axis] - ((const float*)mExtents)[axis];	}
-		//! Get component of the box's max point along a given axis
-		inline	float		GetMax(unsigned int axis)		const		{ return ((const float*)mCenter)[axis] + ((const float*)mExtents)[axis];	}
-
-
-
-				Point		mCenter;				//!< Box center
-				Point		mExtents;				//!< Box extents
-	};
-
-	class OPCODE_API QuantizedAABB
+	//! Get component of the box's min point along a given axis
+	inline float GetMin(unsigned int axis) const
 	{
-		public:
-		//! Constructor
-		inline				QuantizedAABB()			{}
-		//! Destructor
-		inline				~QuantizedAABB()		{}
+		return ((const float *)mCenter)[axis] - ((const float *)mExtents)[axis];
+	}
+	//! Get component of the box's max point along a given axis
+	inline float GetMax(unsigned int axis) const
+	{
+		return ((const float *)mCenter)[axis] + ((const float *)mExtents)[axis];
+	}
 
-		signed short		mCenter[3];				//!< Quantized center
-		unsigned short		mExtents[3];			//!< Quantized extents
-	};
-	   
+	Point mCenter;	//!< Box center
+	Point mExtents; //!< Box extents
+};
+
+class OPCODE_API QuantizedAABB
+{
+public:
+	//! Constructor
+	inline QuantizedAABB() {}
+	//! Destructor
+	inline ~QuantizedAABB() {}
+
+	signed short mCenter[3];	//!< Quantized center
+	unsigned short mExtents[3]; //!< Quantized extents
+};
+
 #endif //__OPC_COMMON_H__

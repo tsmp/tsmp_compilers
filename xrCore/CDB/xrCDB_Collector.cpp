@@ -6,11 +6,11 @@ namespace CDB
 {
 
 #pragma warning(push)
-#pragma warning(disable:4995)
+#pragma warning(disable : 4995)
 #include <malloc.h>
 #pragma warning(pop)
 
-	CollectorPacked::CollectorPacked(const Fbox& bb, int apx_vertices, int apx_faces)
+	CollectorPacked::CollectorPacked(const Fbox &bb, int apx_vertices, int apx_faces)
 	{
 		// Params
 		VMscale.set(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z);
@@ -24,8 +24,8 @@ namespace CDB
 		verts.reserve(apx_vertices);
 		faces.reserve(apx_faces);
 
-		int	_size = (clpMX + 1) * (clpMY + 1) * (clpMZ + 1);
-		int	_average = (apx_vertices / _size) / 2;
+		int _size = (clpMX + 1) * (clpMY + 1) * (clpMZ + 1);
+		int _average = (apx_vertices / _size) / 2;
 
 		for (int ix = 0; ix < clpMX + 1; ix++)
 			for (int iy = 0; iy < clpMY + 1; iy++)
@@ -33,9 +33,9 @@ namespace CDB
 					VM[ix][iy][iz].reserve(_average);
 	}
 
-	void CollectorPacked::add_face(
-		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
-		u16 material, u16 sector									// misc
+	void CollectorPacked::add_face(const Fvector &v0, const Fvector &v1,
+		const Fvector &v2,		 // vertices
+		u16 material, u16 sector // misc
 	)
 	{
 		TRI T;
@@ -47,12 +47,12 @@ namespace CDB
 		faces.push_back(T);
 	}
 
-	void CollectorPacked::add_face_D(
-		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
+	void CollectorPacked::add_face_D(const Fvector &v0, const Fvector &v1,
+		const Fvector &v2, // vertices
 #ifdef _WIN64
-		u64 dummy													// misc
+		u64 dummy // misc
 #else
-		u32 dummy													// misc
+		u32 dummy // misc
 #endif
 	)
 	{
@@ -64,7 +64,7 @@ namespace CDB
 		faces.push_back(T);
 	}
 
-	u32	CollectorPacked::VPack(const Fvector& V)
+	u32 CollectorPacked::VPack(const Fvector &V)
 	{
 		u32 P = 0xffffffff;
 
@@ -74,13 +74,15 @@ namespace CDB
 		iz = iFloor(float(V.z - VMmin.z) / VMscale.z * clpMZ);
 
 		//		R_ASSERT(ix<=clpMX && iy<=clpMY && iz<=clpMZ);
-		clamp(ix, (u32)0, clpMX);	clamp(iy, (u32)0, clpMY);	clamp(iz, (u32)0, clpMZ);
+		clamp(ix, (u32)0, clpMX);
+		clamp(iy, (u32)0, clpMY);
+		clamp(iz, (u32)0, clpMZ);
 
 		{
-			DWORDList* vl;
+			DWORDList *vl;
 			vl = &(VM[ix][iy][iz]);
 			for (DWORDIt it = vl->begin(); it != vl->end(); it++)
-				if (verts[*it].similar(V)) 
+				if (verts[*it].similar(V))
 				{
 					P = *it;
 					break;
@@ -100,20 +102,29 @@ namespace CDB
 			izE = iFloor(float(V.z + VMeps.z - VMmin.z) / VMscale.z * clpMZ);
 
 			//			R_ASSERT(ixE<=clpMX && iyE<=clpMY && izE<=clpMZ);
-			clamp(ixE, (u32)0, clpMX);	clamp(iyE, (u32)0, clpMY);	clamp(izE, (u32)0, clpMZ);
+			clamp(ixE, (u32)0, clpMX);
+			clamp(iyE, (u32)0, clpMY);
+			clamp(izE, (u32)0, clpMZ);
 
-			if (ixE != ix)							VM[ixE][iy][iz].push_back(P);
-			if (iyE != iy)							VM[ix][iyE][iz].push_back(P);
-			if (izE != iz)							VM[ix][iy][izE].push_back(P);
-			if ((ixE != ix) && (iyE != iy))				VM[ixE][iyE][iz].push_back(P);
-			if ((ixE != ix) && (izE != iz))				VM[ixE][iy][izE].push_back(P);
-			if ((iyE != iy) && (izE != iz))				VM[ix][iyE][izE].push_back(P);
-			if ((ixE != ix) && (iyE != iy) && (izE != iz))	VM[ixE][iyE][izE].push_back(P);
+			if (ixE != ix)
+				VM[ixE][iy][iz].push_back(P);
+			if (iyE != iy)
+				VM[ix][iyE][iz].push_back(P);
+			if (izE != iz)
+				VM[ix][iy][izE].push_back(P);
+			if ((ixE != ix) && (iyE != iy))
+				VM[ixE][iyE][iz].push_back(P);
+			if ((ixE != ix) && (izE != iz))
+				VM[ixE][iy][izE].push_back(P);
+			if ((iyE != iy) && (izE != iz))
+				VM[ix][iyE][izE].push_back(P);
+			if ((ixE != ix) && (iyE != iy) && (izE != iz))
+				VM[ixE][iyE][izE].push_back(P);
 		}
 		return P;
 	}
 
-	void	CollectorPacked::clear()
+	void CollectorPacked::clear()
 	{
 		verts.clear_and_free();
 		faces.clear_and_free();
@@ -122,4 +133,4 @@ namespace CDB
 				for (u32 _z = 0; _z <= clpMZ; _z++)
 					VM[_x][_y][_z].clear_and_free();
 	}
-};
+}; // namespace CDB

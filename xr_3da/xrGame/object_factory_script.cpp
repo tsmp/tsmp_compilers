@@ -13,53 +13,50 @@
 #include "object_item_script.h"
 #include <type_traits>
 
-void CObjectFactory::register_script_class	(LPCSTR client_class, LPCSTR server_class, LPCSTR clsid, LPCSTR script_clsid)
+void CObjectFactory::register_script_class(LPCSTR client_class, LPCSTR server_class, LPCSTR clsid,
+	LPCSTR script_clsid)
 {
 #ifndef NO_XR_GAME
-	luabind::object				client;
-	if (!ai().script_engine().function_object(client_class,client,LUA_TUSERDATA)) {
-		ai().script_engine().script_log	(eLuaMessageTypeError,"Cannot register class %s",client_class);
+	luabind::object client;
+	if (!ai().script_engine().function_object(client_class, client, LUA_TUSERDATA))
+	{
+		ai().script_engine().script_log(eLuaMessageTypeError, "Cannot register class %s",
+			client_class);
 		return;
 	}
 #endif
-	luabind::object				server;
-	if (!ai().script_engine().function_object(server_class,server,LUA_TUSERDATA)) {
-		ai().script_engine().script_log	(eLuaMessageTypeError,"Cannot register class %s",server_class);
+	luabind::object server;
+	if (!ai().script_engine().function_object(server_class, server, LUA_TUSERDATA))
+	{
+		ai().script_engine().script_log(eLuaMessageTypeError, "Cannot register class %s",
+			server_class);
 		return;
 	}
-	
-	add							(
-		xr_new<CObjectItemScript>(
+
+	add(xr_new<CObjectItemScript>(
 #ifndef NO_XR_GAME
-			client,
+		client,
 #endif
-			server,
-			TEXT2CLSID(clsid),
-			script_clsid
-		)
-	);
+		server, TEXT2CLSID(clsid), script_clsid));
 }
 
-void CObjectFactory::register_script_class			(LPCSTR unknown_class, LPCSTR clsid, LPCSTR script_clsid)
+void CObjectFactory::register_script_class(LPCSTR unknown_class, LPCSTR clsid, LPCSTR script_clsid)
 {
-	luabind::object				creator;
-	if (!ai().script_engine().function_object(unknown_class,creator,LUA_TUSERDATA)) {
-		ai().script_engine().script_log	(eLuaMessageTypeError,"Cannot register class %s",unknown_class);
+	luabind::object creator;
+	if (!ai().script_engine().function_object(unknown_class, creator, LUA_TUSERDATA))
+	{
+		ai().script_engine().script_log(eLuaMessageTypeError, "Cannot register class %s",
+			unknown_class);
 		return;
 	}
-	add							(
-		xr_new<CObjectItemScript>(
+	add(xr_new<CObjectItemScript>(
 #ifndef NO_XR_GAME
-			creator,
+		creator,
 #endif
-			creator,
-			TEXT2CLSID(clsid),
-			script_clsid
-		)
-	);
+		creator, TEXT2CLSID(clsid), script_clsid));
 }
 #ifndef XRSE_FACTORY_EXPORTS
-ENGINE_API	bool g_dedicated_server;
+ENGINE_API bool g_dedicated_server;
 
 void CObjectFactory::register_script_classes()
 {
@@ -67,37 +64,36 @@ void CObjectFactory::register_script_classes()
 		ai();
 }
 #else
-void CObjectFactory::register_script_classes()
-{
-	ai();
-}
+void CObjectFactory::register_script_classes() { ai(); }
 #endif
 
 using namespace luabind;
 
-struct CInternal{};
-
-void CObjectFactory::register_script	() const
+struct CInternal
 {
-	actualize					();
+};
 
-	luabind::class_<CInternal>	instance("clsid");
+void CObjectFactory::register_script() const
+{
+	actualize();
 
-	const_iterator				I = clsids().begin(), B = I;
-	const_iterator				E = clsids().end();
-	for ( ; I != E; ++I)
-		instance = std::move(instance).enum_("_clsid")[luabind::value(*(*I)->script_clsid(),int(I - B))];
+	luabind::class_<CInternal> instance("clsid");
 
-	luabind::module				(ai().script_engine().lua())[std::move(instance)];
+	const_iterator I = clsids().begin(), B = I;
+	const_iterator E = clsids().end();
+	for (; I != E; ++I)
+		instance =
+			std::move(instance).enum_("_clsid")[luabind::value(*(*I)->script_clsid(), int(I - B))];
+
+	luabind::module(ai().script_engine().lua())[std::move(instance)];
 }
 
-#pragma optimize("s",on)
+#pragma optimize("s", on)
 void CObjectFactory::script_register(lua_State *L)
 {
-	module(L)
-	[
-		class_<CObjectFactory>("object_factory")
-			.def("register",	(void (CObjectFactory::*)(LPCSTR,LPCSTR,LPCSTR,LPCSTR))(&CObjectFactory::register_script_class))
-			.def("register",	(void (CObjectFactory::*)(LPCSTR,LPCSTR,LPCSTR))(&CObjectFactory::register_script_class))
-	];
+	module(L)[class_<CObjectFactory>("object_factory")
+				  .def("register", (void(CObjectFactory::*)(LPCSTR, LPCSTR, LPCSTR, LPCSTR))(
+									   &CObjectFactory::register_script_class))
+				  .def("register", (void(CObjectFactory::*)(LPCSTR, LPCSTR, LPCSTR))(
+									   &CObjectFactory::register_script_class))];
 }

@@ -3,11 +3,11 @@
 
 void MuLight()
 {
-	CTimer	start_mu1;
+	CTimer start_mu1;
 	start_mu1.Start();
 
 	// Light models
-	
+
 	int Mu_Size = pBuild->mu_models.size();
 
 	for (int m = 0; m < Mu_Size; m++)
@@ -17,27 +17,23 @@ void MuLight()
 		pBuild->mu_models[m]->calc_lighting();
 	}
 
-	clMsg("mu_light primary completed %f seconds elapsed", start_mu1.GetElapsed_sec());	
+	clMsg("mu_light primary completed %f seconds elapsed", start_mu1.GetElapsed_sec());
 
+	// Light references
+	int count = (int)pBuild->mu_refs.size();
 
-		// Light references
-		int count = (int)pBuild->mu_refs.size();
+	if (count)
+	{
+		CTimer start_mu;
+		start_mu.Start();
 
-		if (count)
+		for (int it = 0; it < count; it++)
 		{
-			CTimer	start_mu;
-			start_mu.Start();
-
-			for (int it = 0; it < count; it++)
-			{
-				pBuild->mu_refs[it]->calc_lighting();
-			}
-
-			clMsg("mu_light secondary completed %f seconds elapsed", start_mu.GetElapsed_sec());
+			pBuild->mu_refs[it]->calc_lighting();
 		}
-	}
 
-void	CBuild::xrPhase_MU_light()
-{
-	MuLight();
+		clMsg("mu_light secondary completed %f seconds elapsed", start_mu.GetElapsed_sec());
+	}
 }
+
+void CBuild::xrPhase_MU_light() { MuLight(); }

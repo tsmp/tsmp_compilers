@@ -32,8 +32,7 @@ distribution.
 // It also cleans up the code a bit.
 //
 
-const char* TiXmlBase::errorString[ TIXML_ERROR_STRING_COUNT ] =
-{
+const char *TiXmlBase::errorString[TIXML_ERROR_STRING_COUNT] = {
 	"No error",
 	"Error",
 	"Failed to open file",

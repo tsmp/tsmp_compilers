@@ -21,44 +21,46 @@ enum
 };
 
 // KD start
-BOOL					b_norgb = FALSE;
-BOOL					b_nosun = FALSE;
+BOOL b_norgb = FALSE;
+BOOL b_nosun = FALSE;
 // KD end
 
-int						i_ThreadCount = 1;
+int i_ThreadCount = 1;
 
-float	color_intensity(Fcolor& c)
+float color_intensity(Fcolor &c)
 {
-	float	ntsc = c.r * 0.2125f + c.g * 0.7154f + c.b * 0.0721f;
-	float	absolute = c.magnitude_rgb() / 1.7320508075688772935274463415059f;
-	return	ntsc * 0.5f + absolute * 0.5f;
+	float ntsc = c.r * 0.2125f + c.g * 0.7154f + c.b * 0.0721f;
+	float absolute = c.magnitude_rgb() / 1.7320508075688772935274463415059f;
+	return ntsc * 0.5f + absolute * 0.5f;
 }
 class base_lighting
 {
 public:
-	xr_vector<R_Light>		rgb;		// P,N	
-	xr_vector<R_Light>		hemi;		// P,N	
-	xr_vector<R_Light>		sun;		// P
+	xr_vector<R_Light> rgb;	 // P,N
+	xr_vector<R_Light> hemi; // P,N
+	xr_vector<R_Light> sun;	 // P
 
-	void					select(xr_vector<R_Light>& dest, xr_vector<R_Light>& src, Fvector& P, float R);
-	void					select(base_lighting& from, Fvector& P, float R);
+	void select(xr_vector<R_Light> &dest, xr_vector<R_Light> &src, Fvector &P, float R);
+	void select(base_lighting &from, Fvector &P, float R);
 };
-void	base_lighting::select(xr_vector<R_Light>& dest, xr_vector<R_Light>& src, Fvector& P, float R)
+void base_lighting::select(xr_vector<R_Light> &dest, xr_vector<R_Light> &src, Fvector &P, float R)
 {
-	Fsphere		Sphere;
+	Fsphere Sphere;
 	Sphere.set(P, R);
 	dest.clear();
-	R_Light*	L = &*src.begin();
+	R_Light *L = &*src.begin();
 	for (; L != &*src.end(); L++)
 	{
-		if (L->type == LT_POINT) {
+		if (L->type == LT_POINT)
+		{
 			float dist = Sphere.P.distance_to(L->position);
-			if (dist > (Sphere.R + L->range))	continue;
+			if (dist > (Sphere.R + L->range))
+				continue;
 		}
 		dest.push_back(*L);
 	}
 }
-void	base_lighting::select(base_lighting& from, Fvector& P, float R)
+void base_lighting::select(base_lighting &from, Fvector &P, float R)
 {
 	select(rgb, from.rgb, P, R);
 	select(hemi, from.hemi, P, R);
@@ -68,39 +70,72 @@ void	base_lighting::select(base_lighting& from, Fvector& P, float R)
 class base_color
 {
 public:
-	Fvector					rgb;		// - all static lighting
-	float					hemi;		// - hemisphere
-	float					sun;		// - sun
-	float					_tmp_;		// ???
-	base_color() { rgb.set(0, 0, 0); hemi = 0; sun = 0; _tmp_ = 0; }
+	Fvector rgb; // - all static lighting
+	float hemi;	 // - hemisphere
+	float sun;	 // - sun
+	float _tmp_; // ???
+	base_color()
+	{
+		rgb.set(0, 0, 0);
+		hemi = 0;
+		sun = 0;
+		_tmp_ = 0;
+	}
 
-	void					mul(float s) { rgb.mul(s);	hemi *= s; sun *= s; };
-	void					add(float s) { rgb.add(s);	hemi += s; sun += s; };
-	void					add(base_color& s) { rgb.add(s.rgb);	hemi += s.hemi; sun += s.sun; };
-	void					scale(int samples) { mul(1.f / float(samples)); };
-	void					max(base_color& s) { rgb.max(s.rgb); hemi = _max(hemi, s.hemi); sun = _max(sun, s.sun); };
-	void					lerp(base_color& A, base_color& B, float s) { rgb.lerp(A.rgb, B.rgb, s); float is = 1 - s;  hemi = is * A.hemi + s * B.hemi; sun = is * A.sun + s * B.sun; };
+	void mul(float s)
+	{
+		rgb.mul(s);
+		hemi *= s;
+		sun *= s;
+	};
+	void add(float s)
+	{
+		rgb.add(s);
+		hemi += s;
+		sun += s;
+	};
+	void add(base_color &s)
+	{
+		rgb.add(s.rgb);
+		hemi += s.hemi;
+		sun += s.sun;
+	};
+	void scale(int samples) { mul(1.f / float(samples)); };
+	void max(base_color &s)
+	{
+		rgb.max(s.rgb);
+		hemi = _max(hemi, s.hemi);
+		sun = _max(sun, s.sun);
+	};
+	void lerp(base_color &A, base_color &B, float s)
+	{
+		rgb.lerp(A.rgb, B.rgb, s);
+		float is = 1 - s;
+		hemi = is * A.hemi + s * B.hemi;
+		sun = is * A.sun + s * B.sun;
+	};
 };
-IC	u8	u8_clr(float a) { s32 _a = iFloor(a*255.f); clamp(_a, 0, 255); return u8(_a); };
-
+IC u8 u8_clr(float a)
+{
+	s32 _a = iFloor(a * 255.f);
+	clamp(_a, 0, 255);
+	return u8(_a);
+};
 
 //-----------------------------------------------------------------------------------------------------------------
-const int	LIGHT_Count = 7;
+const int LIGHT_Count = 7;
 
 //-----------------------------------------------------------------
-__declspec(thread)		u64			t_start = 0;
-__declspec(thread)		u64			t_time = 0;
-__declspec(thread)		u64			t_count = 0;
+__declspec(thread) u64 t_start = 0;
+__declspec(thread) u64 t_time = 0;
+__declspec(thread) u64 t_count = 0;
 
 struct b_BuildTexture : public b_texture
 {
-	STextureParams	THM;
+	STextureParams THM;
 
-	u32&	Texel(u32 x, u32 y)
-	{
-		return pSurface[y*dwWidth + x];
-	}
-	void	Vflip()
+	u32 &Texel(u32 x, u32 y) { return pSurface[y * dwWidth + x]; }
+	void Vflip()
 	{
 		R_ASSERT(pSurface);
 		for (u32 y = 0; y < dwHeight / 2; y++)
@@ -108,7 +143,7 @@ struct b_BuildTexture : public b_texture
 			u32 y2 = dwHeight - y - 1;
 			for (u32 x = 0; x < dwWidth; x++)
 			{
-				u32		t = Texel(x, y);
+				u32 t = Texel(x, y);
 				Texel(x, y) = Texel(x, y2);
 				Texel(x, y2) = t;
 			}
@@ -117,41 +152,42 @@ struct b_BuildTexture : public b_texture
 };
 
 //-----------------------------------------------------------------
-base_lighting				g_lights;
-CDB::MODEL					RCAST_Model;
-Fbox						LevelBB;
-CVirtualFileRW*				dtFS = 0;
-DetailHeader				dtH;
-DetailSlot*					dtS;
+base_lighting g_lights;
+CDB::MODEL RCAST_Model;
+Fbox LevelBB;
+CVirtualFileRW *dtFS = 0;
+DetailHeader dtH;
+DetailSlot *dtS;
 
-Shader_xrLC_LIB*			g_shaders_xrlc;
+Shader_xrLC_LIB *g_shaders_xrlc;
 
-b_params					g_params;
+b_params g_params;
 
-xr_vector<b_material>		g_materials;
-xr_vector<b_shader>			g_shader_render;
-xr_vector<b_shader>			g_shader_compile;
-xr_vector<b_BuildTexture>	g_textures;
-xr_vector<b_rc_face>		g_rc_faces;
+xr_vector<b_material> g_materials;
+xr_vector<b_shader> g_shader_render;
+xr_vector<b_shader> g_shader_compile;
+xr_vector<b_BuildTexture> g_textures;
+xr_vector<b_rc_face> g_rc_faces;
 
 //-----------------------------------------------------------------
 template <class T>
-void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
+void transfer(const char *name, xr_vector<T> &dest, IReader &F, u32 chunk)
 {
-	IReader*	O = F.open_chunk(chunk);
-	u32		count = O ? (O->length() / sizeof(T)) : 0;
+	IReader *O = F.open_chunk(chunk);
+	u32 count = O ? (O->length() / sizeof(T)) : 0;
 	clMsg("* %16s: %d", name, count);
 	if (count)
 	{
 		dest.reserve(count);
-		dest.insert(dest.begin(), (T*)O->pointer(), (T*)O->pointer() + count);
+		dest.insert(dest.begin(), (T *)O->pointer(), (T *)O->pointer() + count);
 	}
-	if (O)		O->close();
+	if (O)
+		O->close();
 }
- 
+
 void xrLoad(LPCSTR name)
 {
-	string_path					N;
+	string_path N;
 	FS.update_path(N, "$game_data$", "shaders_xrlc.xr");
 	g_shaders_xrlc = xr_new<Shader_xrLC_LIB>();
 	g_shaders_xrlc->Load(N);
@@ -161,15 +197,15 @@ void xrLoad(LPCSTR name)
 		FS.update_path(N, "$level$", "build.cform");
 		Msg(N);
 
-		IReader*			fs = FS.r_open("$level$", "build.cform");
+		IReader *fs = FS.r_open("$level$", "build.cform");
 
 		R_ASSERT(fs->find_chunk(0));
-		hdrCFORM			H;
+		hdrCFORM H;
 		fs->r(&H, sizeof(hdrCFORM));
 		R_ASSERT(CFORM_CURRENT_VERSION == H.version);
 
-		Fvector*	verts = (Fvector*)fs->pointer();
-		CDB::TRI*	tris = (CDB::TRI*)(verts + H.vertcount);
+		Fvector *verts = (Fvector *)fs->pointer();
+		CDB::TRI *tris = (CDB::TRI *)(verts + H.vertcount);
 		RCAST_Model.build(verts, H.vertcount, tris, H.facecount);
 		Msg("* Level CFORM: %dK", RCAST_Model.memory() / 1024);
 
@@ -183,8 +219,8 @@ void xrLoad(LPCSTR name)
 	// Load .details
 	{
 		// copy
-		IReader*	R = FS.r_open("$level$", "build.details");
-		IWriter*	W = FS.w_open("$level$", "level.details");
+		IReader *R = FS.r_open("$level$", "build.details");
+		IWriter *W = FS.w_open("$level$", "level.details");
 		W->w(R->pointer(), R->length());
 		FS.w_close(W);
 		FS.r_close(R);
@@ -196,43 +232,44 @@ void xrLoad(LPCSTR name)
 		R_ASSERT(dtH.version == DETAIL_VERSION);
 
 		dtFS->find_chunk(2);
-		dtS = (DetailSlot*)dtFS->pointer();
+		dtS = (DetailSlot *)dtFS->pointer();
 	}
 
 	// Lights
 	{
-		IReader*			fs = FS.r_open("$level$", "build.lights");
-		IReader*			F;	u32 cnt; R_Light* L;
+		IReader *fs = FS.r_open("$level$", "build.lights");
+		IReader *F;
+		u32 cnt;
+		R_Light *L;
 
 		// rgb
 		F = fs->open_chunk(0);
 		cnt = F->length() / sizeof(R_Light);
-		L = (R_Light*)F->pointer();
+		L = (R_Light *)F->pointer();
 		g_lights.rgb.assign(L, L + cnt);
 		F->close();
 
 		// hemi
 		F = fs->open_chunk(1);
 		cnt = F->length() / sizeof(R_Light);
-		L = (R_Light*)F->pointer();
+		L = (R_Light *)F->pointer();
 		g_lights.hemi.assign(L, L + cnt);
 		F->close();
 
 		// sun
 		F = fs->open_chunk(2);
 		cnt = F->length() / sizeof(R_Light);
-		L = (R_Light*)F->pointer();
+		L = (R_Light *)F->pointer();
 		g_lights.sun.assign(L, L + cnt);
 		F->close();
 
 		FS.r_close(fs);
 	}
 
-
 	// Load level data
 	{
-		IReader*	fs = FS.r_open("$level$", "build.prj");
-		IReader*	F;
+		IReader *fs = FS.r_open("$level$", "build.prj");
+		IReader *F;
 
 		// Version
 		u32 version;
@@ -264,17 +301,17 @@ void xrLoad(LPCSTR name)
 
 #ifdef _WIN64
 				// workaround for ptr size mismatching
-				help_b_texture	TEX;
+				help_b_texture TEX;
 				F->r(&TEX, sizeof(TEX));
 
-				b_BuildTexture	BT;
-				CopyMemory(&BT, &TEX, sizeof(TEX) - 4);	// ptr should be copied separately
+				b_BuildTexture BT;
+				CopyMemory(&BT, &TEX, sizeof(TEX) - 4); // ptr should be copied separately
 				BT.pSurface = (u32 *)TEX.pSurface;
 #else
-				b_texture		TEX;
+				b_texture TEX;
 				F->r(&TEX, sizeof(TEX));
 
-				b_BuildTexture	BT;
+				b_BuildTexture BT;
 				CopyMemory(&BT, &TEX, sizeof(TEX));
 #endif
 
@@ -297,7 +334,7 @@ void xrLoad(LPCSTR name)
 				else
 				{
 					strcat(N, ".thm");
-					IReader* THM = FS.r_open("$textures$", N);
+					IReader *THM = FS.r_open("$textures$", N);
 					R_ASSERT2(THM, N);
 
 					// version
@@ -315,7 +352,7 @@ void xrLoad(LPCSTR name)
 					BT.THM.mip_filter = THM->r_u32();
 					BT.THM.width = THM->r_u32();
 					BT.THM.height = THM->r_u32();
-					BOOL			bLOD = FALSE;
+					BOOL bLOD = FALSE;
 
 					if (N[0] == 'l' && N[1] == 'o' && N[2] == 'd' && N[3] == '\\')
 						bLOD = TRUE;
@@ -331,14 +368,16 @@ void xrLoad(LPCSTR name)
 						if (BT.bHasAlpha || BT.THM.flags.test(STextureParams::flImplicitLighted))
 						{
 							clMsg("- loading: %s", N);
-							u32			w = 0, h = 0;
+							u32 w = 0, h = 0;
 							BT.pSurface = Surface_Load(N, w, h);
 							R_ASSERT2(BT.pSurface, "Can't load surface");
 
 							// KD: in case of thm doesn't correspond to texture let's reset thm params to actual texture ones
 							if ((w != BT.dwWidth) || (h != BT.dwHeight))
 							{
-								Msg("! THM doesn't correspond to the texture: %dx%d -> %dx%d, reseting", BT.dwWidth, BT.dwHeight, w, h);
+								Msg("! THM doesn't correspond to the texture: %dx%d -> %dx%d, "
+									"reseting",
+									BT.dwWidth, BT.dwHeight, w, h);
 								BT.dwWidth = w;
 								BT.dwHeight = h;
 							}
@@ -359,13 +398,15 @@ void xrLoad(LPCSTR name)
 	}
 }
 
-IC bool RayPick(CDB::COLLIDER& DB, Fvector& P, Fvector& D, float r, R_Light& L)
+IC bool RayPick(CDB::COLLIDER &DB, Fvector &P, Fvector &D, float r, R_Light &L)
 {
 	// 1. Check cached polygon
 	float _u, _v, range;
 	bool res = CDB::TestRayTri(P, D, L.tri, _u, _v, range, true);
-	if (res) {
-		if (range > 0 && range < r) return true;
+	if (res)
+	{
+		if (range > 0 && range < r)
+			return true;
 	}
 
 	// 2. Polygon doesn't pick - real database query
@@ -375,13 +416,15 @@ IC bool RayPick(CDB::COLLIDER& DB, Fvector& P, Fvector& D, float r, R_Light& L)
 	t_count += 1;
 
 	// 3. Analyze
-	if (0 == DB.r_count()) {
+	if (0 == DB.r_count())
+	{
 		return false;
 	}
-	else {
+	else
+	{
 		// cache polygon
-		CDB::RESULT&	rpinf = *DB.r_begin();
-		CDB::TRI&		T = RCAST_Model.get_tris()[rpinf.id];
+		CDB::RESULT &rpinf = *DB.r_begin();
+		CDB::TRI &T = RCAST_Model.get_tris()[rpinf.id];
 		L.tri[0].set(rpinf.verts[0]);
 		L.tri[1].set(rpinf.verts[1]);
 		L.tri[2].set(rpinf.verts[2]);
@@ -389,32 +432,36 @@ IC bool RayPick(CDB::COLLIDER& DB, Fvector& P, Fvector& D, float r, R_Light& L)
 	}
 }
 
-float getLastRP_Scale(CDB::COLLIDER* DB, R_Light& L)//, Face* skip)
+float getLastRP_Scale(CDB::COLLIDER *DB, R_Light &L) //, Face* skip)
 {
-	u32	tris_count = DB->r_count();
-	float	scale = 1.f;
+	u32 tris_count = DB->r_count();
+	float scale = 1.f;
 	Fvector B;
 
-	//	X_TRY 
+	//	X_TRY
 	{
 		for (u32 I = 0; I < tris_count; I++)
 		{
-			CDB::RESULT& rpinf = DB->r_begin()[I];
+			CDB::RESULT &rpinf = DB->r_begin()[I];
 			// Access to texture
-			CDB::TRI& clT = RCAST_Model.get_tris()[rpinf.id];
-			b_rc_face& F = g_rc_faces[rpinf.id];
+			CDB::TRI &clT = RCAST_Model.get_tris()[rpinf.id];
+			b_rc_face &F = g_rc_faces[rpinf.id];
 			//			if (0==F)									continue;
 			//			if (skip==F)								continue;
 
-			b_material& M = g_materials[F.dwMaterial];
-			b_texture&	T = g_textures[M.surfidx];
-			Shader_xrLCVec&	LIB = g_shaders_xrlc->Library();
-			if (M.shader_xrlc >= LIB.size()) return		0;		//. hack
-			Shader_xrLC& SH = LIB[M.shader_xrlc];
-			if (!SH.flags.bLIGHT_CastShadow)			continue;
+			b_material &M = g_materials[F.dwMaterial];
+			b_texture &T = g_textures[M.surfidx];
+			Shader_xrLCVec &LIB = g_shaders_xrlc->Library();
+			if (M.shader_xrlc >= LIB.size())
+				return 0; //. hack
+			Shader_xrLC &SH = LIB[M.shader_xrlc];
+			if (!SH.flags.bLIGHT_CastShadow)
+				continue;
 
-			if (0 == T.pSurface)	T.bHasAlpha = FALSE;
-			if (!T.bHasAlpha) {
+			if (0 == T.pSurface)
+				T.bHasAlpha = FALSE;
+			if (!T.bHasAlpha)
+			{
 				// Opaque poly - cache it
 				L.tri[0].set(rpinf.verts[0]);
 				L.tri[1].set(rpinf.verts[1]);
@@ -427,17 +474,21 @@ float getLastRP_Scale(CDB::COLLIDER* DB, R_Light& L)//, Face* skip)
 			B.set(1.0f - rpinf.u - rpinf.v, rpinf.u, rpinf.v);
 
 			// calc UV
-			Fvector2*	cuv = F.t;
-			Fvector2	uv;
-			uv.x = cuv[0].x*B.x + cuv[1].x*B.y + cuv[2].x*B.z;
-			uv.y = cuv[0].y*B.x + cuv[1].y*B.y + cuv[2].y*B.z;
+			Fvector2 *cuv = F.t;
+			Fvector2 uv;
+			uv.x = cuv[0].x * B.x + cuv[1].x * B.y + cuv[2].x * B.z;
+			uv.y = cuv[0].y * B.x + cuv[1].y * B.y + cuv[2].y * B.z;
 
-			int U = iFloor(uv.x*float(T.dwWidth) + .5f);
-			int V = iFloor(uv.y*float(T.dwHeight) + .5f);
-			U %= T.dwWidth;		if (U < 0) U += T.dwWidth;
-			V %= T.dwHeight;	if (V < 0) V += T.dwHeight;
+			int U = iFloor(uv.x * float(T.dwWidth) + .5f);
+			int V = iFloor(uv.y * float(T.dwHeight) + .5f);
+			U %= T.dwWidth;
+			if (U < 0)
+				U += T.dwWidth;
+			V %= T.dwHeight;
+			if (V < 0)
+				V += T.dwHeight;
 
-			u32 pixel = T.pSurface[V*T.dwWidth + U];
+			u32 pixel = T.pSurface[V * T.dwWidth + U];
 			u32 pixel_a = color_get_A(pixel);
 			float opac = 1.f - float(pixel_a) / 255.f;
 			scale *= opac;
@@ -447,7 +498,7 @@ float getLastRP_Scale(CDB::COLLIDER* DB, R_Light& L)//, Face* skip)
 	return scale;
 }
 
-float rayTrace(CDB::COLLIDER* DB, R_Light& L, Fvector& P, Fvector& D, float R)//, Face* skip)
+float rayTrace(CDB::COLLIDER *DB, R_Light &L, Fvector &P, Fvector &D, float R) //, Face* skip)
 {
 	R_ASSERT(DB);
 
@@ -465,19 +516,20 @@ float rayTrace(CDB::COLLIDER* DB, R_Light& L, Fvector& P, Fvector& D, float R)//
 	if (0 == DB->r_count())
 		return 1;
 	else
-		return getLastRP_Scale(DB, L);//,skip);
+		return getLastRP_Scale(DB, L); //,skip);
 
 	return 0;
 }
 
-void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_lighting& lights, u32 flags)
+void LightPoint(CDB::COLLIDER *DB, base_color &C, Fvector &P, Fvector &N, base_lighting &lights,
+	u32 flags)
 {
-	Fvector		Ldir, Pnew;
+	Fvector Ldir, Pnew;
 	Pnew.mad(P, N, 0.01f);
 
-	if (!(flags&LP_dont_rgb))
+	if (!(flags & LP_dont_rgb))
 	{
-		R_Light	*L = &*lights.rgb.begin(), *E = &*lights.rgb.end();
+		R_Light *L = &*lights.rgb.begin(), *E = &*lights.rgb.end();
 
 		for (; L != E; L++)
 		{
@@ -491,7 +543,7 @@ void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_l
 					continue;
 
 				// Trace Light
-				float scale = D * L->energy*rayTrace(DB, *L, Pnew, Ldir, 1000.f);
+				float scale = D * L->energy * rayTrace(DB, *L, Pnew, Ldir, 1000.f);
 				C.rgb.x += scale * L->diffuse.x;
 				C.rgb.y += scale * L->diffuse.y;
 				C.rgb.z += scale * L->diffuse.z;
@@ -514,8 +566,8 @@ void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_l
 
 				// Trace Light
 				float R = _sqrt(sqD);
-				float scale = D * L->energy*rayTrace(DB, *L, Pnew, Ldir, R);
-				float A = scale / (L->attenuation0 + L->attenuation1*R + L->attenuation2*sqD);
+				float scale = D * L->energy * rayTrace(DB, *L, Pnew, Ldir, R);
+				float A = scale / (L->attenuation0 + L->attenuation1 * R + L->attenuation2 * sqD);
 
 				C.rgb.x += A * L->diffuse.x;
 				C.rgb.y += A * L->diffuse.y;
@@ -524,9 +576,9 @@ void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_l
 		}
 	}
 
-	if (!(flags&LP_dont_sun))
+	if (!(flags & LP_dont_sun))
 	{
-		R_Light	*L = &*(lights.sun.begin()), *E = &*(lights.sun.end());
+		R_Light *L = &*(lights.sun.begin()), *E = &*(lights.sun.end());
 
 		for (; L != E; L++)
 		{
@@ -535,10 +587,11 @@ void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_l
 				// Cos
 				Ldir.invert(L->direction);
 				float D = Ldir.dotproduct(N);
-				if (D <= 0) continue;
+				if (D <= 0)
+					continue;
 
 				// Trace Light
-				float scale = L->energy*rayTrace(DB, *L, Pnew, Ldir, 1000.f);
+				float scale = L->energy * rayTrace(DB, *L, Pnew, Ldir, 1000.f);
 				C.sun += scale;
 			}
 			else
@@ -559,17 +612,17 @@ void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_l
 
 				// Trace Light
 				float R = _sqrt(sqD);
-				float scale = D * L->energy*rayTrace(DB, *L, Pnew, Ldir, R);
-				float A = scale / (L->attenuation0 + L->attenuation1*R + L->attenuation2*sqD);
+				float scale = D * L->energy * rayTrace(DB, *L, Pnew, Ldir, R);
+				float A = scale / (L->attenuation0 + L->attenuation1 * R + L->attenuation2 * sqD);
 
 				C.sun += A;
 			}
 		}
 	}
 
-	if (!(flags&LP_dont_hemi))
+	if (!(flags & LP_dont_hemi))
 	{
-		R_Light	*L = &*lights.hemi.begin(), *E = &*lights.hemi.end();
+		R_Light *L = &*lights.hemi.begin(), *E = &*lights.hemi.end();
 
 		for (; L != E; L++)
 		{
@@ -583,8 +636,9 @@ void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_l
 					continue;
 
 				// Trace Light
-				Fvector		PMoved;	PMoved.mad(Pnew, Ldir, 0.001f);
-				float scale = L->energy*rayTrace(DB, *L, PMoved, Ldir, 1000.f);
+				Fvector PMoved;
+				PMoved.mad(Pnew, Ldir, 0.001f);
+				float scale = L->energy * rayTrace(DB, *L, PMoved, Ldir, 1000.f);
 				C.hemi += scale;
 			}
 			else
@@ -605,8 +659,8 @@ void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_l
 
 				// Trace Light
 				float R = _sqrt(sqD);
-				float scale = D * L->energy*rayTrace(DB, *L, Pnew, Ldir, R);
-				float A = scale / (L->attenuation0 + L->attenuation1*R + L->attenuation2*sqD);
+				float scale = D * L->energy * rayTrace(DB, *L, Pnew, Ldir, R);
+				float A = scale / (L->attenuation0 + L->attenuation1 * R + L->attenuation2 * sqD);
 
 				C.hemi += A;
 			}
@@ -614,31 +668,26 @@ void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_l
 	}
 }
 
-xrCriticalSection	DO_CS;
-xr_vector<int>		DO_task_pool;
-u32					DO_count;
+xrCriticalSection DO_CS;
+xr_vector<int> DO_task_pool;
+u32 DO_count;
 
 DEFINE_VECTOR(u32, DWORDVec, DWORDIt);
-class	LightThread : public CThread
+class LightThread : public CThread
 {
-	DWORDVec	box_result;
+	DWORDVec box_result;
+
 public:
 	LightThread(u32 ID) : CThread(ID)
 	{
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 	}
 
-	IC float			fromSlotX(int x)
-	{
-		return (x - dtH.offs_x)*DETAIL_SLOT_SIZE + DETAIL_SLOT_SIZE_2;
-	}
+	IC float fromSlotX(int x) { return (x - dtH.offs_x) * DETAIL_SLOT_SIZE + DETAIL_SLOT_SIZE_2; }
 
-	IC float			fromSlotZ(int z)
-	{
-		return (z - dtH.offs_z)*DETAIL_SLOT_SIZE + DETAIL_SLOT_SIZE_2;
-	}
+	IC float fromSlotZ(int z) { return (z - dtH.offs_z) * DETAIL_SLOT_SIZE + DETAIL_SLOT_SIZE_2; }
 
-	void				GetSlotRect(Frect& rect, int sx, int sz)
+	void GetSlotRect(Frect &rect, int sx, int sz)
 	{
 		float x = fromSlotX(sx);
 		float z = fromSlotZ(sz);
@@ -667,78 +716,88 @@ public:
 			DO_task_pool.pop_back();
 			DO_CS.Leave();
 
-			CDB::COLLIDER		DB;
+			CDB::COLLIDER DB;
 			DB.ray_options(CDB::OPT_CULL);
 			DB.box_options(CDB::OPT_FULL_TEST);
 
-			base_lighting		Selected;
+			base_lighting Selected;
 
 			u32 _z = it;
 
 			for (u32 _x = 0; _x < dtH.size_x; _x++)
 			{
-				DetailSlot&	DS = dtS[_z*dtH.size_x + _x];
+				DetailSlot &DS = dtS[_z * dtH.size_x + _x];
 
-				if ((DS.id0 == DetailSlot::ID_Empty) && (DS.id1 == DetailSlot::ID_Empty) && (DS.id2 == DetailSlot::ID_Empty) && (DS.id3 == DetailSlot::ID_Empty))
+				if ((DS.id0 == DetailSlot::ID_Empty) && (DS.id1 == DetailSlot::ID_Empty) &&
+					(DS.id2 == DetailSlot::ID_Empty) && (DS.id3 == DetailSlot::ID_Empty))
 					continue;
 
 				// Build slot BB & sphere
 				int slt_z = int(_z) - int(dtH.offs_z);
 				int slt_x = int(_x) - int(dtH.offs_x);
 
-				Fbox		BB;
-				BB.min.set(slt_x*DETAIL_SLOT_SIZE, DS.r_ybase(), slt_z*DETAIL_SLOT_SIZE);
-				BB.max.set(BB.min.x + DETAIL_SLOT_SIZE, DS.r_ybase() + DS.r_yheight(), BB.min.z + DETAIL_SLOT_SIZE);
+				Fbox BB;
+				BB.min.set(slt_x * DETAIL_SLOT_SIZE, DS.r_ybase(), slt_z * DETAIL_SLOT_SIZE);
+				BB.max.set(BB.min.x + DETAIL_SLOT_SIZE, DS.r_ybase() + DS.r_yheight(),
+					BB.min.z + DETAIL_SLOT_SIZE);
 				BB.grow(0.05f);
 
-				Fsphere		S;
+				Fsphere S;
 				BB.getsphere(S.P, S.R);
 
 				// Select polygons
-				Fvector				bbC, bbD;
-				BB.get_CD(bbC, bbD);	bbD.add(0.01f);
+				Fvector bbC, bbD;
+				BB.get_CD(bbC, bbD);
+				bbD.add(0.01f);
 				DB.box_query(&RCAST_Model, bbC, bbD);
 
 				box_result.clear();
-				for (CDB::RESULT* I = DB.r_begin(); I != DB.r_end(); I++) box_result.push_back(I->id);
-				if (box_result.empty())	continue;
+				for (CDB::RESULT *I = DB.r_begin(); I != DB.r_end(); I++)
+					box_result.push_back(I->id);
+				if (box_result.empty())
+					continue;
 
-				CDB::TRI*	tris = RCAST_Model.get_tris();
-				Fvector*	verts = RCAST_Model.get_verts();
+				CDB::TRI *tris = RCAST_Model.get_tris();
+				Fvector *verts = RCAST_Model.get_verts();
 
 				// select lights
 				Selected.select(g_lights, S.P, S.R);
 
 				// lighting itself
-				base_color		amount;
-				u32				count = 0;
+				base_color amount;
+				u32 count = 0;
 				float coeff = DETAIL_SLOT_SIZE_2 / float(LIGHT_Count);
 				FPU::m64r();
 
 				for (int x = -LIGHT_Count; x <= LIGHT_Count; x++)
 				{
-					Fvector		P;
+					Fvector P;
 					P.x = bbC.x + coeff * float(x);
 
 					for (int z = -LIGHT_Count; z <= LIGHT_Count; z++)
 					{
 						// compute position
-						Fvector t_n;	t_n.set(0, 1, 0);
+						Fvector t_n;
+						t_n.set(0, 1, 0);
 						P.z = bbC.z + coeff * float(z);
 						P.y = BB.min.y - 5;
-						Fvector	dir;	dir.set(0, -1, 0);
-						Fvector start;	start.set(P.x, BB.max.y + EPS, P.z);
+						Fvector dir;
+						dir.set(0, -1, 0);
+						Fvector start;
+						start.set(P.x, BB.max.y + EPS, P.z);
 
-						float		r_u, r_v, r_range;
+						float r_u, r_v, r_range;
 
 						for (DWORDIt tit = box_result.begin(); tit != box_result.end(); tit++)
 						{
-							CDB::TRI&	T = tris[*tit];
-							Fvector		V[3] = { verts[T.verts[0]], verts[T.verts[1]], verts[T.verts[2]] };
+							CDB::TRI &T = tris[*tit];
+							Fvector V[3] = {verts[T.verts[0]], verts[T.verts[1]],
+								verts[T.verts[2]]};
 
 							if (CDB::TestRayTri(start, dir, V, r_u, r_v, r_range, TRUE))
 							{
-								if (r_range >= 0.f) {
+								if (r_range >= 0.f)
+								{
 									float y_test = start.y - r_range;
 
 									if (y_test > P.y)
@@ -754,7 +813,8 @@ public:
 							continue;
 
 						// light point
-						LightPoint(&DB, amount, P, t_n, Selected, (b_norgb ? LP_dont_rgb : 0) | (b_nosun ? LP_dont_sun : 0) | LP_DEFAULT);
+						LightPoint(&DB, amount, P, t_n, Selected,
+							(b_norgb ? LP_dont_rgb : 0) | (b_nosun ? LP_dont_sun : 0) | LP_DEFAULT);
 						count += 1;
 					}
 				}
@@ -770,21 +830,21 @@ public:
 			}
 		}
 	}
-
 };
 
-void	xrLight()
+void xrLight()
 {
-	u32	range = dtH.size_z;
+	u32 range = dtH.size_z;
 
 	// Start threads, wait, continue --- perform all the work
-	CThreadManager		Threads;
-	CTimer				Timer;
+	CThreadManager Threads;
+	CTimer Timer;
 	Timer.Start();
 
 	DO_count = range;
 
-	for (u32 it = 0; it < range; it++)	DO_task_pool.push_back(it);
+	for (u32 it = 0; it < range; it++)
+		DO_task_pool.push_back(it);
 
 	for (u32 thID = 0; thID < i_ThreadCount; thID++)
 		Threads.start(xr_new<LightThread>(thID));
@@ -801,6 +861,6 @@ void xrCompiler(LPCSTR name)
 	Phase("Lighting nodes...");
 	xrLight();
 
-	if (dtFS)	
+	if (dtFS)
 		xr_delete(dtFS);
 }

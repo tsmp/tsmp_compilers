@@ -58,7 +58,6 @@ using namespace Opcode;
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Computes the splitting value along a given axis for a given primitive.
@@ -67,7 +66,6 @@ using namespace Opcode;
  *	\return		splitting value
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -78,22 +76,24 @@ using namespace Opcode;
  *	\return		true if success
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool AABBTreeOfTrianglesBuilder::ComputeGlobalBox(const unsigned int* primitives, unsigned int nb_prims, AABB& global_box) const
+bool AABBTreeOfTrianglesBuilder::ComputeGlobalBox(const unsigned int *primitives,
+	unsigned int nb_prims, AABB &global_box) const
 {
 	// Checkings
-	if(!primitives || !nb_prims)	return false;
+	if (!primitives || !nb_prims)
+		return false;
 
 	// Initialize global box
 	Point Min(flt_max, flt_max, flt_max);
 	Point Max(flt_min, flt_min, flt_min);
 
 	// Loop through triangles
-	for(unsigned int i=0;i<nb_prims;i++)
+	for (unsigned int i = 0; i < nb_prims; i++)
 	{
 		// Get current triangle-vertices
-		const Point& p0 = mVerts[mTriList[primitives[i]].mVRef[0]];
-		const Point& p1 = mVerts[mTriList[primitives[i]].mVRef[1]];
-		const Point& p2 = mVerts[mTriList[primitives[i]].mVRef[2]];
+		const Point &p0 = mVerts[mTriList[primitives[i]].mVRef[0]];
+		const Point &p1 = mVerts[mTriList[primitives[i]].mVRef[1]];
+		const Point &p2 = mVerts[mTriList[primitives[i]].mVRef[2]];
 		// Update global box
 		Min.Min(p0).Min(p1).Min(p2);
 		Max.Max(p0).Max(p1).Max(p2);
@@ -111,20 +111,21 @@ bool AABBTreeOfTrianglesBuilder::ComputeGlobalBox(const unsigned int* primitives
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define INV3				0.33333333333333333333f	
+#define INV3 0.33333333333333333333f
 
 float AABBTreeOfTrianglesBuilder::GetSplittingValue(unsigned int index, unsigned int axis) const
 {
-/*	// Compute center of triangle
+	/*	// Compute center of triangle
 	Point Center;
 	mTriList[index].Center(mVerts, Center);
 	// Return value
 	return Center[axis];*/
 
 	// Compute correct component from center of triangle
-	return	(((const float*)mVerts[mTriList[index].mVRef[0]])[axis]
-			+((const float*)mVerts[mTriList[index].mVRef[1]])[axis]
-			+((const float*)mVerts[mTriList[index].mVRef[2]])[axis])*INV3;
+	return (((const float *)mVerts[mTriList[index].mVRef[0]])[axis] +
+			   ((const float *)mVerts[mTriList[index].mVRef[1]])[axis] +
+			   ((const float *)mVerts[mTriList[index].mVRef[2]])[axis]) *
+		   INV3;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,24 +138,26 @@ float AABBTreeOfTrianglesBuilder::GetSplittingValue(unsigned int index, unsigned
  *	\return		splitting value
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float AABBTreeOfTrianglesBuilder::GetSplittingValue(const unsigned int* primitives, unsigned int nb_prims, const AABB& global_box, unsigned int axis)	const
+float AABBTreeOfTrianglesBuilder::GetSplittingValue(const unsigned int *primitives,
+	unsigned int nb_prims, const AABB &global_box, unsigned int axis) const
 {
-	if(mRules&SPLIT_GEOMCENTER)
+	if (mRules & SPLIT_GEOMCENTER)
 	{
 		// Loop through triangles
 		float SplitValue = 0.0f;
-		for(unsigned int i=0;i<nb_prims;i++)
+		for (unsigned int i = 0; i < nb_prims; i++)
 		{
 			// Get current triangle-vertices
-			const Point& p0 = mVerts[mTriList[primitives[i]].mVRef[0]];
-			const Point& p1 = mVerts[mTriList[primitives[i]].mVRef[1]];
-			const Point& p2 = mVerts[mTriList[primitives[i]].mVRef[2]];
+			const Point &p0 = mVerts[mTriList[primitives[i]].mVRef[0]];
+			const Point &p1 = mVerts[mTriList[primitives[i]].mVRef[1]];
+			const Point &p2 = mVerts[mTriList[primitives[i]].mVRef[2]];
 			// Update split value
-			SplitValue += ((const float*)p0)[axis];
-			SplitValue += ((const float*)p1)[axis];
-			SplitValue += ((const float*)p2)[axis];
+			SplitValue += ((const float *)p0)[axis];
+			SplitValue += ((const float *)p1)[axis];
+			SplitValue += ((const float *)p2)[axis];
 		}
-		return SplitValue / float(nb_prims*3);
+		return SplitValue / float(nb_prims * 3);
 	}
-	else return AABBTreeBuilder::GetSplittingValueEx(primitives, nb_prims, global_box, axis);
+	else
+		return AABBTreeBuilder::GetSplittingValueEx(primitives, nb_prims, global_box, axis);
 }

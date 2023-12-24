@@ -136,16 +136,18 @@
 
 using namespace Opcode;
 
-#define CHECKALLOC(x)		if(!x) return false;
+#define CHECKALLOC(x)                                                                              \
+	if (!x)                                                                                        \
+		return false;
 
 OPCODECREATE::OPCODECREATE()
 {
-	NbTris			= 0;
-	NbVerts			= 0;
-	Tris			= nullptr;
-	Verts			= nullptr;
-	Rules			= SPLIT_COMPLETE | SPLIT_LARGESTAXIS;
-	KeepOriginal	= false;
+	NbTris = 0;
+	NbVerts = 0;
+	Tris = nullptr;
+	Verts = nullptr;
+	Rules = SPLIT_COMPLETE | SPLIT_LARGESTAXIS;
+	KeepOriginal = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,9 +155,7 @@ OPCODECREATE::OPCODECREATE()
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-OPCODE_Model::OPCODE_Model() : mSource(nullptr), mTree(nullptr)
-{
-}
+OPCODE_Model::OPCODE_Model() : mSource(nullptr), mTree(nullptr) {}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -175,25 +175,31 @@ OPCODE_Model::~OPCODE_Model()
  *	\return		true if success
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool OPCODE_Model::Build(const OPCODECREATE& create)
+bool OPCODE_Model::Build(const OPCODECREATE &create)
 {
 	// 1) Checkings
-	if(!create.NbTris || !create.Tris || !create.Verts)	return false;
+	if (!create.NbTris || !create.Tris || !create.Verts)
+		return false;
 
 	// In this lib, we only support complete trees
-	if(!(create.Rules&SPLIT_COMPLETE))	return SetIceError;//("OPCODE WARNING: supports complete trees only! Use SPLIT_COMPLETE.\n");
+	if (!(create.Rules & SPLIT_COMPLETE))
+		return SetIceError; //("OPCODE WARNING: supports complete trees only! Use SPLIT_COMPLETE.\n");
 
 	// Check topology. If the model contains degenerate faces, collision report can be wrong in some cases.
 	// e.g. it happens with the standard MAX teapot. So clean your meshes first... If you don't have a mesh cleaner
 	// you can try this: www.codercorner.com/Consolidation.zip
-	const IndexedTriangle* Tris = (const IndexedTriangle*)create.Tris;
+	const IndexedTriangle *Tris = (const IndexedTriangle *)create.Tris;
 	unsigned int NbDegenerate = 0;
-	for(unsigned int i=0;i<create.NbTris;i++)
+	for (unsigned int i = 0; i < create.NbTris; i++)
 	{
-		if(Tris[i].IsDegenerate())	NbDegenerate++;
+		if (Tris[i].IsDegenerate())
+			NbDegenerate++;
 	}
-	if(NbDegenerate)	Log("OPCODE WARNING: found %d degenerate faces in model! Collision might report wrong results!\n", NbDegenerate);
-	// We continue nonetheless.... 
+	if (NbDegenerate)
+		Log("OPCODE WARNING: found %d degenerate faces in model! Collision might report wrong "
+			"results!\n",
+			NbDegenerate);
+	// We continue nonetheless....
 
 	// 2) Build a generic AABB Tree.
 	mSource = xr_new<AABBTree>();
@@ -202,21 +208,24 @@ bool OPCODE_Model::Build(const OPCODECREATE& create)
 	// 2-1) Setup a builder. Our primitives here are triangles from input mesh,
 	// so we use an AABBTreeOfTrianglesBuilder.....
 	AABBTreeOfTrianglesBuilder TB;
-	TB.mTriList			= Tris;
-	TB.mVerts			= create.Verts;
-	TB.mRules			= create.Rules;
-	TB.mNbPrimitives	= create.NbTris;
-	if(!mSource->Build(&TB))	return false;
+	TB.mTriList = Tris;
+	TB.mVerts = create.Verts;
+	TB.mRules = create.Rules;
+	TB.mNbPrimitives = create.NbTris;
+	if (!mSource->Build(&TB))
+		return false;
 
-    mTree = xr_new<AABBNoLeafTree>();
+	mTree = xr_new<AABBNoLeafTree>();
 
 	// 3-2) Create optimized tree
-	if(!mTree->Build(mSource))	return false;
+	if (!mTree->Build(mSource))
+		return false;
 
 	// 3-3) Delete generic tree if needed
-	if(!create.KeepOriginal)	{
-		mSource->destroy	(&TB)		;
-		xr_delete			(mSource)	;	
+	if (!create.KeepOriginal)
+	{
+		mSource->destroy(&TB);
+		xr_delete(mSource);
 	}
 
 	return true;

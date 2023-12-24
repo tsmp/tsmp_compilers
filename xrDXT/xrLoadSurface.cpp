@@ -21,7 +21,7 @@ struct SExts
 
 	u32 size() { return (u32)exts.size(); }
 
-	LPSTR operator [](int k) { return exts[k]; }
+	LPSTR operator[](int k) { return exts[k]; }
 
 	~SExts()
 	{
@@ -54,7 +54,7 @@ void Surface_FormatExt(FREE_IMAGE_FORMAT f)
 			}
 		}
 
-		if (cur && cur[0]) 
+		if (cur && cur[0])
 			formats.format_register(cur);
 
 		xr_free(base);
@@ -92,7 +92,7 @@ void Surface_Init()
 	Msg("* %d supported formats", formats.size());
 }
 
-BOOL Surface_Detect(string_path& F, LPSTR N)
+BOOL Surface_Detect(string_path &F, LPSTR N)
 {
 	for (u32 i = 0; i < formats.size(); i++)
 	{
@@ -108,49 +108,49 @@ BOOL Surface_Detect(string_path& F, LPSTR N)
 	return FALSE;
 }
 
-FIBITMAP* Surface_Load(char* full_name)
+FIBITMAP *Surface_Load(char *full_name)
 {
 	// load
-	FREE_IMAGE_FORMAT	fif = FreeImage_GetFIFFromFilename(full_name);
-	FIBITMAP* map = FreeImage_Load(fif, full_name);
+	FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(full_name);
+	FIBITMAP *map = FreeImage_Load(fif, full_name);
 
-	if (0 == map)		
+	if (0 == map)
 		return NULL;
 
 	// check if already 32bpp
-	if (32 == FreeImage_GetBPP(map))	
+	if (32 == FreeImage_GetBPP(map))
 		return map;
 
 	// convert
-	FIBITMAP* map32 = FreeImage_ConvertTo32Bits(map);
+	FIBITMAP *map32 = FreeImage_ConvertTo32Bits(map);
 
-	if (0 == map32)	
+	if (0 == map32)
 		map32 = map;
-	else			
+	else
 		FreeImage_Unload(map);
 
 	return map32;
 }
 
-u32* Surface_Load(char* name, u32& w, u32& h)
+u32 *Surface_Load(char *name, u32 &w, u32 &h)
 {
 	if (strchr(name, '.'))
 		*(strchr(name, '.')) = 0;
 
 	// detect format
-	string_path	full;
+	string_path full;
 
-	if (!Surface_Detect(full, name)) 
+	if (!Surface_Detect(full, name))
 		return NULL;
 
-	FIBITMAP* map32 = Surface_Load(full);
+	FIBITMAP *map32 = Surface_Load(full);
 
 	h = FreeImage_GetHeight(map32);
 	w = FreeImage_GetWidth(map32);
 
-	u32	memSize = w * h * 4;
-	u32* memPTR = (u32*)(xr_malloc(memSize));
-	u32* memDATA = (u32*)(FreeImage_GetScanLine(map32, 0));
+	u32 memSize = w * h * 4;
+	u32 *memPTR = (u32 *)(xr_malloc(memSize));
+	u32 *memDATA = (u32 *)(FreeImage_GetScanLine(map32, 0));
 	CopyMemory(memPTR, memDATA, memSize);
 	FreeImage_Unload(map32);
 

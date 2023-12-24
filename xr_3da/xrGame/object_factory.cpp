@@ -12,18 +12,12 @@
 
 CObjectFactory *g_object_factory = 0;
 
-CObjectFactory::CObjectFactory	()
+CObjectFactory::CObjectFactory()
 {
-	m_actual					= false;
-	register_classes			();
+	m_actual = false;
+	register_classes();
 }
 
-CObjectFactory::~CObjectFactory	()
-{
-	delete_data					(m_clsids);
-}
+CObjectFactory::~CObjectFactory() { delete_data(m_clsids); }
 
-void CObjectFactory::init		()
-{
-	register_script_classes		();
-}
+void CObjectFactory::init() { register_script_classes(); }

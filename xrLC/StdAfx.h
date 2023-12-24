@@ -8,12 +8,12 @@
 
 #pragma once
 
-#pragma warning(disable:4577)
-#pragma warning(disable:4595)
+#pragma warning(disable : 4577)
+#pragma warning(disable : 4595)
 
 #include "xrCore.h"
 
-#pragma warning(disable:4995)
+#pragma warning(disable : 4995)
 #include <commctrl.h>
 #include <d3dx9.h>
 #include <io.h>
@@ -21,18 +21,18 @@
 #include <sys\stat.h>
 
 #include <windows.h>
-#pragma warning(default:4995)
+#pragma warning(default : 4995)
 
-#ifndef	NDEBUG
-#define X_TRY 
+#ifndef NDEBUG
+#define X_TRY
 #define X_CATCH if (0)
 #else
 #define X_TRY try
-#define X_CATCH catch(...)
+#define X_CATCH catch (...)
 #endif
 
-#define ENGINE_API				// fake, to enable sharing with engine
-#define ECORE_API				// fake, to enable sharing with editors
+#define ENGINE_API // fake, to enable sharing with engine
+#define ECORE_API  // fake, to enable sharing with editors
 #define XR_EPROPS_API
 #include "clsid.h"
 #include "..\xr_3da\defines.h"
@@ -40,7 +40,7 @@
 
 #include "..\xr_3da\_d3d_extensions.h"
 #include "common_compilers\communicate.h"
-extern b_params	g_params;
+extern b_params g_params;
 
 #include "build.h"
 

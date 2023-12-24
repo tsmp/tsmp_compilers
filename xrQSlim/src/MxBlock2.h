@@ -1,7 +1,7 @@
 #ifndef MXBLOCK2_INCLUDED // -*- C++ -*-
 #define MXBLOCK2_INCLUDED
 #if !defined(__GNUC__)
-#  pragma once
+#pragma once
 #endif
 
 /************************************************************************
@@ -16,25 +16,34 @@
 
 #include "MxBlock.h"
 
-template<class T>
+template <class T>
 class MxBlock2 : public MxBlock<T>
 {
 private:
-    int W, H;
+	int W, H;
 
 protected:
-    MxBlock2() { }
+	MxBlock2() {}
 
 public:
-    MxBlock2(int w, int h) : MxBlock<T>(w*h) { W=w; H=h; }
+	MxBlock2(int w, int h) : MxBlock<T>(w * h)
+	{
+		W = w;
+		H = h;
+	}
 
-    T&       operator()(int i, int j)       { return (*this)[j*W+i]; }
-    const T& operator()(int i, int j) const { return (*this)[j*W+i]; }
+	T &operator()(int i, int j) { return (*this)[j * W + i]; }
+	const T &operator()(int i, int j) const { return (*this)[j * W + i]; }
 
-    int width() const { return W; }
-    int height() const { return H; }
+	int width() const { return W; }
+	int height() const { return H; }
 
-    void resize(int w, int h) { W=w; H=h; MxBlock<T>::resize_block(w*h); }
+	void resize(int w, int h)
+	{
+		W = w;
+		H = h;
+		MxBlock<T>::resize_block(w * h);
+	}
 };
 
 // MXBLOCK2_INCLUDED

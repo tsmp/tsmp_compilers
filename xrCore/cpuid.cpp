@@ -8,7 +8,7 @@
 
 int _cpuid(_processor_info *pinfo)
 {
-	_processor_info&	P = *pinfo;
+	_processor_info &P = *pinfo;
 
 	ZeroMemory(&P, sizeof(_processor_info));
 
@@ -62,7 +62,7 @@ int _cpuid(_processor_info *pinfo)
 
 	dwMajorVersion = (DWORD)(LOBYTE(LOWORD(dwVersion)));
 
-	if (dwMajorVersion <= 5)		// XP don't support SSE3+ instruction sets
+	if (dwMajorVersion <= 5) // XP don't support SSE3+ instruction sets
 	{
 		P.os_support &= ~_CPU_FEATURE_SSE3;
 		P.os_support &= ~_CPU_FEATURE_SSE41;

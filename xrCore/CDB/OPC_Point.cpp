@@ -59,7 +59,7 @@ using namespace IceMaths;
 // WARNING: not inlined
 //Point::operator HPoint() const	{ return HPoint(x, y, z, 0.0f); }
 
-Point& Point::Refract(const Point& eye, const Point& n, float refractindex, Point& refracted)
+Point &Point::Refract(const Point &eye, const Point &n, float refractindex, Point &refracted)
 {
 	//	Point EyePt = eye position
 	//	Point p = current vertex
@@ -71,12 +71,12 @@ Point& Point::Refract(const Point& eye, const Point& n, float refractindex, Poin
 	Env.y = eye.y - y;
 	Env.z = eye.z - z;
 
-	float NDotE = n|Env;
-	float NDotN = n|n;
+	float NDotE = n | Env;
+	float NDotN = n | n;
 	NDotE /= refractindex;
 
 	// Refracted vector3
-	refracted = n*NDotE - Env*NDotN;
+	refracted = n * NDotE - Env * NDotN;
 
 	return *this;
 }

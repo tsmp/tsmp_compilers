@@ -12,94 +12,77 @@
 #include "ai_space.h"
 #include "object_factory.h"
 
-CScriptIniFile::CScriptIniFile		(IReader *F, LPCSTR path) :
-	inherited	(F,path)
+CScriptIniFile::CScriptIniFile(IReader *F, LPCSTR path) : inherited(F, path) {}
+
+CScriptIniFile::CScriptIniFile(LPCSTR szFileName, BOOL ReadOnly, BOOL bLoadAtStart, BOOL SaveAtEnd)
+	: inherited(update(szFileName), ReadOnly, bLoadAtStart, SaveAtEnd)
 {
 }
 
-CScriptIniFile::CScriptIniFile		(LPCSTR szFileName, BOOL ReadOnly, BOOL bLoadAtStart, BOOL SaveAtEnd) :
-	inherited	(update(szFileName), ReadOnly, bLoadAtStart, SaveAtEnd)
+CScriptIniFile::~CScriptIniFile() {}
+
+LPCSTR CScriptIniFile::update(LPCSTR file_name)
 {
+	string_path S1;
+	FS.update_path(S1, "$game_config$", file_name);
+	return (*shared_str(S1));
 }
 
-CScriptIniFile::~CScriptIniFile		()
+bool CScriptIniFile::line_exist(LPCSTR S, LPCSTR L) { return (!!inherited::line_exist(S, L)); }
+
+bool CScriptIniFile::section_exist(LPCSTR S) { return (!!inherited::section_exist(S)); }
+
+int CScriptIniFile::r_clsid(LPCSTR S, LPCSTR L)
 {
+	return (object_factory().script_clsid(inherited::r_clsid(S, L)));
 }
 
-LPCSTR	CScriptIniFile::update		(LPCSTR file_name)
+bool CScriptIniFile::r_bool(LPCSTR S, LPCSTR L) { return (!!inherited::r_bool(S, L)); }
+
+int CScriptIniFile::r_token(LPCSTR S, LPCSTR L, const CScriptTokenList &token_list)
 {
-	string_path			S1;
-	FS.update_path		(S1,"$game_config$",file_name);
-	return				(*shared_str(S1));
+	return (inherited::r_token(S, L, &*token_list.tokens().begin()));
 }
 
-bool CScriptIniFile::line_exist		(LPCSTR S, LPCSTR L)
+LPCSTR CScriptIniFile::r_string_wb(LPCSTR S, LPCSTR L) { return (*inherited::r_string_wb(S, L)); }
+
+u32 CScriptIniFile::line_count(LPCSTR S)
 {
-	return		(!!inherited::line_exist(S,L));
+	THROW3(inherited::section_exist(S), "Cannot find section", S);
+	return (inherited::line_count(S));
 }
 
-bool CScriptIniFile::section_exist	(LPCSTR S)
+LPCSTR CScriptIniFile::r_string(LPCSTR S, LPCSTR L)
 {
-	return		(!!inherited::section_exist(S));
+	THROW3(inherited::section_exist(S), "Cannot find section", S);
+	THROW3(inherited::line_exist(S, L), "Cannot find line", L);
+	return (inherited::r_string(S, L));
 }
 
-int	 CScriptIniFile::r_clsid		(LPCSTR S, LPCSTR L)
+u32 CScriptIniFile::r_u32(LPCSTR S, LPCSTR L)
 {
-	return		(object_factory().script_clsid(inherited::r_clsid(S,L)));
+	THROW3(inherited::section_exist(S), "Cannot find section", S);
+	THROW3(inherited::line_exist(S, L), "Cannot find line", L);
+	return (inherited::r_u32(S, L));
 }
 
-bool CScriptIniFile::r_bool			(LPCSTR S, LPCSTR L)
+int CScriptIniFile::r_s32(LPCSTR S, LPCSTR L)
 {
-	return		(!!inherited::r_bool(S,L));
+	THROW3(inherited::section_exist(S), "Cannot find section", S);
+	THROW3(inherited::line_exist(S, L), "Cannot find line", L);
+	return (inherited::r_s32(S, L));
 }
 
-int	 CScriptIniFile::r_token		(LPCSTR S, LPCSTR L, const CScriptTokenList &token_list)
+float CScriptIniFile::r_float(LPCSTR S, LPCSTR L)
 {
-	return		(inherited::r_token(S,L,&*token_list.tokens().begin()));
+	THROW3(inherited::section_exist(S), "Cannot find section", S);
+	THROW3(inherited::line_exist(S, L), "Cannot find line", L);
+	return (inherited::r_float(S, L));
 }
 
-LPCSTR CScriptIniFile::r_string_wb	(LPCSTR S, LPCSTR L)
+Fvector CScriptIniFile::r_fvector3(LPCSTR S, LPCSTR L)
 {
-	return		(*inherited::r_string_wb(S,L));
-}
-
-u32	 CScriptIniFile::line_count			(LPCSTR S)
-{
-	THROW3		(inherited::section_exist(S),"Cannot find section",S);
-	return		(inherited::line_count(S));
-}
-
-LPCSTR CScriptIniFile::r_string			(LPCSTR S, LPCSTR L)
-{
-	THROW3		(inherited::section_exist(S),"Cannot find section",S);
-	THROW3		(inherited::line_exist(S,L),"Cannot find line",L);
-	return		(inherited::r_string(S,L));
-}
-
-u32	 CScriptIniFile::r_u32				(LPCSTR S, LPCSTR L)
-{
-	THROW3		(inherited::section_exist(S),"Cannot find section",S);
-	THROW3		(inherited::line_exist(S,L),"Cannot find line",L);
-	return		(inherited::r_u32(S,L));
-}
-
-int	 CScriptIniFile::r_s32				(LPCSTR S, LPCSTR L)
-{
-	THROW3		(inherited::section_exist(S),"Cannot find section",S);
-	THROW3		(inherited::line_exist(S,L),"Cannot find line",L);
-	return		(inherited::r_s32(S,L));
-}
-
-float CScriptIniFile::r_float			(LPCSTR S, LPCSTR L)
-{
-	THROW3		(inherited::section_exist(S),"Cannot find section",S);
-	THROW3		(inherited::line_exist(S,L),"Cannot find line",L);
-	return		(inherited::r_float(S,L));
-}
-
-Fvector CScriptIniFile::r_fvector3		(LPCSTR S, LPCSTR L)
-{
-	THROW3		(inherited::section_exist(S),"Cannot find section",S);
-	THROW3		(inherited::line_exist(S,L),"Cannot find line",L);
-	return		(inherited::r_fvector3(S,L));
+	THROW3(inherited::section_exist(S), "Cannot find section", S);
+	THROW3(inherited::line_exist(S, L), "Cannot find line", L);
+	return (inherited::r_fvector3(S, L));
 }

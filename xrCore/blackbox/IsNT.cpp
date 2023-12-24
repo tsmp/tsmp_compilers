@@ -16,34 +16,33 @@ static bool g_bHasVersion = false;
 // Indicates NT or 95/98.
 static bool g_bIsNT = true;
 
-bool __stdcall IsNT ( void )
+bool __stdcall IsNT(void)
 {
-    if (g_bHasVersion )
+	if (g_bHasVersion)
 		return g_bIsNT;
-    
 
-    OSVERSIONINFO stOSVI ;
+	OSVERSIONINFO stOSVI;
 
-    FillMemory ( &stOSVI , sizeof ( OSVERSIONINFO ), NULL ) ;
-    stOSVI.dwOSVersionInfoSize = sizeof ( OSVERSIONINFO ) ;
+	FillMemory(&stOSVI, sizeof(OSVERSIONINFO), NULL);
+	stOSVI.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 
-    bool bRet = GetVersionEx ( &stOSVI );
+	bool bRet = GetVersionEx(&stOSVI);
 
-    ASSERT (bRet) ;
+	ASSERT(bRet);
 
-    if (!bRet )
-    {
-        TRACE0 ( "GetVersionEx failed!\n" ) ;
-        return ( false ) ;
-    }
+	if (!bRet)
+	{
+		TRACE0("GetVersionEx failed!\n");
+		return (false);
+	}
 
-    // Check the version and call the appropriate thing.
-    if ( VER_PLATFORM_WIN32_NT == stOSVI.dwPlatformId )
+	// Check the version and call the appropriate thing.
+	if (VER_PLATFORM_WIN32_NT == stOSVI.dwPlatformId)
 		g_bIsNT = true;
 	else
 		g_bIsNT = false;
-    
-    g_bHasVersion = true;
 
-    return g_bIsNT;
+	g_bHasVersion = true;
+
+	return g_bIsNT;
 }

@@ -24,58 +24,56 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Preprocessor
-#define OPCODE_API 
+#define OPCODE_API
 #ifndef __ICECORE_H__
-	#ifdef WIN32
-	#include <windows.h>
-	#include <windowsx.h>
-	#endif // WIN32
+#ifdef WIN32
+#include <windows.h>
+#include <windowsx.h>
+#endif // WIN32
 
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <assert.h>
-	#include <float.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <float.h>
 
-	#ifndef ASSERT
-		#define	ASSERT	assert
-	#endif
+#ifndef ASSERT
+#define ASSERT assert
+#endif
 
-	#define	Log
-	#define	SetIceError		false
-	#define	EC_OUTOFMEMORY	"Out of memory"
-	#define	Alignment
+#define Log
+#define SetIceError false
+#define EC_OUTOFMEMORY "Out of memory"
+#define Alignment
 
-	#define ICECORE_API	OPCODE_API
-
+#define ICECORE_API OPCODE_API
 
 #endif
 
 #ifndef __ICEMATHS_H__
-	#include <Math.h>
-	#define ICEMATHS_API	OPCODE_API
-	namespace IceMaths
-	{
-		#include "OPC_Point.h"
-	}
-	using namespace IceMaths;
+#include <Math.h>
+#define ICEMATHS_API OPCODE_API
+namespace IceMaths
+{
+#include "OPC_Point.h"
+}
+using namespace IceMaths;
 #endif
 
-	namespace Meshmerizer
-	{
-		#include "OPC_Triangle.h"
-		#include "OPC_AABB.h"
-	}
-	using namespace Meshmerizer;
+namespace Meshmerizer
+{
+#include "OPC_Triangle.h"
+#include "OPC_AABB.h"
+} // namespace Meshmerizer
+using namespace Meshmerizer;
 
-
-	namespace Opcode
-	{
-		// Bulk-of-the-work
-		#include "OPC_Common.h"
-		#include "OPC_TreeBuilders.h"
-		#include "OPC_AABBTree.h"
-		#include "OPC_OptimizedTree.h"
-		#include "OPC_Model.h"
-	}
+namespace Opcode
+{
+// Bulk-of-the-work
+#include "OPC_Common.h"
+#include "OPC_TreeBuilders.h"
+#include "OPC_AABBTree.h"
+#include "OPC_OptimizedTree.h"
+#include "OPC_Model.h"
+} // namespace Opcode
 
 #endif // __OPCODE_H__

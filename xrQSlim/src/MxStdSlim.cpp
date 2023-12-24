@@ -12,26 +12,29 @@
 
 #include "MxStdSlim.h"
 
-MxStdSlim::MxStdSlim(MxStdModel *m0)
-    : heap(64)
+MxStdSlim::MxStdSlim(MxStdModel *m0) : heap(64)
 {
-    m = m0;
+	m = m0;
 
-    // Externally visible variables
-    placement_policy = MX_PLACE_ENDPOINTS;
-    weighting_policy = MX_WEIGHT_AREA;
-    boundary_weight = 1000.0;
-    compactness_ratio = 1.0;
-    meshing_penalty = 1000.0;
-    local_validity_threshold = 0.0;
-    vertex_degree_limit = 24;
-    will_join_only = false;
+	// Externally visible variables
+	placement_policy = MX_PLACE_ENDPOINTS;
+	weighting_policy = MX_WEIGHT_AREA;
+	boundary_weight = 1000.0;
+	compactness_ratio = 1.0;
+	meshing_penalty = 1000.0;
+	local_validity_threshold = 0.0;
+	vertex_degree_limit = 24;
+	will_join_only = false;
 
-    valid_faces = 0;
-    valid_verts = 0;
-    is_initialized = false;
+	valid_faces = 0;
+	valid_verts = 0;
+	is_initialized = false;
 
-    unsigned int i;
-    for(i=0; i<m->face_count(); i++) if(m->face_is_valid(i))  valid_faces++;
-    for(i=0; i<m->vert_count(); i++) if(m->vertex_is_valid(i))  valid_verts++;
+	unsigned int i;
+	for (i = 0; i < m->face_count(); i++)
+		if (m->face_is_valid(i))
+			valid_faces++;
+	for (i = 0; i < m->vert_count(); i++)
+		if (m->vertex_is_valid(i))
+			valid_verts++;
 }

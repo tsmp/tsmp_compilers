@@ -28,14 +28,15 @@
 // config
 #define USE_DL_PREFIX
 
-// 
+//
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-#include <stddef.h>   /* for size_t */
+#include <stddef.h> /* for size_t */
 
-/*
+	/*
   malloc(size_t n)
   Returns a pointer to a newly allocated chunk of at least n bytes, or
   null if no space is available. Additionally, on failure, errno is
@@ -55,9 +56,9 @@ extern "C" {
 */
 
 #ifndef USE_DL_PREFIX
-void*  malloc(size_t);
+	void *malloc(size_t);
 #else
-void*  dlmalloc(size_t);
+void *dlmalloc(size_t);
 #endif
 
 /*
@@ -72,9 +73,9 @@ void*  dlmalloc(size_t);
   back unused memory to the system, thus reducing program footprint.
 */
 #ifndef USE_DL_PREFIX
-void     free(void*);
+	void free(void *);
 #else
-void     dlfree(void*);
+void dlfree(void *);
 #endif
 
 /*
@@ -83,12 +84,12 @@ void     dlfree(void*);
   set to zero.
 */
 #ifndef USE_DL_PREFIX
-void*  calloc(size_t, size_t);
+	void *calloc(size_t, size_t);
 #else
-void*  dlcalloc(size_t, size_t);
+void *dlcalloc(size_t, size_t);
 #endif
 
-/*
+	/*
   realloc(void* p, size_t n)
   Returns a pointer to a chunk of size n that contains the same data
   as does chunk p up to the minimum of (n, p's size) bytes.
@@ -116,12 +117,12 @@ void*  dlcalloc(size_t, size_t);
 */
 
 #ifndef USE_DL_PREFIX
-void*  realloc(void*, size_t);
+	void *realloc(void *, size_t);
 #else
-void*  dlrealloc(void*, size_t);
+void *dlrealloc(void *, size_t);
 #endif
 
-/*
+	/*
   memalign(size_t alignment, size_t n);
   Returns a pointer to a newly allocated chunk of n bytes, aligned
   in accord with the alignment argument.
@@ -135,13 +136,12 @@ void*  dlrealloc(void*, size_t);
 */
 
 #ifndef USE_DL_PREFIX
-void*  memalign(size_t, size_t);
+	void *memalign(size_t, size_t);
 #else
-void*  dlmemalign(size_t, size_t);
+void *dlmemalign(size_t, size_t);
 #endif
 
-
-/*
+	/*
   valloc(size_t n);
   Allocates a page-aligned chunk of at least n bytes.
   Equivalent to memalign(pagesize, n), where pagesize is the page
@@ -149,13 +149,12 @@ void*  dlmemalign(size_t, size_t);
 */
 
 #ifndef USE_DL_PREFIX
-void*  valloc(size_t);
+	void *valloc(size_t);
 #else
-void*  dlvalloc(size_t);
+void *dlvalloc(size_t);
 #endif
 
-
-/*
+	/*
   independent_calloc(size_t n_elements, size_t element_size, void* chunks[]);
 
   independent_calloc is similar to calloc, but instead of returning a
@@ -209,12 +208,12 @@ void*  dlvalloc(size_t);
 */
 
 #ifndef USE_DL_PREFIX
-void** independent_calloc(size_t, size_t, void**);
+	void **independent_calloc(size_t, size_t, void **);
 #else
-void** dlindependent_calloc(size_t, size_t, void**);
+void **dlindependent_calloc(size_t, size_t, void **);
 #endif
 
-/*
+	/*
   independent_comalloc(size_t n_elements, size_t sizes[], void* chunks[]);
 
   independent_comalloc allocates, all at once, a set of n_elements
@@ -275,25 +274,24 @@ void** dlindependent_calloc(size_t, size_t, void**);
 */
 
 #ifndef USE_DL_PREFIX
-void** independent_comalloc(size_t, size_t*, void**);
+	void **independent_comalloc(size_t, size_t *, void **);
 #else
-void** dlindependent_comalloc(size_t, size_t*, void**);
+void **dlindependent_comalloc(size_t, size_t *, void **);
 #endif
 
-
-/*
+	/*
   pvalloc(size_t n);
   Equivalent to valloc(minimum-page-that-holds(n)), that is,
   round up n to nearest pagesize.
  */
 
 #ifndef USE_DL_PREFIX
-void*  pvalloc(size_t);
+	void *pvalloc(size_t);
 #else
-void*  dlpvalloc(size_t);
+void *dlpvalloc(size_t);
 #endif
 
-/*
+	/*
   cfree(void* p);
   Equivalent to free(p).
 
@@ -303,13 +301,12 @@ void*  dlpvalloc(size_t);
 */
 
 #ifndef USE_DL_PREFIX
-void     cfree(void*);
+	void cfree(void *);
 #else
-void     dlcfree(void*);
+void dlcfree(void *);
 #endif
 
-
-/*
+	/*
   malloc_trim(size_t pad);
 
   If possible, gives memory back to the system (via negative
@@ -335,13 +332,12 @@ void     dlcfree(void*);
 */
 
 #ifndef USE_DL_PREFIX
-int      malloc_trim(size_t);
+	int malloc_trim(size_t);
 #else
-int      dlmalloc_trim(size_t);
+int dlmalloc_trim(size_t);
 #endif
 
-
-/*
+	/*
   malloc_usable_size(void* p);
 
   Returns the number of bytes you can actually use in an allocated
@@ -357,13 +353,12 @@ int      dlmalloc_trim(size_t);
 */
 
 #ifndef USE_DL_PREFIX
-size_t   malloc_usable_size(void*);
+	size_t malloc_usable_size(void *);
 #else
-size_t   dlmalloc_usable_size(void*);
+size_t dlmalloc_usable_size(void *);
 #endif
 
-
-/*
+	/*
   malloc_stats();
   Prints on stderr the amount of space obtained from the system (both
   via sbrk and mmap), the maximum amount (which may be more than
@@ -384,12 +379,12 @@ size_t   dlmalloc_usable_size(void*);
 */
 
 #ifndef USE_DL_PREFIX
-void     malloc_stats();
+	void malloc_stats();
 #else
-void     dlmalloc_stats();
+void dlmalloc_stats();
 #endif
 
-/*
+	/*
   mallinfo()
   Returns (by copy) a struct containing various summary statistics:
 
@@ -429,28 +424,29 @@ void     dlmalloc_stats();
 
 #ifndef HAVE_USR_INCLUDE_MALLOC_H
 #ifndef _MALLOC_H
-struct mallinfo {
-  int arena;    
-  int ordblks;  
-  int smblks;   
-  int hblks;    
-  int hblkhd;   
-  int usmblks;  
-  int fsmblks;  
-  int uordblks; 
-  int fordblks; 
-  int keepcost; 
-};
+	struct mallinfo
+	{
+		int arena;
+		int ordblks;
+		int smblks;
+		int hblks;
+		int hblkhd;
+		int usmblks;
+		int fsmblks;
+		int uordblks;
+		int fordblks;
+		int keepcost;
+	};
 #endif
 #endif
 
 #ifndef USE_DL_PREFIX
-struct mallinfo mallinfo(void);
+	struct mallinfo mallinfo(void);
 #else
 struct mallinfo dlmallinfo(void);
 #endif
 
-/*
+	/*
   mallopt(int parameter_number, int parameter_value)
   Sets tunable parameters The format is to provide a
   (parameter-number, parameter-value) pair.  mallopt then sets the
@@ -473,14 +469,14 @@ struct mallinfo dlmallinfo(void);
 */
 
 #ifndef USE_DL_PREFIX
-int  mallopt(int, int);
+	int mallopt(int, int);
 #else
-int  dlmallopt(int, int);
+int dlmallopt(int, int);
 #endif
 
-/* Descriptions of tuning options */
+	/* Descriptions of tuning options */
 
-/*
+	/*
   M_MXFAST is the maximum request size used for "fastbins", special bins
   that hold returned chunks without consolidating their spaces. This
   enables future requests for chunks of the same size to be handled
@@ -504,10 +500,10 @@ int  dlmallopt(int, int);
 */
 
 #ifndef M_MXFAST
-#define M_MXFAST  1
+#define M_MXFAST 1
 #endif
 
-/*
+	/*
   M_TRIM_THRESHOLD is the maximum amount of unused top-most memory
   to keep before releasing via malloc_trim in free().
 
@@ -568,9 +564,9 @@ int  dlmallopt(int, int);
   since that memory will immediately be returned to the system.
 */
 
-#define M_TRIM_THRESHOLD    -1
+#define M_TRIM_THRESHOLD -1
 
-/*
+	/*
   M_TOP_PAD is the amount of extra `padding' space to allocate or
   retain whenever sbrk is called. It is used in two ways internally:
 
@@ -597,10 +593,9 @@ int  dlmallopt(int, int);
   the program needs.
 */
 
-#define M_TOP_PAD           -2
+#define M_TOP_PAD -2
 
-
-/*
+	/*
   M_MMAP_THRESHOLD is the request size threshold for using mmap()
   to service a request. Requests of at least this size that cannot
   be allocated using already-existing space will be serviced via mmap.
@@ -638,9 +633,9 @@ int  dlmallopt(int, int);
   systems.
 */
 
-#define M_MMAP_THRESHOLD    -3
+#define M_MMAP_THRESHOLD -3
 
-/*
+	/*
   M_MMAP_MAX is the maximum number of requests to simultaneously
   service using mmap. This parameter exists because
   some systems have a limited number of internal tables for
@@ -653,31 +648,30 @@ int  dlmallopt(int, int);
   attempts to set it to non-zero values in mallopt will fail.
 */
 
-#define M_MMAP_MAX          -4
+#define M_MMAP_MAX -4
 
-
-/* Unused SVID2/XPG mallopt options, listed for completeness */
+	/* Unused SVID2/XPG mallopt options, listed for completeness */
 
 #ifndef M_NBLKS
-#define M_NLBLKS  2    /* UNUSED in this malloc */
+#define M_NLBLKS 2 /* UNUSED in this malloc */
 #endif
 #ifndef M_GRAIN
-#define M_GRAIN   3    /* UNUSED in this malloc */
+#define M_GRAIN 3 /* UNUSED in this malloc */
 #endif
 #ifndef M_KEEP
-#define M_KEEP    4    /* UNUSED in this malloc */
+#define M_KEEP 4 /* UNUSED in this malloc */
 #endif
 
-/* 
+	/* 
   Some malloc.h's declare alloca, even though it is not part of malloc.
 */
 
-//#ifndef _ALLOCA_H
-//extern void* alloca(size_t);
-//#endif
+	//#ifndef _ALLOCA_H
+	//extern void* alloca(size_t);
+	//#endif
 
 #ifdef __cplusplus
-};  /* end of extern "C" */
+}; /* end of extern "C" */
 #endif
 
 #endif /* MALLOC_270_H */

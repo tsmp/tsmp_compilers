@@ -10,22 +10,18 @@
 namespace nv
 {
 	template <class _Type>
-	inline _Type Clamp(const _Type& x,
-		const _Type& lo,
-		const _Type& hi)
+	inline _Type Clamp(const _Type &x, const _Type &lo, const _Type &hi)
 	{
 		if (x < lo)
 			return lo;
 		else if (x > hi)
 			return hi;
-	
+
 		return x;
 	}
-}
+} // namespace nv
 
-
-#pragma pack(push,4)
-
+#pragma pack(push, 4)
 
 class rgba_t
 {
@@ -42,12 +38,13 @@ public:
 			unsigned char a;
 		};
 	};
-	
-	rgba_t() {} 
+
+	rgba_t() {}
 
 	unsigned long bgra()
 	{
-		return ((unsigned long)a << 24) | ((unsigned long)r << 16) | ((unsigned long)g << 8) | ((unsigned long)b);
+		return ((unsigned long)a << 24) | ((unsigned long)r << 16) | ((unsigned long)g << 8) |
+			   ((unsigned long)b);
 	}
 
 	rgba_t(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
@@ -58,7 +55,7 @@ public:
 		b = _b;
 	}
 
-	rgba_t& operator += (const rgba_t& v)     // incrementation by a rgba_t
+	rgba_t &operator+=(const rgba_t &v) // incrementation by a rgba_t
 	{
 		r = (unsigned char)nv::Clamp((int)((int)r + (int)v.r), 0, 255);
 		g = (unsigned char)nv::Clamp((int)g + (int)v.g, 0, 255);
@@ -68,11 +65,11 @@ public:
 		return *this;
 	}
 
-	rgba_t& operator -= (const rgba_t& v);     // decrementation by a rgba_t
-	rgba_t& operator *= (const float d);     // multiplication by a constant
-	rgba_t& operator /= (const float d);     // division by a constant
+	rgba_t &operator-=(const rgba_t &v); // decrementation by a rgba_t
+	rgba_t &operator*=(const float d);	 // multiplication by a constant
+	rgba_t &operator/=(const float d);	 // division by a constant
 
-	rgba_t& operator = (const rgba_t& v)
+	rgba_t &operator=(const rgba_t &v)
 	{
 		r = v.r;
 		g = v.g;
@@ -81,7 +78,7 @@ public:
 		return *this;
 	}
 
-	friend rgba_t operator + (const rgba_t& v1, const rgba_t& v2)
+	friend rgba_t operator+(const rgba_t &v1, const rgba_t &v2)
 	{
 		int r, g, b, a;
 		r = nv::Clamp((int)v1.r + (int)v2.r, 0, 255);
@@ -92,21 +89,15 @@ public:
 		return rgba_t((unsigned char)r, (unsigned char)g, (unsigned char)b, (unsigned char)a);
 	}
 
-	friend rgba_t operator / (const rgba_t& v, float s)
+	friend rgba_t operator/(const rgba_t &v, float s)
 	{
-		return rgba_t(
-			(unsigned char)(v.r / s),
-			(unsigned char)(v.g / s),
-			(unsigned char)(v.b / s),
+		return rgba_t((unsigned char)(v.r / s), (unsigned char)(v.g / s), (unsigned char)(v.b / s),
 			(unsigned char)(v.a / s));
 	}
 
-	friend rgba_t operator / (const rgba_t& v, int s)
+	friend rgba_t operator/(const rgba_t &v, int s)
 	{
-		return rgba_t(
-			(unsigned char)(v.r / s),
-			(unsigned char)(v.g / s),
-			(unsigned char)(v.b / s),
+		return rgba_t((unsigned char)(v.r / s), (unsigned char)(v.g / s), (unsigned char)(v.b / s),
 			(unsigned char)(v.a / s));
 	}
 
@@ -129,11 +120,7 @@ class nvImage
 	bool m_RGBE;
 
 public:
-
-	_Type* pixels(size_t n = 0)
-	{
-		return &m_pixels[n];
-	}
+	_Type *pixels(size_t n = 0) { return &m_pixels[n]; }
 
 	nvImage()
 	{
