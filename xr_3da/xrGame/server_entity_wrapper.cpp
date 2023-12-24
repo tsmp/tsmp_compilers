@@ -11,14 +11,11 @@
 #include "xrServer_Objects.h"
 #include "xrmessages.h"
 #include "../../xrNetServer/net_utils.h"
-
-#ifdef AI_COMPILER
-#include "..\xrAI\factory_api.h"
-#endif
+#include "../xrAI/FactoryApi.h"
 
 struct ISE_Abstract;
 
-CServerEntityWrapper::~CServerEntityWrapper() { F_entity_Destroy(m_object); }
+CServerEntityWrapper::~CServerEntityWrapper() { Factory::DestroyEntity(m_object); }
 
 void CServerEntityWrapper::save(IWriter &stream)
 {
@@ -68,7 +65,7 @@ void CServerEntityWrapper::load(IReader &stream)
 	string64 s_name;
 	net_packet.r_stringZ(s_name);
 
-	m_object = F_entity_Create(s_name);
+	m_object = Factory::CreateEntity(s_name);
 
 	R_ASSERT3(m_object, "Can't create entity.", s_name);
 	m_object->Spawn_Read(net_packet);

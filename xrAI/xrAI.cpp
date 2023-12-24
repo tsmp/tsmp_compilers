@@ -1,20 +1,14 @@
-// xrAI.cpp : Defines the entry point for the application.
-//
-
 #include "stdafx.h"
 #include "xr_ini.h"
 #include "process.h"
 #include "xrAI.h"
-
 #include "xr_graph_merge.h"
 #include "game_spawn_constructor.h"
 #include "xrCrossTable.h"
-//#include "path_test.h"
 #include "game_graph_builder.h"
 #include <mmsystem.h>
 #include "spawn_patcher.h"
-
-#pragma comment(linker, "/STACK:0x800000,0x400000")
+#include "FactoryApi.h"
 
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "d3dx9.lib")
@@ -22,6 +16,12 @@
 #pragma comment(lib, "winmm.LIB")
 #pragma comment(lib, "MagicFM.LIB")
 #pragma comment(lib, "xrCore.LIB")
+
+typedef void DUMMY_STUFF(const void*, const u32&, void*);
+XRCORE_API DUMMY_STUFF* g_temporary_stuff;
+
+#define TRIVIAL_ENCRYPTOR_DECODER
+#include "../xr_3da/trivial_encryptor.h"
 
 extern LPCSTR LEVEL_GRAPH_NAME;
 
@@ -223,26 +223,18 @@ void Startup(LPSTR lpCmdLine)
 	Sleep(500);
 }
 
-#include "factory_api.h"
-
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Core._initialize("xrai", 0);
-
-	HMODULE hFactory;
-	LPCSTR g_name = "xrSE_Factory.dll";
-	Log("Loading DLL:", g_name);
-	hFactory = LoadLibrary(g_name);
-	if (0 == hFactory)
-		R_CHK(GetLastError());
-	R_ASSERT2(hFactory,
-		"Factory DLL raised exception during loading or there is no factory DLL at all");
+	
+	g_temporary_stuff = &trivial_encryptor::decode;
+	string_path systemLtxPath;
+	FS.update_path(systemLtxPath, "$game_config$", "system.ltx");
+	pSettings = xr_new<CInifile>(systemLtxPath);
 
 	Startup(lpCmdLine);
 
-	FreeLibrary(hFactory);
-
+	xr_delete(pSettings);
 	Core._destroy();
-
-	return (0);
+	return 0;
 }

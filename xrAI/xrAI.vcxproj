@@ -57,7 +57,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\xrLc\COMMON_COMPILERS\resource.h" />
-    <ClInclude Include="factory_api.h" />
+    <ClInclude Include="FactoryApi.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="xrAI.h" />
     <ClInclude Include="FTimer.h" />
@@ -85,6 +85,7 @@
     <ClInclude Include="spawn_patcher.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FactoryApi.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -151,10 +152,6 @@
   <ItemGroup>
     <ProjectReference Include="..\xrCore\xrCore.vcxproj">
       <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\xrSE_Factory\xrSE_Factory.vcxproj">
-      <Project>{3ad26fd3-4f52-4e22-a4cf-ad4c49e74c61}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

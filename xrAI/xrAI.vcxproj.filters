@@ -4,10 +4,6 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{5ecbdd9e-a288-49d6-aebe-26c0f27f551f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\Resource Files">
-      <UniqueIdentifier>{381dad62-3b90-4303-9a4e-4e448140a447}</UniqueIdentifier>
-      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
-    </Filter>
     <Filter Include="Compiler">
       <UniqueIdentifier>{fa8f240e-f078-4317-9a8b-ed2b8b0124fa}</UniqueIdentifier>
     </Filter>
@@ -83,11 +79,11 @@
     <Filter Include="ALife\Verify">
       <UniqueIdentifier>{ff4607e6-79cf-476a-b22b-22ea20794c44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{b8c4d91f-b7b2-4f0b-9839-16d5108d6c9b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="factory_api.h">
-      <Filter>Kernel</Filter>
-    </ClInclude>
     <ClInclude Include="StdAfx.h">
       <Filter>Kernel</Filter>
     </ClInclude>
@@ -164,6 +160,9 @@
       <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="..\xrLc\COMMON_COMPILERS\resource.h" />
+    <ClInclude Include="FactoryApi.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -263,6 +262,9 @@
     <ClCompile Include="..\xrLc\COMMON_COMPILERS\guid_generator.cpp" />
     <ClCompile Include="..\xrLc\COMMON_COMPILERS\tga.cpp" />
     <ClCompile Include="..\xrLc\COMMON_COMPILERS\xrThread.cpp" />
+    <ClCompile Include="FactoryApi.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\xrLc\COMMON_COMPILERS\resource.rc" />

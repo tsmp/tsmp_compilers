@@ -12,7 +12,7 @@
 #include "graph_abstract.h"
 #include "xrMessages.h"
 #include "xrServer_Objects_ALife.h"
-#include "factory_api.h"
+#include "FactoryApi.h"
 #include "game_level_cross_table.h"
 #include "xrCrossTable.h"
 #include "..\xrLC\COMMON_COMPILERS\guid_generator.h"
@@ -68,20 +68,19 @@ void CGameGraphBuilder::load_graph_point(NET_Packet &net_packet)
 	R_ASSERT(M_SPAWN == id);
 	net_packet.r_stringZ(section_id);
 
-	//	if (xr_strcmp("graph_point",section_id))
-	//		return;
+	CSE_Abstract *entity = Factory::CreateEntity(section_id);
 
-	CSE_Abstract *entity = F_entity_Create(section_id);
 	if (!entity)
 	{
 		Msg("Cannot create entity from section %s, skipping", section_id);
 		return;
 	}
 
-	CSE_ALifeGraphPoint *graph_point = smart_cast<CSE_ALifeGraphPoint *>(entity);
+	auto graph_point = smart_cast<CSE_ALifeGraphPoint*>(entity);
+
 	if (!graph_point)
 	{
-		F_entity_Destroy(entity);
+		Factory::DestroyEntity(entity);
 		return;
 	}
 
@@ -139,8 +138,7 @@ void CGameGraphBuilder::load_graph_point(NET_Packet &net_packet)
 	vertex.dwPointOffset = 0;
 
 	graph().add_vertex(vertex, graph().vertices().size());
-
-	F_entity_Destroy(entity);
+	Factory::DestroyEntity(entity);
 }
 
 void CGameGraphBuilder::load_graph_points(const float &start, const float &amount)

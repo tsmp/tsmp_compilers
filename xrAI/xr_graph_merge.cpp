@@ -1,17 +1,9 @@
-////////////////////////////////////////////////////////////////////////////
-//	Module 		: xr_graph_merge.cpp
-//	Created 	: 25.01.2003
-//  Modified 	: 25.01.2003
-//	Author		: Dmitriy Iassenev
-//	Description : Merging level graphs for off-line AI NPC computations
-////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "xr_ini.h"
 #include "..\xr_3da\xrLevel.h"
 #include "xrAI.h"
 #include "xrServer_Objects_ALife_All.h"
-#include "factory_api.h"
+#include "FactoryApi.h"
 #include "xrCrossTable.h"
 #include "level_graph.h"
 #include "net_utils.h"
@@ -247,11 +239,10 @@ public:
 				P.r_begin(ID);
 				R_ASSERT(M_SPAWN == ID);
 				P.r_stringZ(fName);
-				CSE_Abstract *E = F_entity_Create(fName);
+				CSE_Abstract *E = Factory::CreateEntity(fName);
 				R_ASSERT3(E, "Can't create entity.", fName);
-				//				E->Spawn_Read						(P);
-				CSE_ALifeGraphPoint *tpGraphPoint = smart_cast<CSE_ALifeGraphPoint *>(E);
-				if (tpGraphPoint)
+				
+				if (auto tpGraphPoint = smart_cast<CSE_ALifeGraphPoint*>(E))
 				{
 					E->Spawn_Read(P);
 
@@ -278,13 +269,10 @@ public:
 					if (fMinDistance < EPS_L)
 					{
 						SConnectionVertex T;
-						LPSTR S;
-						S = xr_strdup(tpGraphPoint->name_replace());
+						LPSTR S = xr_strdup(tpGraphPoint->name_replace());
 						T.caConnectName = xr_strdup(*tpGraphPoint->m_caConnectionPointName);
-						T.dwLevelID =
-							dwfGetIDByLevelName(Ini, *tpGraphPoint->m_caConnectionLevelName);
-						//						T.tGraphID						= (GameGraph::_GRAPH_ID)i;
-						//						T.tOldGraphID					= tGraphID;
+						T.dwLevelID = dwfGetIDByLevelName(Ini, *tpGraphPoint->m_caConnectionLevelName);
+
 						T.tOldGraphID = (GameGraph::_GRAPH_ID)i;
 						T.tGraphID = tGraphID;
 
@@ -292,6 +280,7 @@ public:
 						VERTEX_MAP::const_iterator II = m_tVertexMap.begin();
 						VERTEX_MAP::const_iterator EE = m_tVertexMap.end();
 						for (; II != EE; ++II)
+						{
 							if (T.tOldGraphID == (*II).second.tOldGraphID)
 							{
 								ok = false;
@@ -300,6 +289,7 @@ public:
 									E->name_replace());
 								break;
 							}
+						}
 
 						if (ok)
 						{
@@ -308,26 +298,26 @@ public:
 						}
 					}
 				}
-				F_entity_Destroy(E);
+
+				Factory::DestroyEntity(E);
 			}
+
 			if (i != m_tpGraph->header().vertex_count())
+			{
 				Msg("Graph for the level %s doesn't correspond to the graph points from Level "
 					"Editor! (%d : %d)",
 					*m_tLevel.name(), i, m_tpGraph->header().vertex_count());
+			}
 
-			VERTEX_MAP::const_iterator I = m_tVertexMap.begin();
-			VERTEX_MAP::const_iterator E = m_tVertexMap.end();
-			for (; I != E; ++I)
+			for (const auto &vertexPair : m_tVertexMap)
 			{
-				R_ASSERT3(!xr_strlen((*I).second.caConnectName) ||
-							  ((*I).second.tGraphID < m_tpVertices.size()),
+				R_ASSERT3(!xr_strlen(vertexPair.second.caConnectName) || (vertexPair.second.tGraphID < m_tpVertices.size()),
 					"Rebuild graph for the level", *m_tLevel.name());
 			}
 
-			//			VERIFY3									(i == m_tpGraph->header().vertex_count(), "Rebuild graph for the level ",m_tLevel.name());
 			O->close();
 		}
-	};
+	}
 
 	virtual ~CLevelGameGraph()
 	{
