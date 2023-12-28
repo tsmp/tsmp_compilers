@@ -62,8 +62,6 @@ XRCORE_API void ComputeBuildID(LPCSTR Date)
 		build_id -= days_in_month[i];
 }
 
-extern char g_application_path[256];
-
 void xrCore::_initialize(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, LPCSTR fs_fname)
 {
 	strcpy_s(ApplicationName, _ApplicationName);
@@ -83,9 +81,6 @@ void xrCore::_initialize(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, 
 		GetModuleFileName(GetModuleHandle(MODULE_NAME), fn, sizeof(fn));
 		_splitpath(fn, dr, di, 0, 0);
 		strconcat(sizeof(ApplicationPath), ApplicationPath, dr, di);
-#ifndef _EDITOR
-		strcpy_s(g_application_path, sizeof(g_application_path), ApplicationPath);
-#endif
 
 		// working path
 		if (strstr(Params, "-wf"))

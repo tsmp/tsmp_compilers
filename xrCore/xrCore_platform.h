@@ -13,7 +13,7 @@
 
 // windows.h
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0502
+#define _WIN32_WINNT NTDDI_WIN7
 #endif
 
 #define NOGDICAPMASKS
