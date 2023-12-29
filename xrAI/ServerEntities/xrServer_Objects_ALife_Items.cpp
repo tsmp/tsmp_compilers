@@ -12,18 +12,12 @@
 #include "clsid_game.h"
 #include "xrServer_Objects_ALife_Items.h"
 #include "clsid_game.h"
+#include "..\bone.h"
 
-#ifndef XRGAME_EXPORTS
-#include "..\bone.h"
-#else
-#include "..\bone.h"
-#ifdef DEBUG
-#define PHPH_DEBUG
-#endif
-#endif
 #ifdef PHPH_DEBUG
 #include "PHDebug.h"
 #endif
+
 ////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeInventoryItem
 ////////////////////////////////////////////////////////////////////////////
@@ -235,11 +229,7 @@ void CSE_ALifeItem::UPDATE_Write(NET_Packet &tNetPacket)
 {
 	inherited1::UPDATE_Write(tNetPacket);
 	inherited2::UPDATE_Write(tNetPacket);
-
-#ifdef XRGAME_EXPORTS
-	m_last_update_time = Device.dwTimeGlobal;
-#endif // XRGAME_EXPORTS
-};
+}
 
 void CSE_ALifeItem::UPDATE_Read(NET_Packet &tNetPacket)
 {
@@ -247,7 +237,7 @@ void CSE_ALifeItem::UPDATE_Read(NET_Packet &tNetPacket)
 	inherited2::UPDATE_Read(tNetPacket);
 
 	m_physics_disabled = false;
-};
+}
 
 void CSE_ALifeItem::FillProps(LPCSTR pref, PropItemVec &values)
 {
@@ -258,17 +248,8 @@ void CSE_ALifeItem::FillProps(LPCSTR pref, PropItemVec &values)
 BOOL CSE_ALifeItem::Net_Relevant()
 {
 	if (attached())
-		return (false);
-
-	if (!m_physics_disabled && !fis_zero(State.linear_vel.square_magnitude(), EPS_L))
-		return (true);
-
-#ifdef XRGAME_EXPORTS
-	if (Device.dwTimeGlobal < (m_last_update_time + update_rate()))
-		return (false);
-#endif // XRGAME_EXPORTS
-
-	return (true);
+		return false;
+	return true;
 }
 
 void CSE_ALifeItem::OnEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender)
@@ -278,13 +259,10 @@ void CSE_ALifeItem::OnEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID
 	if (type != GE_FREEZE_OBJECT)
 		return;
 
-	//	R_ASSERT					(!m_physics_disabled);
 	m_physics_disabled = true;
 }
 
-////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeItemTorch
-////////////////////////////////////////////////////////////////////////////
 CSE_ALifeItemTorch::CSE_ALifeItemTorch(LPCSTR caSection) : CSE_ALifeItem(caSection)
 {
 	m_active = false;
@@ -760,16 +738,12 @@ void CSE_ALifeItemPDA::STATE_Write(NET_Packet &tNetPacket)
 {
 	inherited::STATE_Write(tNetPacket);
 	tNetPacket.w(&m_original_owner, sizeof(m_original_owner));
-#ifdef XRGAME_EXPORTS
-	tNetPacket.w_stringZ(m_specific_character);
-	tNetPacket.w_stringZ(m_info_portion);
-#else
-	shared_str tmp_1 = NULL;
-	shared_str tmp_2 = NULL;
+
+	shared_str tmp_1;
+	shared_str tmp_2;
 
 	tNetPacket.w_stringZ(tmp_1);
 	tNetPacket.w_stringZ(tmp_2);
-#endif
 }
 
 void CSE_ALifeItemPDA::UPDATE_Read(NET_Packet &tNetPacket) { inherited::UPDATE_Read(tNetPacket); }

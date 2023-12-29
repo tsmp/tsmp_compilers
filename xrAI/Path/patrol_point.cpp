@@ -13,10 +13,6 @@
 #include "..\Graph\game_graph.h"
 #include "..\Object\object_broker.h"
 
-#ifdef XRGAME_EXPORTS
-#include "ai_space.h"
-#endif
-
 #ifdef DEBUG
 #include "patrol_path.h"
 #endif
@@ -123,21 +119,3 @@ void CPatrolPoint::save(IWriter &stream)
 	save_data(m_level_vertex_id, stream);
 	save_data(m_game_vertex_id, stream);
 }
-
-#ifdef XRGAME_EXPORTS
-const u32 &CPatrolPoint::level_vertex_id() const
-{
-	if (ai().game_graph().vertex(m_game_vertex_id)->level_id() == ai().level_graph().level_id())
-		return (level_vertex_id(&ai().level_graph(), &ai().cross_table(), &ai().game_graph()));
-
-	return (m_level_vertex_id);
-}
-
-const GameGraph::_GRAPH_ID &CPatrolPoint::game_vertex_id() const
-{
-	if (ai().game_graph().vertex(m_game_vertex_id)->level_id() == ai().level_graph().level_id())
-		return (game_vertex_id(&ai().level_graph(), &ai().cross_table(), &ai().game_graph()));
-
-	return (m_game_vertex_id);
-}
-#endif

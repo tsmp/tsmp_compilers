@@ -16,17 +16,3 @@
 	{                                                                                              \
 		return p->C();                                                                             \
 	};
-
-#ifdef XRGAME_EXPORTS
-template <>
-CGameObject *SmartDynamicCast::smart_cast<CGameObject, CObject>(CObject *p)
-{
-	return static_cast<CGameObject *>(p);
-}
-
-template <>
-Feel::Sound *SmartDynamicCast::smart_cast<Feel::Sound, ISpatial>(ISpatial *p)
-{
-	return (p->dcast_FeelSound());
-}
-#endif

@@ -69,11 +69,6 @@ void CSE_ALifeHumanAbstract::script_register(lua_State *L)
 	module(L)[luabind_class_monster2(CSE_ALifeHumanAbstract, "cse_alife_human_abstract",
 		CSE_ALifeTraderAbstract, CSE_ALifeMonsterAbstract)
 				  .def("brain", &human_brain)
-#ifdef XRGAME_EXPORTS
-				  .def("rank", &CSE_ALifeTraderAbstract::Rank)
-				  .def("set_rank", &CSE_ALifeTraderAbstract::SetRank)
-
-#endif
 	];
 }
 

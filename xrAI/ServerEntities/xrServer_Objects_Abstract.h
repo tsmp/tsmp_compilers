@@ -11,24 +11,14 @@
 
 #pragma pack(push, 4)
 #include "xrServer_Space.h"
-#ifdef XRGAME_EXPORTS
+
 #include "CDB/xrCDB.h"
-#else // XRGAME_EXPORTS
-#include "CDB/xrCDB.h"
-#endif // XRGAME_EXPORTS
 #include "..\ShapeData.h"
 
 class NET_Packet;
 class CDUInterface;
 
-#ifndef _EDITOR
-#ifndef XRGAME_EXPORTS
-//#include "Sound.h"
-#endif
-#endif
-
 #include "xrEProps.h"
-//#include "DrawUtils.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4005)
