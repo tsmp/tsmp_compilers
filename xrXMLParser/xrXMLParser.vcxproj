@@ -43,6 +43,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
       <PreprocessorDefinitions>NDEBUG;XRXMLPARSER_EXPORTS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <OmitFramePointers Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</OmitFramePointers>
+      <OmitFramePointers Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</OmitFramePointers>
     </ClCompile>
     <Link>
       <GenerateMapFile>false</GenerateMapFile>
@@ -57,12 +59,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
-      <PrecompiledHeader >Create</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="xrXMLParser.cpp" />
-    <ClCompile Include="tinystr.cpp"/>
+    <ClCompile Include="tinystr.cpp" />
     <ClCompile Include="tinyxml.cpp" />
-    <ClCompile Include="tinyxmlerror.cpp"/>
+    <ClCompile Include="tinyxmlerror.cpp" />
     <ClCompile Include="tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>

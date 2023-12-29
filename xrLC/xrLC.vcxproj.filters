@@ -288,8 +288,6 @@
     <ClCompile Include="..\xr_3da\fmesh.cpp">
       <Filter>COMPILER\XRAY</Filter>
     </ClCompile>
-    <ClCompile Include="COMMON_COMPILERS\cl_log.cpp" />
-    <ClCompile Include="COMMON_COMPILERS\xrThread.cpp" />
     <ClCompile Include="xr_mu_light.cpp" />
     <ClCompile Include="nv_algebra.cpp">
       <Filter>External\NV_Basis</Filter>
@@ -309,8 +307,10 @@
     <ClCompile Include="Startup.cpp">
       <Filter>Kernel</Filter>
     </ClCompile>
+    <ClCompile Include="..\CommonCompilers\cl_log.cpp" />
+    <ClCompile Include="..\CommonCompilers\xrThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="COMMON_COMPILERS\resource.rc" />
+    <ResourceCompile Include="..\CommonCompilers\resource.rc" />
   </ItemGroup>
 </Project>
