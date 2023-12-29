@@ -48,7 +48,7 @@
 //		and CSE_ALifeHumanAbstract		appended with known_traders property
 //		and CSE_ALifeTask				appended with try count property
 //		and CSE_ALifePersonalTask		no more exists
-// 37 - бинокль имеет ServerEntity не CSE_ALifeItemWeapon, а CSE_ALifeItem
+// 37 - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ ServerEntity пїЅпїЅ CSE_ALifeItemWeapon, пїЅ CSE_ALifeItem
 // 38 - CSE_ALifeHumanAbstract			appended with the equipment and weapon preferences
 // 39 - CSE_ALifeAnomalousZone			appended with the start power property
 // 40 - CSE_ALifeObjectPhysic			appended with activate flag
@@ -220,19 +220,5 @@ LPCSTR getStartupAnimation();
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_AbstractVisual)
 #define script_type_list save_type_list(CSE_AbstractVisual)
-
-#ifndef AI_COMPILER
-	extern CSE_Abstract *F_entity_Create(LPCSTR caSection);
-#endif
-
-/**
-SERVER_ENTITY_DECLARE_BEGIN(CSE_SpawnGroup,CSE_Abstract)
-public:
-									CSE_SpawnGroup	(LPCSTR caSection);
-	virtual							~CSE_SpawnGroup	();
-SERVER_ENTITY_DECLARE_END
-add_to_type_list(CSE_SpawnGroup)
-#define script_type_list save_type_list(CSE_SpawnGroup)
-/**/
 
 #pragma warning(pop)

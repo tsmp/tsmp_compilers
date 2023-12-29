@@ -27,21 +27,12 @@ enum eTraderFlags
 	eTraderFlagInfiniteAmmo = u32(1) << 0,
 	eTraderFlagDummy = u32(-1),
 };
-//	float							m_fCumulativeItemMass;
-//	int								m_iCumulativeItemVolume;
+
 u32 m_dwMoney;
 float m_fMaxItemMass;
 Flags32 m_trader_flags;
 
-////////////////////////////////////////////////////
 //character profile info
-#ifndef AI_COMPILER
-shared_str character_profile();
-void set_character_profile(shared_str);
-shared_str specific_character();
-void set_specific_character(shared_str);
-#endif
-
 CHARACTER_COMMUNITY_INDEX m_community_index;
 CHARACTER_REPUTATION_VALUE m_reputation;
 CHARACTER_RANK_VALUE m_rank;

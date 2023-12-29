@@ -1,6 +1,3 @@
-#ifndef xrLevelH
-#define xrLevelH
-
 #pragma once
 
 struct xrGUID
@@ -197,7 +194,6 @@ public:
 	friend class CRenumbererConverter;
 }; // 2+2+5+12 = 21b
 
-#ifdef AI_COMPILER
 struct NodeCompressed6
 {
 public:
@@ -295,7 +291,6 @@ public:
 	friend struct CNodeCompressed;
 	friend class CNodeRenumberer;
 }; // 2+5+2+11 = 20b
-#endif
 
 struct SNodePositionOld
 {
@@ -310,5 +305,3 @@ const u32 XRCL_PRODUCTION_VERSION = 14; // output
 const u32 CFORM_CURRENT_VERSION = 4;
 const u32 MAX_NODE_BIT_COUNT = 23;
 const u32 XRAI_CURRENT_VERSION = 8;
-
-#endif // xrLevelH

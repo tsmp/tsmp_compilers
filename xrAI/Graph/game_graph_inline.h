@@ -8,20 +8,8 @@
 
 #pragma once
 
-#if !defined(AI_COMPILER)
-IC CGameGraph::CGameGraph()
-#else // !defined(AI_COMPILER)
-#ifdef AI_COMPILER
 IC CGameGraph::CGameGraph(LPCSTR file_name, u32 current_version)
-#endif // AI_COMPILER
-#endif // !defined(AI_COMPILER)
-
 {
-#if !defined(AI_COMPILER)
-	string_path file_name;
-	FS.update_path(file_name, "$game_data$", GRAPH_NAME);
-#endif // !defined(AI_COMPILER)
-
 	m_reader = FS.r_open(file_name);
 	VERIFY(m_reader);
 	m_header.load(m_reader);

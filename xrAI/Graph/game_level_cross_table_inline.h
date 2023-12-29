@@ -8,17 +8,8 @@
 
 #pragma once
 
-#ifdef AI_COMPILER
 IC CGameLevelCrossTable::CGameLevelCrossTable(LPCSTR fName)
-#else  // AI_COMPILER
-IC CGameLevelCrossTable::CGameLevelCrossTable()
-#endif // AI_COMPILER
 {
-#ifndef AI_COMPILER
-	string_path fName;
-	FS.update_path(fName, "$level$", CROSS_TABLE_NAME);
-#endif // AI_COMPILER
-
 	m_tpCrossTableVFS = FS.r_open(fName);
 	R_ASSERT2(m_tpCrossTableVFS, "Can't open cross table!");
 

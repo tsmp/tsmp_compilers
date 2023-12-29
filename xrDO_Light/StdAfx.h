@@ -1,10 +1,4 @@
-// stdafx.h : include file for standard system include files,
-//  or project specific include files that are used frequently, but
-//      are changed infrequently
-//
-
 #pragma once
-
 #include "xrCore.h"
 
 #pragma warning(disable : 4995)
@@ -15,6 +9,7 @@
 #define ENGINE_API
 #define ECORE_API
 #define XR_EPROPS_API
+
 #include "clsid.h"
 #include "..\xr_3da\defines.h"
 #include "CommonCompilers\cl_log.h"
@@ -26,11 +21,6 @@
 #include <sys/stat.h>
 #include <io.h>
 #include <stdio.h>
-
-#ifdef AI_COMPILER
-#include "smart_cast.h"
-#endif
-// TODO: reference additional headers your program requires here
 
 #define READ_IF_EXISTS(ltx, method, section, name, default_value)                                  \
 	(ltx->line_exist(section, name)) ? ltx->method(section, name) : default_value

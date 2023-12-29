@@ -18,10 +18,6 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-#ifndef AI_COMPILER
-#include "object_factory.h"
-#endif
-
 #include "xrEProps.h"
 
 IPropHelper &PHelper()
@@ -123,10 +119,6 @@ CSE_Abstract::CSE_Abstract(LPCSTR caSection)
 			FS.r_close(reader);
 		}
 	}
-
-#ifndef AI_COMPILER
-	m_script_clsid = object_factory().script_clsid(m_tClassID);
-#endif
 }
 
 CSE_Abstract::~CSE_Abstract()

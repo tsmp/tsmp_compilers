@@ -78,11 +78,7 @@ private:
 	};
 
 public:
-#ifndef AI_COMPILER
-	CLevelGraph();
-#else
 	CLevelGraph(LPCSTR file_name);
-#endif
 	virtual ~CLevelGraph();
 	IC const_vertex_iterator begin() const;
 	IC const_vertex_iterator end() const;
@@ -234,42 +230,6 @@ public:
 	IC Fvector2 v2d(const Fvector &vector3d) const;
 	IC bool valid_vertex_position(const Fvector &position) const;
 	bool neighbour_in_direction(const Fvector &direction, u32 start_vertex_id) const;
-
-#ifdef DEBUG
-#ifndef AI_COMPILER
-
-private:
-	ref_shader sh_debug;
-
-private:
-	int m_current_level_id;
-	bool m_current_actual;
-	Fvector m_current_center;
-	Fvector m_current_radius;
-
-public:
-	void setup_current_level(const int &level_id);
-
-private:
-	Fvector convert_position(const Fvector &position);
-	void draw_edge(const int &vertex_id0, const int &vertex_id1);
-	void draw_vertex(const int &vertex_id);
-	void draw_stalkers(const int &vertex_id);
-	void draw_objects(const int &vertex_id);
-	void update_current_info();
-
-private:
-	void draw_nodes();
-	void draw_restrictions();
-	void draw_covers();
-	void draw_game_graph();
-	void draw_objects();
-	void draw_debug_node();
-
-public:
-	void render();
-#endif
-#endif
 };
 
 IC bool operator<(const CLevelGraph::CVertex &vertex, const u32 &vertex_xz);
@@ -278,14 +238,6 @@ IC bool operator==(const CLevelGraph::CVertex &vertex, const u32 &vertex_xz);
 IC bool operator<(const u32 &vertex_xz, const CLevelGraph::CVertex &vertex);
 IC bool operator>(const u32 &vertex_xz, const CLevelGraph::CVertex &vertex);
 IC bool operator==(const u32 &vertex_xz, const CLevelGraph::CVertex &vertex);
-
-#ifdef DEBUG
-#ifndef AI_COMPILER
-extern BOOL g_bDebugNode;
-extern u32 g_dwDebugNodeSource;
-extern u32 g_dwDebugNodeDest;
-#endif
-#endif
 
 #include "level_graph_inline.h"
 #include "level_graph_vertex_inline.h"

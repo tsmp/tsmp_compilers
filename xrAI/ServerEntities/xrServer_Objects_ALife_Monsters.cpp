@@ -13,14 +13,7 @@
 #include "..\Object\object_broker.h"
 #include "..\Alife\alife_human_brain.h"
 
-#ifndef AI_COMPILER
-#include "ai_space.h"
-#include "character_info.h"
-#include "specific_character.h"
-#endif
-
-void setup_location_types_section(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile *ini,
-	LPCSTR section)
+void setup_location_types_section(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile *ini, LPCSTR section)
 {
 	VERIFY3(ini->section_exist(section), "cannot open section", section);
 	GameGraph::STerrainPlace terrain_mask;
@@ -29,6 +22,7 @@ void setup_location_types_section(GameGraph::TERRAIN_VECTOR &m_vertex_types, CIn
 	CInifile::Sect &sect = ini->r_section(section);
 	CInifile::SectCIt I = sect.Data.begin();
 	CInifile::SectCIt E = sect.Data.end();
+
 	for (; I != E; ++I)
 	{
 		LPCSTR S = *(*I).first;
@@ -170,15 +164,7 @@ void CSE_ALifeTraderAbstract::STATE_Read(NET_Packet &tNetPacket, u16 size)
 		{
 			int tmp;
 			tNetPacket.r_s32(tmp);
-#ifndef AI_COMPILER
-			if (tmp != -1)
-				m_SpecificCharacter = CSpecificCharacter::IndexToId(tmp);
-			else
-				m_SpecificCharacter = NULL;
-
-#else
 			m_SpecificCharacter = NULL;
-#endif
 		}
 		else if (m_wVersion >= 98)
 		{
@@ -192,11 +178,7 @@ void CSE_ALifeTraderAbstract::STATE_Read(NET_Packet &tNetPacket, u16 size)
 		{
 			int tmp;
 			tNetPacket.r_s32(tmp);
-#ifndef AI_COMPILER
-			m_sCharacterProfile = CCharacterInfo::IndexToId(tmp);
-#else
 			m_sCharacterProfile = "default";
-#endif
 			VERIFY(xr_strlen(m_sCharacterProfile));
 		}
 		else if (m_wVersion > 95)
@@ -220,121 +202,14 @@ void CSE_ALifeTraderAbstract::STATE_Read(NET_Packet &tNetPacket, u16 size)
 void CSE_ALifeTraderAbstract::OnChangeProfile(PropValue *sender)
 {
 	m_SpecificCharacter = NULL;
-#ifndef AI_COMPILER
-	specific_character();
-#endif
 	base()->set_editor_flag(ISE_Abstract::flVisualChange);
 }
-
-#ifndef AI_COMPILER
-
-
-shared_str CSE_ALifeTraderAbstract::specific_character()
-{
-	if (m_SpecificCharacter.size())
-		return m_SpecificCharacter;
-
-	CCharacterInfo char_info;
-	char_info.Load(character_profile());
-
-	//профиль задан индексом
-	if (char_info.data()->m_CharacterId.size())
-	{
-		set_specific_character(char_info.data()->m_CharacterId);
-		return m_SpecificCharacter;
-	}
-	//профиль задан шаблоном
-	//
-	//проверяем все информации о персонаже, запоминаем подходящие,
-	//а потом делаем случайный выбор
-	else
-	{
-		m_CheckedCharacters.clear();
-		m_DefaultCharacters.clear();
-
-		for (int i = 0; i <= CSpecificCharacter::GetMaxIndex(); i++)
-		{
-			CSpecificCharacter spec_char;
-			shared_str id = CSpecificCharacter::IndexToId(i);
-			spec_char.Load(id);
-
-			if (spec_char.data()->m_bNoRandom)
-				continue;
-
-			bool class_found = false;
-			for (std::size_t j = 0; j < spec_char.data()->m_Classes.size(); j++)
-			{
-				if (char_info.data()->m_Class == spec_char.data()->m_Classes[j])
-				{
-					class_found = true;
-					break;
-				}
-			}
-			if (!char_info.data()->m_Class.size() || class_found)
-			{
-				//запомнить пподходящий персонаж с флажком m_bDefaultForCommunity
-				if (spec_char.data()->m_bDefaultForCommunity)
-					m_DefaultCharacters.push_back(id);
-
-				if (char_info.data()->m_Rank == NO_RANK ||
-					_abs(spec_char.Rank() - char_info.data()->m_Rank) < RANK_DELTA)
-				{
-					if (char_info.data()->m_Reputation == NO_REPUTATION ||
-						_abs(spec_char.Reputation() - char_info.data()->m_Reputation) <
-							REPUTATION_DELTA)
-					{
-							m_CheckedCharacters.push_back(id);
-					}
-				}
-			}
-		}
-		R_ASSERT3(!m_DefaultCharacters.empty(), "no default specific character set for class",
-			*char_info.data()->m_Class);
-
-		char_info.m_SpecificCharacterId =
-			m_DefaultCharacters[Random.randI(m_DefaultCharacters.size())];
-
-		set_specific_character(char_info.m_SpecificCharacterId);
-		return m_SpecificCharacter;
-	}
-}
-
-void CSE_ALifeTraderAbstract::set_specific_character(shared_str new_spec_char)
-{
-	R_ASSERT(new_spec_char.size());
-	m_SpecificCharacter = new_spec_char;
-
-	CSpecificCharacter selected_char;
-	selected_char.Load(m_SpecificCharacter);
-	if (selected_char.Visual())
-	{
-		CSE_Visual *visual = smart_cast<CSE_Visual *>(base());
-		VERIFY(visual);
-		if (xr_strlen(selected_char.Visual()) > 0)
-			visual->set_visual(selected_char.Visual());
-	}
-
-	//в редакторе специфический профиль оставляем не заполненым
-	m_SpecificCharacter = NULL;
-}
-
-void CSE_ALifeTraderAbstract::set_character_profile(shared_str new_profile)
-{
-	m_sCharacterProfile = new_profile;
-}
-
-shared_str CSE_ALifeTraderAbstract::character_profile() { return m_sCharacterProfile; }
-
-#endif
 
 void CSE_ALifeTraderAbstract::UPDATE_Write(NET_Packet &tNetPacket){};
 
 void CSE_ALifeTraderAbstract::UPDATE_Read(NET_Packet &tNetPacket){};
 
-////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeTrader
-////////////////////////////////////////////////////////////////////////////
-
 CSE_ALifeTrader::CSE_ALifeTrader(LPCSTR caSection)
 	: CSE_ALifeDynamicObjectVisual(caSection), CSE_ALifeTraderAbstract(caSection)
 {

@@ -19,12 +19,10 @@
 
 class CGameLevelCrossTable
 {
-#ifdef AI_COMPILER
 	friend class CLevelGameGraph;
 	friend class CCrossTableBuilder;
 	friend class CRenumbererConverter;
 	friend class CGameGraphBuilder;
-#endif // AI_COMPILER
 
 public:
 #pragma pack(push, 2)
@@ -43,12 +41,10 @@ public:
 		IC const xrGUID &level_guid() const;
 		IC const xrGUID &game_guid() const;
 
-#ifdef AI_COMPILER
 		friend class CLevelGameGraph;
 		friend class CCrossTableBuilder;
 		friend class CRenumbererConverter;
 		friend class CGameGraphBuilder;
-#endif // AI_COMPILER
 	};
 
 	class CCell
@@ -59,12 +55,11 @@ public:
 	public:
 		IC GameGraph::_GRAPH_ID game_vertex_id() const;
 		IC float distance() const;
-#ifdef AI_COMPILER
+
 		friend class CLevelGameGraph;
 		friend class CCrossTableBuilder;
 		friend class CRenumbererConverter;
 		friend class CGameGraphBuilder;
-#endif // AI_COMPILER
 	};
 #pragma pack(pop)
 
@@ -77,11 +72,7 @@ private:
 	IReader *m_chunk;
 
 public:
-#ifdef AI_COMPILER
 	IC CGameLevelCrossTable(LPCSTR fName);
-#else  // AI_COMPILER
-	IC CGameLevelCrossTable();
-#endif // AI_COMPILER
 
 public:
 	IC virtual ~CGameLevelCrossTable();

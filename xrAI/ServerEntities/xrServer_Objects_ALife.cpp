@@ -14,21 +14,17 @@
 #include "..\Object\object_broker.h"
 #include "..\restriction_space.h"
 
-#ifndef AI_COMPILER
-#include "character_info.h"
-#endif
-
 #include "..\bone.h"
 #include "..\defines.h"
+
 LPCSTR GAME_CONFIG = "game.ltx";
 
 bool SortStringsByAlphabetPred(const shared_str &s1, const shared_str &s2)
 {
 	R_ASSERT(s1.size());
 	R_ASSERT(s2.size());
-
-	return (xr_strcmp(s1, s2) < 0);
-};
+	return xr_strcmp(s1, s2) < 0;
+}
 
 struct story_name_predicate
 {

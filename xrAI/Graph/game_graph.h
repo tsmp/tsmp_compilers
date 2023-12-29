@@ -43,13 +43,7 @@ private:
 	_GRAPH_ID m_current_level_some_vertex_id;
 
 public:
-#if !defined(AI_COMPILER)
-	IC CGameGraph();
-#else // !defined(AI_COMPILER)
-#ifdef AI_COMPILER
 	IC CGameGraph(LPCSTR file_name, u32 current_version = XRAI_CURRENT_VERSION);
-#endif // AI_COMPILER
-#endif // !defined(AI_COMPILER)
 
 public:
 	IC virtual ~CGameGraph();
