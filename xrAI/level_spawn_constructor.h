@@ -53,10 +53,7 @@ private:
 	bool m_no_separator_check;
 
 private:
-#ifdef PRIQUEL
-	const
-#endif // PRIQUEL
-		CGameLevelCrossTable *m_cross_table;
+	CGameLevelCrossTable *m_cross_table;
 
 protected:
 	void init();

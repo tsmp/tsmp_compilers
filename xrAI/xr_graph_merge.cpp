@@ -85,11 +85,7 @@ public:
 	CGameGraph *m_tpGraph;
 	CMemoryWriter m_cross_table;
 
-	CLevelGameGraph(
-#ifdef PRIQUEL
-		LPCSTR graph_file_name, LPCSTR raw_cross_table_file_name,
-#endif // PRIQUEL
-		CGameGraph::SLevel *tLevel, LPCSTR S, u32 dwOffset, u32 dwLevelID, CInifile *Ini)
+	CLevelGameGraph(CGameGraph::SLevel *tLevel, LPCSTR S, u32 dwOffset, u32 dwLevelID, CInifile *Ini)
 	{
 		m_tLevel = *tLevel;
 		m_dwOffset = dwOffset;
@@ -98,18 +94,10 @@ public:
 		FILE_NAME caFileName;
 
 		// loading graph
-#ifdef PRIQUEL
-		strcpy(caFileName, graph_file_name);
-#else  // PRIQUEL
 		strconcat(sizeof(caFileName), caFileName, S, GAME_LEVEL_GRAPH);
-#endif // PRIQUEL
 		m_tpGraph = xr_new<CGameGraph>(caFileName);
 
-#ifdef PRIQUEL
-		strcpy(caFileName, raw_cross_table_file_name);
-#else  // PRIQUEL
 		strconcat(sizeof(caFileName), caFileName, S, CROSS_TABLE_NAME_RAW);
-#endif // PRIQUEL
 		CGameLevelCrossTable *l_tpCrossTable = xr_new<CGameLevelCrossTable>(caFileName);
 
 		CLevelGraph *l_tpAI_Map = xr_new<CLevelGraph>(S);
@@ -176,14 +164,11 @@ public:
 
 		// updating cross-table
 		{
-#ifdef PRIQUEL
-			strcpy(caFileName, raw_cross_table_file_name);
-#else  // PRIQUEL
 			strconcat(sizeof(caFileName), caFileName, S, CROSS_TABLE_NAME_RAW);
-#endif // PRIQUEL
 			CGameLevelCrossTable *tpCrossTable = xr_new<CGameLevelCrossTable>(caFileName);
 			xr_vector<CGameLevelCrossTable::CCell> tCrossTableUpdate;
 			tCrossTableUpdate.resize(tpCrossTable->header().level_vertex_count());
+
 			for (int i = 0; i < (int)tpCrossTable->header().level_vertex_count(); i++)
 			{
 				tCrossTableUpdate[i] = tpCrossTable->vertex(i);
@@ -204,22 +189,18 @@ public:
 
 			xr_delete(tpCrossTable);
 
-#ifndef PRIQUEL
 			CMemoryWriter m_cross_table;
 			m_cross_table.open_chunk(CROSS_TABLE_CHUNK_VERSION);
-#endif // PRIQUEL
 			m_cross_table.w(&tCrossTableHeader, sizeof(tCrossTableHeader));
-#ifndef PRIQUEL
 			m_cross_table.close_chunk();
 			m_cross_table.open_chunk(CROSS_TABLE_CHUNK_DATA);
-#endif // PRIQUEL
+
 			for (int i = 0; i < (int)tCrossTableHeader.dwNodeCount; i++)
 				m_cross_table.w(&(tCrossTableUpdate[i]), sizeof(tCrossTableUpdate[i]));
-#ifndef PRIQUEL
+
 			m_cross_table.close_chunk();
 			strconcat(sizeof(caFileName), caFileName, S, CROSS_TABLE_NAME);
 			m_cross_table.save_to(caFileName);
-#endif // PRIQUEL
 		}
 
 		// fill vertex map
@@ -230,6 +211,7 @@ public:
 			u32 id;
 			IReader *O = F->open_chunk_iterator(id);
 			int i;
+
 			for (i = 0; O; O = F->open_chunk_iterator(id, O))
 			{
 				NET_Packet P;
@@ -445,11 +427,7 @@ public:
 class CGraphMerger
 {
 public:
-	CGraphMerger(
-#ifdef PRIQUEL
-		LPCSTR game_graph_id,
-#endif // PRIQUEL
-		LPCSTR name, bool rebuild);
+	CGraphMerger(LPCSTR name, bool rebuild);
 };
 
 void read_levels(CInifile *Ini, xr_set<CLevelInfo> &levels, bool rebuild_graph,
@@ -563,10 +541,10 @@ void read_levels(CInifile *Ini, xr_set<CLevelInfo> &levels, bool rebuild_graph,
 			}
 		}
 
-#ifndef PRIQUEL
 		// graph
 		strconcat(sizeof(caFileName), caFileName, S, "\\", GAME_LEVEL_GRAPH);
 		FS.update_path(file_name, "$game_levels$", caFileName);
+
 		if (!FS.exist(file_name))
 		{
 			if (rebuild_graph)
@@ -594,6 +572,7 @@ void read_levels(CInifile *Ini, xr_set<CLevelInfo> &levels, bool rebuild_graph,
 			CGameGraph::CHeader header;
 			header.load(reader);
 			FS.r_close(reader);
+
 			if (header.version() != XRAI_CURRENT_VERSION)
 			{
 				Msg("! Graph for the level %s is incompatible (version mismatch)! (level is not "
@@ -606,6 +585,7 @@ void read_levels(CInifile *Ini, xr_set<CLevelInfo> &levels, bool rebuild_graph,
 		// cross table
 		strconcat(sizeof(caFileName), caFileName, S, "\\", CROSS_TABLE_NAME_RAW);
 		FS.update_path(file_name, "$game_levels$", caFileName);
+
 		if (!FS.exist(file_name))
 		{
 			Msg("! There is no cross table for the level %s! (level is not included into the game "
@@ -637,7 +617,6 @@ void read_levels(CInifile *Ini, xr_set<CLevelInfo> &levels, bool rebuild_graph,
 				continue;
 			}
 		}
-#endif // PRIQUEL
 
 		levels.insert(CLevelInfo(id, S, Ini->r_fvector3(N, "offset"), N));
 	}
@@ -657,42 +636,17 @@ LPCSTR generate_temp_file_name(LPCSTR header0, LPCSTR header1, string_path &buff
 	return (buffer);
 }
 
-#ifdef PRIQUEL
-void fill_needed_levels(LPSTR levels, xr_vector<LPCSTR> &result)
-{
-	LPSTR I = levels;
-	for (LPSTR J = I;; ++I)
-	{
-		if (*I != ',')
-		{
-			if (*I)
-				continue;
-
-			result.push_back(J);
-			break;
-		}
-
-		*I = 0;
-		result.push_back(J);
-		J = I + 1;
-	}
-}
-#endif // PRIQUEL
-
-CGraphMerger::CGraphMerger(
-#ifdef PRIQUEL
-	LPCSTR game_graph_id,
-#endif // PRIQUEL
-	LPCSTR name, bool rebuild)
+CGraphMerger::CGraphMerger(LPCSTR name, bool rebuild)
 {
 	// load all the graphs
 	Phase("Processing level graphs");
 
 	CInifile *Ini = xr_new<CInifile>(INI_FILE);
+
 	if (!Ini->section_exist("levels"))
 		THROW(false);
-	R_ASSERT(Ini->section_exist("levels"));
 
+	R_ASSERT(Ini->section_exist("levels"));
 	tGraphHeader.m_guid = generate_guid();
 
 	GRAPH_P_MAP tpGraphs;
@@ -704,25 +658,11 @@ CGraphMerger::CGraphMerger(
 	l_tpLevelPoints.clear();
 
 	xr_set<CLevelInfo> levels;
-
-#ifdef PRIQUEL
-	xr_vector<LPCSTR> needed_levels;
-	string4096 levels_string;
-	strcpy(levels_string, name);
-	strlwr(levels_string);
-	fill_needed_levels(levels_string, needed_levels);
-#endif // PRIQUEL
-
-	read_levels(Ini, levels, rebuild,
-#ifdef PRIQUEL
-		&needed_levels
-#else  // PRIQUEL
-		0
-#endif // PRIQUEL
-	);
+	read_levels(Ini, levels, rebuild, 0);
 
 	xr_set<CLevelInfo>::const_iterator I = levels.begin();
 	xr_set<CLevelInfo>::const_iterator E = levels.end();
+
 	for (; I != E; ++I)
 	{
 		tLevel.m_offset = (*I).m_offset;
@@ -733,26 +673,7 @@ CGraphMerger::CGraphMerger(
 		tLevel.m_id = (*I).m_id;
 		tLevel.m_section = (*I).m_section;
 		Msg("%9s %2d %s", "level", tLevel.id(), *tLevel.m_name);
-#ifdef PRIQUEL
-		string_path _0, _1;
-		generate_temp_file_name("local_graph_", *tLevel.m_name, _0);
-		generate_temp_file_name("raw_cross_table_", *tLevel.m_name, _1);
-		string_path level_folder;
-		FS.update_path(level_folder, "$game_levels$", *tLevel.m_name);
-		strcat(level_folder, "\\");
-		CGameGraphBuilder().build_graph(_0, _1, level_folder);
-#endif // PRIQUEL
-		::CLevelGameGraph *tpLevelGraph = xr_new<::CLevelGameGraph>(
-#ifdef PRIQUEL
-			_0, _1,
-#endif // PRIQUEL
-			&tLevel,
-#ifdef PRIQUEL
-			level_folder,
-#else  // PRIQUEL
-			S1,
-#endif // PRIQUEL
-			dwOffset, tLevel.id(), Ini);
+		::CLevelGameGraph *tpLevelGraph = xr_new<::CLevelGameGraph>(&tLevel, S1, dwOffset, tLevel.id(), Ini);
 		dwOffset += tpLevelGraph->m_tpGraph->header().vertex_count();
 		R_ASSERT2(tpGraphs.find(tLevel.id()) == tpGraphs.end(), "Level ids _MUST_ be different!");
 		tpGraphs.insert(mk_pair(tLevel.id(), tpLevelGraph));
@@ -765,6 +686,7 @@ CGraphMerger::CGraphMerger(
 	{
 		GRAPH_P_PAIR_IT I = tpGraphs.begin();
 		GRAPH_P_PAIR_IT E = tpGraphs.end();
+
 		for (; I != E; I++)
 		{
 			VERTEX_PAIR_IT i = (*I).second->m_tVertexMap.begin();
@@ -894,13 +816,7 @@ CGraphMerger::CGraphMerger(
 	}
 
 	string_path l_caFileName;
-
-#ifdef PRIQUEL
-	strcpy(l_caFileName, game_graph_id);
-#else  // PRIQUEL
 	FS.update_path(l_caFileName, "$game_data$", GRAPH_NAME);
-#endif // PRIQUEL
-
 	F.save_to(l_caFileName);
 
 	// free all the graphs
@@ -914,15 +830,7 @@ CGraphMerger::CGraphMerger(
 	xr_delete(Ini);
 }
 
-void xrMergeGraphs(
-#ifdef PRIQUEL
-	LPCSTR game_graph_id,
-#endif // PRIQUEL
-	LPCSTR name, bool rebuild)
+void xrMergeGraphs(LPCSTR name, bool rebuild)
 {
-	CGraphMerger A(
-#ifdef PRIQUEL
-		game_graph_id,
-#endif // PRIQUEL
-		name, rebuild);
+	CGraphMerger A(name, rebuild);
 }

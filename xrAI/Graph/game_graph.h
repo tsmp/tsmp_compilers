@@ -12,9 +12,7 @@
 #include "../ServerEntities/script_export_space.h"
 #include "game_level_cross_table.h"
 
-#ifndef PRIQUEL
 #define GRAPH_NAME "game.graph"
-#endif // PRIQUEL
 
 class CGameGraph
 {
@@ -39,36 +37,19 @@ public:
 
 private:
 	CHeader m_header;
-#if defined(AI_COMPILER) || !defined(PRIQUEL)
 	IReader *m_reader;
-#endif // defined(AI_COMPILER) || !defined(PRIQUEL)
 	CVertex *m_nodes;
 	mutable ENABLED m_enabled;
 	_GRAPH_ID m_current_level_some_vertex_id;
 
-#ifdef PRIQUEL
-
-private:
-	u32 *m_cross_tables;
-	CGameLevelCrossTable *m_current_level_cross_table;
-#endif // PRIQUEL
-
 public:
-#if !defined(AI_COMPILER) && !defined(PRIQUEL)
+#if !defined(AI_COMPILER)
 	IC CGameGraph();
-#else // !defined(AI_COMPILER) && !defined(PRIQUEL)
+#else // !defined(AI_COMPILER)
 #ifdef AI_COMPILER
 	IC CGameGraph(LPCSTR file_name, u32 current_version = XRAI_CURRENT_VERSION);
 #endif // AI_COMPILER
-#endif // !defined(AI_COMPILER) && !defined(PRIQUEL)
-
-#ifdef PRIQUEL
-
-public:
-	IC CGameGraph(const IReader &stream);
-	IC void save(IWriter &stream);
-	IC const CGameLevelCrossTable &cross_table() const;
-#endif // PRIQUEL
+#endif // !defined(AI_COMPILER)
 
 public:
 	IC virtual ~CGameGraph();

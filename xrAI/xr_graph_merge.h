@@ -23,8 +23,4 @@ struct CLevelInfo
 	IC bool operator<(const CLevelInfo &info) const { return (m_id < info.m_id); }
 };
 
-extern void xrMergeGraphs(
-#ifdef PRIQUEL
-	LPCSTR game_graph_id,
-#endif // PRIQUEL
-	LPCSTR name, bool rebuild);
+extern void xrMergeGraphs(LPCSTR name, bool rebuild);

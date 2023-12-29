@@ -50,12 +50,7 @@ IC shared_str CGameSpawnConstructor::actor_level_name()
 		".spawn"));
 }
 
-extern void read_levels(CInifile *ini, xr_set<CLevelInfo> &m_levels, bool rebuild_graph,
-	xr_vector<LPCSTR> *);
-
-#ifdef PRIQUEL
-void fill_needed_levels(LPSTR levels, xr_vector<LPCSTR> &result);
-#endif // PRIQUEL
+extern void read_levels(CInifile *ini, xr_set<CLevelInfo> &m_levels, bool rebuild_graph, xr_vector<LPCSTR> *);
 
 void CGameSpawnConstructor::load_spawns(LPCSTR name, bool no_separator_check)
 {
@@ -71,41 +66,21 @@ void CGameSpawnConstructor::load_spawns(LPCSTR name, bool no_separator_check)
 	// init patrol path storage
 	m_patrol_path_storage = xr_new<CPatrolPathStorage>();
 
-#ifdef PRIQUEL
-	xr_vector<LPCSTR> needed_levels;
-	string4096 levels_string;
-	strcpy(levels_string, name);
-	strlwr(levels_string);
-	fill_needed_levels(levels_string, needed_levels);
-#endif // PRIQUEL
-
 	// fill level info
-	read_levels(&game_info(), m_levels, false,
-#ifdef PRIQUEL
-		&needed_levels
-#else  // PRIQUEL
-		0
-#endif // PRIQUEL
-	);
+	read_levels(&game_info(), m_levels, false, 0);
 
 	// init game graph
-#ifndef PRIQUEL
 	string_path game_graph_name;
 	FS.update_path(game_graph_name, "$game_data$", GRAPH_NAME);
 	m_game_graph = xr_new<CGameGraph>(game_graph_name);
-#else  // PRIQUEL
-	generate_temp_file_name("game_graph", "", m_game_graph_id);
-	xrMergeGraphs(m_game_graph_id, name, false);
-	m_game_graph = xr_new<CGameGraph>(m_game_graph_id);
-#endif // PRIQUEL
 
 	// load levels
 	GameGraph::SLevel level;
 	LEVEL_INFO_STORAGE::const_iterator I = m_levels.begin();
 	LEVEL_INFO_STORAGE::const_iterator E = m_levels.end();
+
 	for (; I != E; ++I)
 	{
-#ifndef PRIQUEL
 		if (xr_strlen(name))
 		{
 			u32 N = _GetItemCount(name);
@@ -120,7 +95,7 @@ void CGameSpawnConstructor::load_spawns(LPCSTR name, bool no_separator_check)
 			if (!found)
 				continue;
 		}
-#endif // PRIQUEL
+
 		level.m_offset = (*I).m_offset;
 		level.m_name = (*I).m_name;
 		level.m_id = (*I).m_id;
@@ -224,12 +199,6 @@ void CGameSpawnConstructor::save_spawn(LPCSTR name, LPCSTR output)
 	stream.open_chunk(3);
 	save_data(m_patrol_path_storage, stream);
 	stream.close_chunk();
-
-#ifdef PRIQUEL
-	stream.open_chunk(4);
-	m_game_graph->save(stream);
-	stream.close_chunk();
-#endif // PRIQUEL
 
 	stream.save_to(*spawn_name(output));
 }
@@ -350,37 +319,3 @@ void CGameSpawnConstructor::process_actor(LPCSTR start_level_name)
 
 	xr_delete(graph_engine);
 }
-
-#ifdef PRIQUEL
-void clear_temp_folder()
-{
-	string_path query;
-	FS.update_path(query, "$app_data_root$", "temp\\*.*");
-	_finddata_t file;
-	intptr_t handle = _findfirst(query, &file);
-	if (handle == intptr_t(-1))
-		return;
-
-	typedef xr_vector<shared_str> FILES;
-	FILES files;
-	do
-	{
-		if (file.attrib & _A_SUBDIR)
-			continue;
-
-		files.push_back(file.name);
-	} while (!_findnext(handle, &file));
-
-	_findclose(handle);
-
-	FILES::const_iterator I = files.begin();
-	FILES::const_iterator E = files.end();
-	for (; I != E; ++I)
-	{
-		if (DeleteFile(**I))
-			Msg("file %s is successfully deleted", **I);
-		else
-			Msg("cannot delete file %s", **I);
-	}
-}
-#endif // PRIQUEL
