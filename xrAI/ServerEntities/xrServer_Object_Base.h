@@ -10,7 +10,6 @@
 
 #include "xrServer_Objects_Abstract.h"
 #include "..\Object\object_interfaces.h"
-#include "script_value_container.h"
 #include "..\Alife\alife_space.h"
 #include "../../xrNetServer/client_id.h"
 
@@ -48,8 +47,7 @@ virtual void save(NET_Packet &tNetPacket);
 add_to_type_list(CPureServerObject)
 #define script_type_list save_type_list(CPureServerObject)
 
-	SERVER_ENTITY_DECLARE_BEGIN3(CSE_Abstract, ISE_Abstract, CPureServerObject,
-		CScriptValueContainer) public : enum ESpawnFlags {
+	SERVER_ENTITY_DECLARE_BEGIN2(CSE_Abstract, ISE_Abstract, CPureServerObject) public : enum ESpawnFlags {
 		flSpawnEnabled = u32(1 << 0),
 		flSpawnOnSurgeOnly = u32(1 << 1),
 		flSpawnSingleItemOnly = u32(1 << 2),
