@@ -15,7 +15,7 @@
 #include "FactoryApi.h"
 #include "game_level_cross_table.h"
 #include "xrCrossTable.h"
-#include "..\xrLC\COMMON_COMPILERS\guid_generator.h"
+#include "CommonCompilers\guid_generator.h"
 #include "graph_engine.h"
 
 CGameGraphBuilder::CGameGraphBuilder()

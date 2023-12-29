@@ -65,8 +65,8 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="do_compiler.cpp" />
-    <ClCompile Include="..\COMMON_COMPILERS\cl_log.cpp" />
-    <ClCompile Include="..\COMMON_COMPILERS\xrThread.cpp" />
+    <ClCompile Include="..\..\CommonCompilers\cl_log.cpp" />
+    <ClCompile Include="..\..\CommonCompilers\xrThread.cpp" />
     <ClCompile Include="xrDO_Light.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -79,7 +79,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\COMMON_COMPILERS\resource.rc" />
+    <ResourceCompile Include="..\..\CommonCompilers\resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

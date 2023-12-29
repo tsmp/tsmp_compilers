@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "build.h"
-#include "common_compilers\xrThread.h"
+#include "CommonCompilers\xrThread.h"
 
 xrCriticalSection hemi_CS;
 xr_vector<int> hemi_task_pool;

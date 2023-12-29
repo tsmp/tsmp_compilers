@@ -36,10 +36,10 @@
 #define XR_EPROPS_API
 #include "clsid.h"
 #include "..\xr_3da\defines.h"
-#include "common_compilers\cl_log.h"
+#include "CommonCompilers\cl_log.h"
 
 #include "..\xr_3da\_d3d_extensions.h"
-#include "common_compilers\communicate.h"
+#include "CommonCompilers\communicate.h"
 extern b_params g_params;
 
 #include "build.h"

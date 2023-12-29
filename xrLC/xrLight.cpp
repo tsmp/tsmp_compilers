@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "build.h"
-#include "common_compilers\xrThread.h"
+#include "CommonCompilers\xrThread.h"
 #include "xrSyncronize.h"
 #include <random>
 

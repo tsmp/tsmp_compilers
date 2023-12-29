@@ -1,5 +1,5 @@
 #pragma once
-#include "common_compilers\communicate.h"
+#include "CommonCompilers\communicate.h"
 #include "xruvpoint.h"
 #include "progmesh.h"
 #include "xrSpherical.h"

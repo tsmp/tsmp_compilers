@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "compiler.h"
-
-//-------------------------------------------------------------------------------------------------------
 #include "resource.h"
-#include "../xrLC/COMMON_COMPILERS/resource.h"
+#include "CommonCompilers\resource.h"
 
 extern HWND logWindow;
 

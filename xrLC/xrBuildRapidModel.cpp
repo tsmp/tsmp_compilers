@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "build.h"
-#include "common_compilers\communicate.h"
+#include "CommonCompilers\communicate.h"
 
 #include <thread>
 

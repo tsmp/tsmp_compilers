@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "..\xrLC\COMMON_COMPILERS\xrthread.h"
+#include "CommonCompilers\xrthread.h"
 #include "spawn_constructor_space.h"
 
 class CLevelGraph;
@@ -19,7 +19,7 @@ class CGraphEngine;
 class CSE_Abstract;
 class CSE_ALifeObject;
 class CSE_ALifeGraphPoint;
-//class CSE_SpawnGroup;
+
 class CSE_ALifeAnomalousZone;
 class CSpaceRestrictorWrapper;
 class CPatrolPathStorage;

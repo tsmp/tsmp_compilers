@@ -1,9 +1,5 @@
-// Build.cpp: implementation of the CBuild class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
-#include "common_compilers\xrThread.h"
+#include "CommonCompilers\xrThread.h"
 #include "xrSyncronize.h"
 
 xr_vector<OGF_Base *> g_tree;
@@ -22,8 +18,6 @@ float f_lmap_quality = 4.f;
 BOOL gl_linear = FALSE;
 
 int i_ThreadCount = 1;
-
-//////////////////////////////////////////////////////////////////////
 
 class CMULightHiddenThread : public CThread
 {

@@ -10,7 +10,7 @@
 #include "object_broker.h"
 #include "xr_graph_merge.h"
 #include "spawn_constructor_space.h"
-#include "..\xrLC\COMMON_COMPILERS\guid_generator.h"
+#include "CommonCompilers\guid_generator.h"
 #include "game_graph_builder.h"
 #include <direct.h>
 #include <random>

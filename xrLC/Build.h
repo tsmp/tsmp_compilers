@@ -1,10 +1,10 @@
 #pragma once
 
-#include "common_compilers\communicate.h"
+#include "CommonCompilers\communicate.h"
 #include "b_globals.h"
 #include "fs.h"
 #include "..\xr_3da\xrLevel.h"
-#include "COMMON_COMPILERS\ETextureParams.h"
+#include "CommonCompilers\ETextureParams.h"
 #include "..\xr_3da\shader_xrlc.h"
 #include "xrMU_Model.h"
 

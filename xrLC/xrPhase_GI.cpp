@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "xrHemisphere.h"
-#include "common_compilers\xrThread.h"
+#include "CommonCompilers\xrThread.h"
 #include "xrSyncronize.h"
 
 const u32 gi_num_photons = 32;

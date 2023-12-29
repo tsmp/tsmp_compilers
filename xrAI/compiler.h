@@ -6,8 +6,8 @@
 #include "..\xr_3da\xrLevel.h"
 #include "AIMapExport.h"
 #include "..\xr_3da\Shader_xrLC.h"
-#include "..\xrLC\COMMON_COMPILERS\communicate.h"
-#include "..\xrLC\COMMON_COMPILERS\ETextureParams.h"
+#include "CommonCompilers\communicate.h"
+#include "CommonCompilers\ETextureParams.h"
 
 // base patch used all the time up to merging
 const u32 InvalidNode = (1 << 24) - 1;

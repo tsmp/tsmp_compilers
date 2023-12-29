@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "compiler.h"
-#include "..\xrLC\COMMON_COMPILERS\communicate.h"
+#include "CommonCompilers\communicate.h"
 #include "levelgamedef.h"
 #include "level_graph.h"
 #include "AIMapExport.h"

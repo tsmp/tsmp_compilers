@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "compiler.h"
-#include "..\xrLC\COMMON_COMPILERS\guid_generator.h"
+#include "CommonCompilers\guid_generator.h"
 
 IC BYTE compress(float c, int max_value)
 {
