@@ -1,15 +1,15 @@
 #include "stdafx.h"
-#include "..\xr_3da\xrLevel.h"
-#include "..\xr_3da\shader_xrlc.h"
+#include "xr_3da\xrLevel.h"
+#include "xr_3da\shader_xrlc.h"
 #include "CommonCompilers\communicate.h"
 #include "CommonCompilers\xrThread.h"
-#include "..\xr_3da\xrRender\DetailFormat.h"
-#include "..\xrhemisphere.h"
-#include "..\xr_3da\cl_intersect.h"
+#include "xr_3da\xrRender\DetailFormat.h"
+#include "xrLc\xrhemisphere.h"
+#include "xr_3da\cl_intersect.h"
 #include "CommonCompilers\ETextureParams.h"
-#include "..\r_light.h"
+#include "xrLc\r_light.h"
 #include "global_options.h"
-#include "..\xrDXT\DXT.h"
+#include "xrDXT\DXT.h"
 
 enum
 {
