@@ -128,25 +128,19 @@ void xrCore::_initialize(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, 
 		else
 			flags &= ~CLocatorAPI::flCacheFiles;
 #endif		   // DEBUG
-#ifdef _EDITOR // for EDITORS - no cache
-		flags &= ~CLocatorAPI::flCacheFiles;
-#endif // _EDITOR
 		flags |= CLocatorAPI::flScanAppRoot;
 
-#ifndef _EDITOR
 #ifndef ELocatorAPIH
 		if (0 != strstr(Params, "-file_activity"))
 			flags |= CLocatorAPI::flDumpFileActivity;
 #endif
-#endif
+
 		FS._initialize(flags, 0, fs_fname);
 		Msg("xrcore build %d, %s\n", build_id, build_date);
 		EFS._initialize();
 #ifdef DEBUG
-#ifndef _EDITOR
 		Msg("CRT heap 0x%08x", _get_heap_handle());
 		Msg("Process heap 0x%08x", GetProcessHeap());
-#endif
 #endif // DEBUG
 	}
 	SetLogCB(cb);
@@ -168,12 +162,7 @@ void xrCore::_destroy()
 	}
 }
 
-//. why ???
-#ifdef _EDITOR
-BOOL WINAPI DllEntryPoint(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
-#else
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
-#endif
 {
 	switch (ul_reason_for_call)
 	{

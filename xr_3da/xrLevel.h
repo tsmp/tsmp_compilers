@@ -75,7 +75,6 @@ struct hdrNODES
 
 #pragma pack(push, 1)
 #pragma pack(1)
-#ifndef _EDITOR
 class NodePosition
 {
 	u8 data[5];
@@ -197,7 +196,6 @@ public:
 	friend class CNodeRenumberer;
 	friend class CRenumbererConverter;
 }; // 2+2+5+12 = 21b
-#endif
 
 #ifdef AI_COMPILER
 struct NodeCompressed6
@@ -306,10 +304,6 @@ struct SNodePositionOld
 	s16 z;
 };
 #pragma pack(pop)
-
-#ifdef _EDITOR
-typedef SNodePositionOld NodePosition;
-#endif
 
 const u32 XRCL_CURRENT_VERSION = 17;	// input
 const u32 XRCL_PRODUCTION_VERSION = 14; // output
