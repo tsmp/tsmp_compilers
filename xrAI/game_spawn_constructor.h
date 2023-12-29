@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "alife_space.h"
+#include "Alife\alife_space.h"
 #include "xr_graph_merge.h"
 #include "CommonCompilers\xrthread.h"
-#include "graph_abstract.h"
-#include "xrServer_Object_Base.h"
+#include "Graph\graph_abstract.h"
+#include "ServerEntities\xrServer_Object_Base.h"
 #include "spawn_constructor_space.h"
-#include "server_entity_wrapper.h"
+#include "ServerEntities\server_entity_wrapper.h"
 #include "CommonCompilers\guid_generator.h"
 
 class CSE_Abstract;

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "compiler.h"
 #include "CommonCompilers\communicate.h"
-#include "levelgamedef.h"
-#include "level_graph.h"
+#include "ServerEntities\levelgamedef.h"
+#include "Graph\level_graph.h"
 #include "AIMapExport.h"
 
 IC const Fvector vertex_position(const CLevelGraph::CPosition &Psrc, const Fbox &bb,

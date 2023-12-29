@@ -10,9 +10,9 @@
 
 #ifndef PRIQUEL
 #include "spawn_patcher.h"
-#include "game_graph.h"
+#include "Graph\game_graph.h"
 #include "game_spawn_constructor.h"
-#include "patrol_path_storage.h"
+#include "Path\patrol_path_storage.h"
 
 struct reader_guard
 {

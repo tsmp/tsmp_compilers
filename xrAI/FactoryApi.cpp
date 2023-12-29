@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "xrServer_Objects_ALife_All.h"
-#include "clsid_game.h"
+#include "ServerEntities\xrServer_Objects_ALife_All.h"
+#include "ServerEntities\clsid_game.h"
 #include "FactoryApi.h"
 
 constexpr CLASS_ID TextToClsid(const char* text)

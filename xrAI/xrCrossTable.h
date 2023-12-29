@@ -9,10 +9,10 @@
 #pragma once
 
 #include "..\xrLevel.h"
-#include "alife_space.h"
-#include "game_level_cross_table.h"
-#include "game_graph.h"
-#include "level_graph.h"
+#include "Alife\alife_space.h"
+#include "Graph\game_level_cross_table.h"
+#include "Graph\game_graph.h"
+#include "Graph\level_graph.h"
 
 #define CROSS_TABLE_NAME_RAW "level.gct.raw"
 
