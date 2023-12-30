@@ -98,7 +98,8 @@ public:
 	void xrPhase_UVmap();
 	void xrPhase_UVmapThread(const int from, const int to);
 
-	void xrPhase_Subdivide();
+	void xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> deflectors);
+
 	void ImplicitLighting();
 	void Light_prepare();
 	void Light();

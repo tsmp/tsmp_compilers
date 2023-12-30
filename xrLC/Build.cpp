@@ -168,14 +168,14 @@ void CBuild::Run(LPCSTR P)
 		IsolateVertices(TRUE);
 	}
 
-	//Subdivide geometry
+	// Subdivide geometry
 	FPU::m64r();
 	Phase("Subdividing geometry...");
 	mem_Compact();
-	xrPhase_Subdivide();
+	xrPhase_Subdivide(g_XSplit, g_deflectors);
 	IsolateVertices(TRUE);
 
-	//All lighting + lmaps building and saving
+	// All lighting + lmaps building and saving
 	if (!b_nolmaps)
 		Light();
 
