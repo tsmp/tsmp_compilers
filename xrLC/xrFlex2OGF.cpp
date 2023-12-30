@@ -21,17 +21,18 @@ float progr_time = 0;
 		clMsg("* E: %s", #a);                                                                      \
 	}
 
-void CBuild::validate_splits()
+void CBuild::ValidateSplits(const xr_vector<vecFace*> &splits)
 {
-	for (splitIt it = g_XSplit.begin(); it != g_XSplit.end(); ++it)
+	u32 splitIndex = 0;
+	const u32 MaxSplitSize = c_SS_HighVertLimit * 2;
+
+	for (const vecFace *split : splits)
 	{
-		u32 MODEL_ID = u32(it - g_XSplit.begin());
-		if ((*it)->size() > c_SS_HighVertLimit * 2)
-		{
-			clMsg("! ERROR: subdiv #%d has more than %d faces (%d)", MODEL_ID,
-				2 * c_SS_HighVertLimit, (*it)->size());
-		}
-	};
+		if (split->size() > MaxSplitSize)
+			clMsg("! ERROR: subdiv #%d has more than %d faces (%d)", splitIndex, MaxSplitSize, split->size());
+
+		splitIndex++;
+	}
 }
 
 void CBuild::Flex2OGF()
@@ -39,7 +40,7 @@ void CBuild::Flex2OGF()
 	float p_total = 0;
 	float p_cost = 1 / float(g_XSplit.size());
 
-	validate_splits();
+	ValidateSplits(g_XSplit);
 
 	g_tree.clear();
 	g_tree.reserve(4096);

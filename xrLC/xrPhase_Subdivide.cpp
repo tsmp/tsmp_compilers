@@ -31,6 +31,7 @@ void CBuild::xrPhase_Subdivide()
 	Status("Subdividing in space...");
 	vecFace s1, s2;
 	Fbox b1, b2;
+
 	for (int X = 0; X < int(g_XSplit.size()); X++)
 	{
 		if (g_XSplit[X]->empty())
@@ -203,6 +204,7 @@ void CBuild::xrPhase_Subdivide()
 		s1.clear();
 		s2.clear();
 	}
+
 	clMsg("%d subdivisions.", g_XSplit.size());
-	validate_splits();
+	ValidateSplits(g_XSplit);
 }

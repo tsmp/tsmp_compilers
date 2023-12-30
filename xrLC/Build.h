@@ -114,7 +114,8 @@ public:
 	void SaveTREE(IWriter &fs);
 	void SaveSectors(IWriter &fs);
 
-	void validate_splits();
+	// Writes in log when split has more faces than limit
+	void ValidateSplits(const xr_vector<vecFace*> &splits);
 
 	CBuild();
 	~CBuild();

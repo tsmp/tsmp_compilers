@@ -106,16 +106,19 @@ IC BOOL ValidateMerge(u32 f1, Fbox &bb_base, u32 f2, Fbox &bb, float &volume)
 void CBuild::xrPhase_MergeGeometry()
 {
 	Status("Processing...");
-	validate_splits();
+	ValidateSplits(g_XSplit);
+
 	for (u32 split = 0; split < g_XSplit.size(); split++)
 	{
 		vecFace &subdiv = *(g_XSplit[split]);
 		Fbox bb_base;
+
 		while (NeedMerge(subdiv, bb_base))
 		{
 			// **OK**. Let's find the best candidate for merge
 			u32 selected = split;
 			float selected_volume = flt_max;
+
 			for (u32 test = split + 1; test < g_XSplit.size(); test++)
 			{
 				Fbox bb;
@@ -135,6 +138,7 @@ void CBuild::xrPhase_MergeGeometry()
 					selected_volume = volume;
 				}
 			}
+
 			if (selected == split)
 				break; // No candidates for merge
 
@@ -143,8 +147,10 @@ void CBuild::xrPhase_MergeGeometry()
 			xr_delete(g_XSplit[selected]);
 			g_XSplit.erase(g_XSplit.begin() + selected);
 		}
+
 		Progress(float(split) / float(g_XSplit.size()));
 	}
+
 	clMsg("%d subdivisions.", g_XSplit.size());
-	validate_splits();
+	ValidateSplits(g_XSplit);
 }
