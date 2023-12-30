@@ -33,8 +33,6 @@ void base_lighting::select(base_lighting &from, Fvector &P, float R)
 	select(sun, from.sun, P, R);
 }
 
-base_Vertex::~base_Vertex(){};
-
 base_Face::base_Face()
 {
 	basis_tangent[0].set(0, 0, 0);

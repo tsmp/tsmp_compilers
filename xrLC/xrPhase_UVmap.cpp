@@ -17,21 +17,21 @@ void Face::OA_Unwarp()
 			(*it)->OA_Unwarp();
 		}
 }
-void Detach(vecFace *S)
+
+void Detach(xr_vector<Face*> &faces)
 {
-	map_v2v verts;
-	verts.clear();
+	xr_map<Vertex*, Vertex*> verts;
 
 	// Collect vertices
-	for (vecFaceIt F = S->begin(); F != S->end(); ++F)
+	for (Face* face: faces)
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			Vertex *V = (*F)->v[i];
+			Vertex *V = face->v[i];
 			Vertex *VC;
-			map_v2v_it W = verts.find(V); // iterator
+			auto it = verts.find(V);
 
-			if (W == verts.end())
+			if (it == verts.end())
 			{								// where is no such-vertex
 				VC = V->CreateCopy_NOADJ(); // make copy
 				verts.insert(mk_pair(V, VC));
@@ -39,16 +39,14 @@ void Detach(vecFace *S)
 			else
 			{
 				// such vertex(key) already exists - update its adjacency
-				VC = W->second;
+				VC = it->second;
 			}
-			VC->prep_add(*F);
-			V->prep_remove(*F);
-			(*F)->v[i] = VC;
+			VC->prep_add(face);
+			V->prep_remove(face);
+			face->v[i] = VC;
+			// No need to remove V here, it is registered in all vertices container
 		}
 	}
-	// vertices are already registered in container
-	// so we doesn't need "vers" for this time
-	verts.clear();
 }
 
 void CBuild::xrPhase_UVmap()
@@ -120,7 +118,7 @@ void CBuild::xrPhase_UVmap()
 				}
 
 				// detaching itself
-				Detach(&faces_affected);
+				Detach(faces_affected);
 				g_XSplit.push_back(xr_new<vecFace>(faces_affected));
 			}
 			else

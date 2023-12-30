@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "build.h"
 
-extern void Detach(vecFace *S);
-
 IC BOOL FaceEqual(Face *F1, Face *F2)
 {
 	if (F1->dwMaterial != F2->dwMaterial)

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "build.h"
 
-extern void Detach(vecFace *S);
+void Detach(xr_vector<Face*> &faces);
 
 void setup_bbs(Fbox &b1, Fbox &b2, const Fbox &bb, int edge)
 {
@@ -213,9 +213,14 @@ void CBuild::xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector
 			splits.erase(splits.begin() + i);
 			i--;
 			splits.emplace_back(xr_new<vecFace>(newSubdiv1));
-			Detach(&newSubdiv1);
+			Detach(newSubdiv1);
 			splits.emplace_back(xr_new<vecFace>(newSubdiv2));
-			Detach(&newSubdiv2);
+			Detach(newSubdiv2);
+
+			// Detach duplicates vertices, on super huge maps could run out of memory.
+			// To avoid that we will clean unused vertices periodically
+			if (i % 5000 == 0)
+				IsolateVertices(false);
 		}
 	}
 

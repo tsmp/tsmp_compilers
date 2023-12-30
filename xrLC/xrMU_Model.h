@@ -5,7 +5,6 @@
 class xrMU_Model
 {
 public:
-	//**
 	struct _vertex;
 	struct _face;
 
@@ -26,7 +25,6 @@ public:
 		u32 sw_id;
 	};
 
-	//**
 	typedef xr_vector<_vertex *> v_vertices;
 	typedef v_vertices::iterator v_vertices_it;
 	typedef xr_vector<_face *> v_faces;
@@ -34,8 +32,7 @@ public:
 	typedef xr_vector<_subdiv> v_subdivs;
 	typedef v_subdivs::iterator v_subdivs_it;
 
-	//**
-	struct _vertex : public ::base_Vertex
+	struct _vertex : public ::BaseVertex
 	{
 		v_faces adjacent;
 
@@ -44,11 +41,10 @@ public:
 		void prep_remove(_face *F);
 		void calc_normal_adjacent();
 
-		_vertex(){};
-		virtual ~_vertex(){};
+		_vertex() = default;
+		~_vertex() = default;
 	};
 
-	//**
 	struct _face : public ::base_Face
 	{
 	public:

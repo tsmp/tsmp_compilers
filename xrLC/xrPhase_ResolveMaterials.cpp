@@ -3,7 +3,7 @@
 
 vec2Face g_XSplit;
 
-extern void Detach(vecFace *S);
+void Detach(xr_vector<Face*> &faces);
 
 struct _counter
 {
@@ -82,7 +82,7 @@ void CBuild::xrPhase_ResolveMaterials()
 	{
 		for (u32 it = 0; it < g_XSplit.size(); it++)
 		{
-			Detach(g_XSplit[it]);
+			Detach(*g_XSplit[it]);
 		}
 	}
 	clMsg("%d subdivisions.", g_XSplit.size());

@@ -128,17 +128,11 @@ IC u8 u8_clr(float a)
 	return u8(_a);
 };
 
-class base_Vertex
+struct BaseVertex
 {
-public:
 	Fvector P;
 	Fvector N;
 	base_color C; // all_lighting info
-	int handle;	  // used in mesh-processing/optimization/conversion
-
-public:
-	base_Vertex() {}
-	virtual ~base_Vertex() = 0;
 };
 
 class base_basis
@@ -212,36 +206,40 @@ extern const int edge2idx[3][2];
 
 #include "xrUVpoint.h"
 
-class Vertex : public base_Vertex
+class Vertex : public BaseVertex
 {
 public:
 	vecAdj adjacent;
-
 	Vertex *CreateCopy_NOADJ();
+
 	IC BOOL similar(Vertex &V, float eps) { return P.similar(V.P, eps); }
+
 	IC Vertex *CreateCopy()
 	{
 		Vertex *V = CreateCopy_NOADJ();
 		V->adjacent = adjacent;
 		return V;
 	}
+
 	IC void prep_add(Face *F)
 	{
-		for (vecFaceIt I = adjacent.begin(); I != adjacent.end(); ++I)
-			if (F == (*I))
+		for (Face* face: adjacent)
+			if (F == face)
 				return;
+
 		adjacent.push_back(F);
 	}
+
 	IC void prep_remove(Face *F)
 	{
-		vecFaceIt I = std::find(adjacent.begin(), adjacent.end(), F);
-		if (I != adjacent.end())
-			adjacent.erase(I);
+		auto it = std::find(adjacent.begin(), adjacent.end(), F);
+		if (it != adjacent.end())
+			adjacent.erase(it);
 	}
 	void normalFromAdj();
 
 	Vertex();
-	virtual ~Vertex();
+	~Vertex();
 };
 
 struct _TCF
