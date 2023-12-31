@@ -101,6 +101,8 @@ struct OGF_Base
 		Sector = 0xffff;
 	}
 
+	virtual ~OGF_Base() = default;
+
 	IC BOOL IsNode() { return iLevel; }
 
 	virtual void PreSave(u32 tree_id){};
@@ -149,7 +151,7 @@ struct OGF : public OGF_Base
 		vb_id = xvb_id = vb_start = xvb_start = ib_id = xib_id = ib_start = xib_start = sw_id =
 			xsw_id = u32(-1);
 	};
-	~OGF() { xr_free(m_SWI.sw); }
+	~OGF() override { xr_free(m_SWI.sw); }
 
 	BOOL dbg_SphereContainsVertex(Fvector &c, float R);
 
