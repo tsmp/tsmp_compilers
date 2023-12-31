@@ -35,23 +35,21 @@ void CBuild::ValidateSplits(const xr_vector<vecFace*> &splits)
 	}
 }
 
-void CBuild::Flex2OGF()
+void CBuild::Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &outputOgfTree)
 {
 	float p_total = 0;
-	float p_cost = 1 / float(g_XSplit.size());
+	float p_cost = 1 / float(inputSplits.size());
 
-	ValidateSplits(g_XSplit);
-
-	g_tree.clear();
-	g_tree.reserve(4096);
+	ValidateSplits(inputSplits);
+	outputOgfTree.reserve(4096);
 
 	CTimer start_ogf;
 	start_ogf.Start();
 
-	for (splitIt it = g_XSplit.begin(); it != g_XSplit.end(); ++it)
+	for (splitIt it = inputSplits.begin(); it != inputSplits.end(); ++it)
 	{
 		R_ASSERT(!(*it)->empty());
-		u32 MODEL_ID = u32(it - g_XSplit.begin());
+		u32 MODEL_ID = u32(it - inputSplits.begin());
 
 		OGF *pOGF = xr_new<OGF>();
 		Face *F = *((*it)->begin());				 // first face
@@ -158,7 +156,7 @@ void CBuild::Flex2OGF()
 		try
 		{
 			pOGF->Optimize();
-			pOGF->CalcBounds();
+			pOGF->CalcBounds(outputOgfTree);
 
 			CTimer start_pr;
 			start_pr.Start();
@@ -175,7 +173,7 @@ void CBuild::Flex2OGF()
 			clMsg("* ERROR: Flex2OGF, 2nd part, model# %d", MODEL_ID);
 		}
 
-		g_tree.push_back(pOGF);
+		outputOgfTree.push_back(pOGF);
 		//		xr_delete			(*it);
 		Progress(p_total += p_cost);
 	}
@@ -183,5 +181,5 @@ void CBuild::Flex2OGF()
 	clMsg("%f seconds", start_ogf.GetElapsed_sec());
 	clMsg("%f seconds (progressive)", progr_time);
 
-	g_XSplit.clear();
+	inputSplits.clear();
 }

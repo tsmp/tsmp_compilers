@@ -10,7 +10,7 @@
 		clMsg("* E: %s", #a);                                                                      \
 	}
 
-void xrMU_Reference::export_ogf()
+void xrMU_Reference::ExportOgf(xr_vector<OGF_Base*> &ogfTree)
 {
 	xr_vector<u32> generated_ids;
 
@@ -44,9 +44,9 @@ void xrMU_Reference::export_ogf()
 			pOGF->c_bias = c_bias;
 			pOGF->sw_id = it->sw_id;
 
-			pOGF->CalcBounds();
-			generated_ids.push_back((u32)g_tree.size());
-			g_tree.push_back(pOGF);
+			pOGF->CalcBounds(ogfTree);
+			generated_ids.push_back((u32)ogfTree.size());
+			ogfTree.push_back(pOGF);
 		}
 	}
 
@@ -73,12 +73,12 @@ void xrMU_Reference::export_ogf()
 
 		// Add all 'OGFs' with such LOD-id
 		for (u32 o = 0; o < generated_ids.size(); o++)
-			pNode->AddChield(generated_ids[o]);
+			pNode->AddChild(generated_ids[o], ogfTree);
 
 		// Register node
-		R_ASSERT(pNode->chields.size());
-		pNode->CalcBounds();
-		g_tree.push_back(pNode);
+		R_ASSERT(pNode->children.size());
+		pNode->CalcBounds(ogfTree);
+		ogfTree.push_back(pNode);
 
 		// Calculate colors
 		const float sm_range = 5.f;

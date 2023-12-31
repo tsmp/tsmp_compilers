@@ -2,7 +2,6 @@
 #include "CommonCompilers\xrThread.h"
 #include "xrSyncronize.h"
 
-xr_vector<OGF_Base *> g_tree;
 BOOL b_R2 = FALSE;
 BOOL b_noise = FALSE;
 BOOL b_radiosity = FALSE;
@@ -189,7 +188,9 @@ void CBuild::Run(LPCSTR P)
 	FPU::m64r();
 	Phase("Converting to OGFs...");
 	mem_Compact();
-	Flex2OGF();
+
+	xr_vector<OGF_Base*> ogfTree;
+	Flex2OGF(g_XSplit, ogfTree);
 
 	//Wait for MU
 	//	FPU::m64r					();
@@ -213,13 +214,13 @@ void CBuild::Run(LPCSTR P)
 
 		for (m = 0; m < mu_models.size(); m++)
 		{
-			mu_models[m]->calc_ogf();
+			mu_models[m]->CalcOgf(ogfTree);
 			mu_models[m]->export_geometry();
 		}
 
 		Status("MU : References...");
 		for (m = 0; m < mu_refs.size(); m++)
-			mu_refs[m]->export_ogf();
+			mu_refs[m]->ExportOgf(ogfTree);
 	}
 
 	//Destroy RCast-model
@@ -232,7 +233,7 @@ void CBuild::Run(LPCSTR P)
 	FPU::m64r();
 	Phase("Building sectors...");
 	mem_Compact();
-	BuildSectors();
+	BuildSectors(ogfTree);
 
 	//Saving MISC stuff
 	FPU::m64r();
@@ -252,8 +253,13 @@ void CBuild::Run(LPCSTR P)
 	}
 	fs->close_chunk();
 
-	SaveTREE(*fs);
-	SaveSectors(*fs);
+	SaveTREE(*fs, ogfTree);
+	SaveSectors(*fs, ogfTree);
+
+	for (OGF_Base* ogf : ogfTree)
+		xr_delete(ogf);
+
+	ogfTree.clear();
 
 	err_save();
 }

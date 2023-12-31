@@ -25,14 +25,14 @@ BOOL SphereValid(xr_vector<Fvector> &geom, Fsphere &test)
 	return TRUE;
 }
 
-void OGF_Base::CalcBounds()
+void OGF_Base::CalcBounds(xr_vector<OGF_Base*> &tree)
 {
 	// get geometry
 	static xr_vector<Fvector> V;
 	xr_vector<Fvector>::iterator I;
 	V.clear();
 	V.reserve(4096);
-	GetGeometry(V);
+	GetGeometry(V, tree);
 	FPU::m64();
 	R_ASSERT(V.size() >= 3);
 

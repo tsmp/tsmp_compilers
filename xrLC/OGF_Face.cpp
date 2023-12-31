@@ -678,8 +678,8 @@ void OGF_Node::Save(IWriter &fs)
 
 	// Children
 	fs.open_chunk(OGF_CHILDREN_L);
-	fs.w_u32((u32)chields.size());
-	fs.w(&*chields.begin(), (u32)chields.size() * sizeof(u32));
+	fs.w_u32((u32)children.size());
+	fs.w(&*children.begin(), (u32)children.size() * sizeof(u32));
 	fs.close_chunk();
 }
 
@@ -705,10 +705,10 @@ void OGF_LOD::Save(IWriter &fs)
 	fs.w(&H, sizeof(H));
 	fs.close_chunk();
 
-	// Chields
+	// Children
 	fs.open_chunk(OGF_CHILDREN_L);
-	fs.w_u32((u32)chields.size());
-	fs.w(&*chields.begin(), (u32)chields.size() * sizeof(u32));
+	fs.w_u32((u32)children.size());
+	fs.w(&*children.begin(), (u32)children.size() * sizeof(u32));
 	fs.close_chunk();
 
 	// Lod-def

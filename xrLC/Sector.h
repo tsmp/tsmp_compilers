@@ -1,9 +1,3 @@
-// Sector.h: interface for the CSector class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_SECTOR_H__751706E5_383E_40CB_9F3D_6A4D1BB8F3CD__INCLUDED_)
-#define AFX_SECTOR_H__751706E5_383E_40CB_9F3D_6A4D1BB8F3CD__INCLUDED_
 #pragma once
 
 class CSector
@@ -19,14 +13,12 @@ public:
 	void add_glow(u16 G) { Glows.push_back(G); }
 	void add_light(u16 L) { Lights.push_back(L); }
 
-	void BuildHierrarhy();
+	void BuildHierrarhy(xr_vector<OGF_Base*> &ogfTree);
 	void Validate();
-	void Save(IWriter &fs);
+	void Save(IWriter &fs, const xr_vector<OGF_Base*> &ogfTree);
 
 	CSector(u32 ID);
 	~CSector();
 };
 
-extern xr_vector<CSector *> g_sectors;
-
-#endif // !defined(AFX_SECTOR_H__751706E5_383E_40CB_9F3D_6A4D1BB8F3CD__INCLUDED_)
+extern xr_vector<CSector*> g_sectors;

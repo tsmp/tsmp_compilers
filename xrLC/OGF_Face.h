@@ -98,7 +98,7 @@ struct OGF_Base
 		bbox.invalidate();
 		iLevel = _Level;
 		bConnected = FALSE;
-		Sector = 0xffff;
+		Sector = static_cast<u16>(-1);
 	}
 
 	virtual ~OGF_Base() = default;
@@ -107,10 +107,9 @@ struct OGF_Base
 
 	virtual void PreSave(u32 tree_id){};
 	virtual void Save(IWriter &fs);
-	virtual void GetGeometry(xr_vector<Fvector> &RES) = 0;
-	void CalcBounds();
+	virtual void GetGeometry(xr_vector<Fvector> &RES, xr_vector<OGF_Base*> &tree) = 0;
+	void CalcBounds(xr_vector<OGF_Base*> &tree);
 };
-extern xr_vector<OGF_Base *> g_tree;
 
 struct OGF : public OGF_Base
 {
@@ -182,7 +181,7 @@ struct OGF : public OGF_Base
 	void Save_Normal_PM(IWriter &fs, ogf_header &H, BOOL bColors);
 	void Save_Progressive(IWriter &fs, ogf_header &H, BOOL bColors);
 
-	virtual void GetGeometry(xr_vector<Fvector> &R)
+	virtual void GetGeometry(xr_vector<Fvector> &R, xr_vector<OGF_Base*> &tree)
 	{
 		for (xr_vector<OGF_Vertex>::iterator I = vertices.begin(); I != vertices.end(); ++I)
 			R.push_back(I->P);
@@ -209,7 +208,7 @@ struct OGF_Reference : public OGF_Base
 	OGF_Reference() : OGF_Base(0) { model = 0; }
 
 	virtual void Save(IWriter &fs);
-	virtual void GetGeometry(xr_vector<Fvector> &R)
+	virtual void GetGeometry(xr_vector<Fvector> &R, xr_vector<OGF_Base*> &tree)
 	{
 		Fvector P;
 		for (xr_vector<OGF_Vertex>::iterator I = model->vertices.begin();
@@ -223,23 +222,25 @@ struct OGF_Reference : public OGF_Base
 
 struct OGF_Node : public OGF_Base
 {
-	xr_vector<u32> chields;
+	xr_vector<u32> children;
 
 	OGF_Node(int _L, u16 _Sector) : OGF_Base(_L) { Sector = _Sector; }
 
-	void AddChield(u32 ID)
+	void AddChild(u32 ID, xr_vector<OGF_Base*> &tree)
 	{
-		chields.push_back(ID);
-		OGF_Base *P = g_tree[ID];
+		children.push_back(ID);
+		OGF_Base *P = tree[ID];
 		R_ASSERT(P->Sector == Sector);
 		bbox.merge(P->bbox);
 		P->bConnected = TRUE;
 	}
+
 	virtual void Save(IWriter &fs);
-	virtual void GetGeometry(xr_vector<Fvector> &R)
+	
+	virtual void GetGeometry(xr_vector<Fvector> &R, xr_vector<OGF_Base*> &tree)
 	{
-		for (xr_vector<u32>::iterator I = chields.begin(); I != chields.end(); ++I)
-			g_tree[*I]->GetGeometry(R);
+		for (const u32 Id : children)
+			tree[Id]->GetGeometry(R, tree);
 	}
 };
 

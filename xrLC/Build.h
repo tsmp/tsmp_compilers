@@ -31,13 +31,11 @@ struct b_BuildTexture : public b_texture
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////
 // tesselator callbacks
 typedef int tesscb_estimator(Face *F); // -1 = none, 0,1,2 = edge-number
 typedef void tesscb_face(Face *F);	   // new face
 typedef void tesscb_vertex(Vertex *V); // new vertex
 
-//////////////////////////////////////////////////////////////////////////
 class CBuild
 {
 public:
@@ -108,12 +106,12 @@ public:
 	void xrPhase_MergeLM();
 	void xrPhase_MergeGeometry();
 
-	void Flex2OGF();
-	void BuildSectors();
+	void Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &outputOgfTree);
+	void BuildSectors(xr_vector<OGF_Base*> &ogfTree);
 
 	void SaveLights(IWriter &fs);
-	void SaveTREE(IWriter &fs);
-	void SaveSectors(IWriter &fs);
+	void SaveTREE(IWriter &fs, xr_vector<OGF_Base*> &ogfTree);
+	void SaveSectors(IWriter &fs, const xr_vector<OGF_Base*> &ogfTree);
 
 	// Writes in log when split has more faces than limit
 	void ValidateSplits(const xr_vector<vecFace*> &splits);

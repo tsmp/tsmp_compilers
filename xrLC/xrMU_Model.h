@@ -99,7 +99,7 @@ public:
 	void calc_lighting(xr_vector<base_color> &dest, Fmatrix &xform, CDB::MODEL *M,
 		base_lighting &lights, u32 flags);
 	void calc_lighting();
-	void calc_ogf();
+	void CalcOgf(xr_vector<OGF_Base*> &ogfTree);
 	void export_geometry();
 	void export_cform_rcast(CDB::CollectorPacked &CL, Fmatrix &xform);
 };
@@ -123,7 +123,7 @@ public:
 
 	void export_cform_game(CDB::CollectorPacked &CL);
 	void export_cform_rcast(CDB::CollectorPacked &CL);
-	void export_ogf();
+	void ExportOgf(xr_vector<OGF_Base*> &ogfTree);
 };
 
 extern poolSS<xrMU_Model::_vertex, 8 * 1024> mu_vertices;

@@ -40,7 +40,7 @@ IC BOOL ValidateMerge(Fbox &bb_base, Fbox &bb, float &volume, float SLimit)
 	return TRUE;
 }
 
-void CSector::BuildHierrarhy()
+void CSector::BuildHierrarhy(xr_vector<OGF_Base*> &ogfTree)
 {
 	Fvector scene_size;
 	float delimiter;
@@ -49,11 +49,10 @@ void CSector::BuildHierrarhy()
 	// calc scene BB
 	Fbox &scene_bb = pBuild->scene_bb;
 	scene_bb.invalidate();
-	for (int I = 0; I < s32(g_tree.size()); I++)
-		scene_bb.merge(g_tree[I]->bbox);
+	for (int I = 0; I < s32(ogfTree.size()); I++)
+		scene_bb.merge(ogfTree[I]->bbox);
 	scene_bb.grow(EPS_L);
 
-	//
 	scene_bb.getsize(scene_size);
 	delimiter = _max(scene_size.x, _max(scene_size.y, scene_size.z));
 	delimiter *= 2;
@@ -67,17 +66,18 @@ void CSector::BuildHierrarhy()
 
 	for (; SizeLimit <= delimiter; SizeLimit *= 2)
 	{
-		int iSize = g_tree.size();
+		int iSize = ogfTree.size();
 
 		for (int I = 0; I < iSize; I++)
 		{
-			if (g_tree[I]->bConnected)
+			if (ogfTree[I]->bConnected)
 				continue;
-			if (g_tree[I]->Sector != SelfID)
+
+			if (ogfTree[I]->Sector != SelfID)
 				continue;
 
 			OGF_Node *pNode = xr_new<OGF_Node>(iLevel, u16(SelfID));
-			pNode->AddChield(I);
+			pNode->AddChild(I, ogfTree);
 
 			// Find best object to connect with
 			for (;;)
@@ -88,7 +88,7 @@ void CSector::BuildHierrarhy()
 
 				for (int J = 0; J < iSize; J++)
 				{
-					OGF_Base *candidate = g_tree[J];
+					OGF_Base *candidate = ogfTree[J];
 					if (candidate->bConnected)
 						continue;
 					if (candidate->Sector != SelfID)
@@ -108,38 +108,40 @@ void CSector::BuildHierrarhy()
 				// Analyze
 				if (best_id < 0)
 					break;
-				pNode->AddChield(best_id);
+				pNode->AddChild(best_id, ogfTree);
 			}
 
-			if (pNode->chields.size() > 1)
+			if (pNode->children.size() > 1)
 			{
-				pNode->CalcBounds();
-				g_tree.push_back(pNode);
+				pNode->CalcBounds(ogfTree);
+				ogfTree.push_back(pNode);
 				bAnyNode = TRUE;
 			}
 			else
 			{
-				g_tree[I]->bConnected = false;
+				ogfTree[I]->bConnected = false;
 				xr_delete(pNode);
 			}
 		}
 
-		if (iSize != (int)g_tree.size())
+		if (iSize != (int)ogfTree.size())
 			iLevel++;
 	}
 	TreeRoot = 0;
 	if (bAnyNode)
-		TreeRoot = g_tree.back();
+		TreeRoot = ogfTree.back();
 	else
 	{
-		for (u32 I = 0; I < g_tree.size(); I++)
+		for (u32 I = 0; I < ogfTree.size(); I++)
 		{
-			if (g_tree[I]->bConnected)
+			if (ogfTree[I]->bConnected)
 				continue;
-			if (g_tree[I]->Sector != SelfID)
+
+			if (ogfTree[I]->Sector != SelfID)
 				continue;
+
 			R_ASSERT(0 == TreeRoot);
-			TreeRoot = g_tree[I];
+			TreeRoot = ogfTree[I];
 		}
 	}
 	if (0 == TreeRoot)
@@ -156,12 +158,12 @@ void CSector::Validate()
 	R_ASSERT(TreeRoot->Sector == SelfID);
 }
 
-void CSector::Save(IWriter &fs)
+void CSector::Save(IWriter &fs, const xr_vector<OGF_Base*> &ogfTree)
 {
 	// Root
-	xr_vector<OGF_Base *>::iterator F = std::find(g_tree.begin(), g_tree.end(), TreeRoot);
-	R_ASSERT(F != g_tree.end());
-	u32 ID = u32(F - g_tree.begin());
+	auto rootIt = std::find(ogfTree.begin(), ogfTree.end(), TreeRoot);
+	R_ASSERT(rootIt != ogfTree.end());
+	u32 ID = u32(rootIt - ogfTree.begin());
 	fs.w_chunk(fsP_Root, &ID, sizeof(u32));
 
 	// Portals

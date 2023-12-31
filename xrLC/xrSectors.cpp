@@ -4,14 +4,14 @@
 
 xr_vector<CSector *> g_sectors;
 
-void CBuild::BuildSectors()
+void CBuild::BuildSectors(xr_vector<OGF_Base*> &ogfTree)
 {
 	Status("Determining sectors...");
 	Progress(0);
 	u32 SectorMax = 0;
-	for (u32 I = 0; I < g_tree.size(); I++)
-		if (g_tree[I]->Sector > SectorMax)
-			SectorMax = g_tree[I]->Sector;
+	for (u32 I = 0; I < ogfTree.size(); I++)
+		if (ogfTree[I]->Sector > SectorMax)
+			SectorMax = ogfTree[I]->Sector;
 	R_ASSERT(SectorMax < 0xffff);
 
 	u32 SectorCount = SectorMax + 1;
@@ -20,9 +20,9 @@ void CBuild::BuildSectors()
 	clMsg("%d sectors accepted.", SectorCount);
 
 	Status("Spatializing geometry...");
-	for (u32 I = 0; I < g_tree.size(); I++)
+	for (u32 I = 0; I < ogfTree.size(); I++)
 	{
-		u32 Sector = g_tree[I]->Sector;
+		u32 Sector = ogfTree[I]->Sector;
 		if (0 == g_sectors[Sector])
 			g_sectors[Sector] = xr_new<CSector>(Sector);
 	}
@@ -31,7 +31,7 @@ void CBuild::BuildSectors()
 	for (u32 I = 0; I < g_sectors.size(); I++)
 	{
 		R_ASSERT(g_sectors[I]);
-		g_sectors[I]->BuildHierrarhy();
+		g_sectors[I]->BuildHierrarhy(ogfTree);
 		Progress(float(I) / float(g_sectors.size()));
 	}
 
@@ -84,7 +84,7 @@ void CBuild::BuildSectors()
 	}
 }
 
-void CBuild::SaveSectors(IWriter &fs)
+void CBuild::SaveSectors(IWriter &fs, const xr_vector<OGF_Base*> &ogfTree)
 {
 	CMemoryWriter MFS;
 	Status("Processing...");
@@ -94,7 +94,7 @@ void CBuild::SaveSectors(IWriter &fs)
 	{
 		MFS.open_chunk(I);
 		g_sectors[I]->Validate();
-		g_sectors[I]->Save(MFS);
+		g_sectors[I]->Save(MFS, ogfTree);
 		MFS.close_chunk();
 		Progress(float(I) / float(g_sectors.size()));
 	}

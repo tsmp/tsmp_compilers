@@ -11,7 +11,7 @@
 		clMsg("* E: %s", #a);                                                                      \
 	}
 
-void xrMU_Model::calc_ogf()
+void xrMU_Model::CalcOgf(xr_vector<OGF_Base*> &ogfTree)
 {
 	// Build OGFs
 	for (xrMU_Model::v_subdivs_it it = m_subdivs.begin(); it != m_subdivs.end(); ++it)
@@ -81,7 +81,7 @@ void xrMU_Model::calc_ogf()
 		}
 		try
 		{
-			pOGF->CalcBounds();
+			pOGF->CalcBounds(ogfTree);
 		}
 		catch (...)
 		{
