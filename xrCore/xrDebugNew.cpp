@@ -908,7 +908,10 @@ static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *
 		ignore_always);
 }
 
-static void std_out_of_memory_handler() { handler_base("std: out of memory"); }
+static void std_out_of_memory_handler()
+{
+	handler_base("std: out of memory");
+}
 
 static void pure_call_handler() { handler_base("pure virtual function call"); }
 

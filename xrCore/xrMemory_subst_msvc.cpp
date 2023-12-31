@@ -1,8 +1,5 @@
 #include "stdafx.h"
-#pragma hdrstop
-
 #include "xrMemory_align.h"
-#include "xrMemory_pure.h"
 
 #ifndef DEBUG_MEMORY_MANAGER
 #define debug_mode 0
@@ -34,9 +31,7 @@ ICF u32 get_pool(size_t size)
 		return pid;
 }
 
-#ifdef PURE_ALLOC
 bool g_use_pure_alloc = false;
-#endif // PURE_ALLOC
 
 void *xrMemory::mem_alloc(size_t size
 #ifdef DEBUG_MEMORY_NAME
@@ -47,14 +42,11 @@ void *xrMemory::mem_alloc(size_t size
 {
 	stat_calls++;
 
-#ifdef PURE_ALLOC
 	static bool g_use_pure_alloc_initialized = false;
 	if (!g_use_pure_alloc_initialized)
 	{
 		g_use_pure_alloc_initialized = true;
-		g_use_pure_alloc =
-
-			!!strstr(GetCommandLine(), "-pure_alloc");
+		g_use_pure_alloc = !!strstr(GetCommandLine(), "-pure_alloc");
 	}
 
 	if (g_use_pure_alloc)
@@ -65,7 +57,6 @@ void *xrMemory::mem_alloc(size_t size
 #endif // USE_MEMORY_MONITOR
 		return (result);
 	}
-#endif // PURE_ALLOC
 
 #ifdef DEBUG_MEMORY_MANAGER
 	if (mem_initialized)
@@ -75,13 +66,11 @@ void *xrMemory::mem_alloc(size_t size
 	u32 _footer = debug_mode ? 4 : 0;
 	void *_ptr = 0;
 
-	//
 	if (!mem_initialized /*|| debug_mode*/)
 	{
 		// generic
 		//	Igor: Reserve 1 byte for xrMemory header
 		void *_real = xr_aligned_offset_malloc(1 + size + _footer, 16, 0x1);
-		//void*	_real			=	xr_aligned_offset_malloc	(size + _footer, 16, 0x1);
 		_ptr = (void *)(((u8 *)_real) + 1);
 		*acc_header(_ptr) = mem_generic;
 	}
@@ -89,25 +78,23 @@ void *xrMemory::mem_alloc(size_t size
 	{
 #ifdef DEBUG_MEMORY_MANAGER
 		save_stack_trace();
-#endif // DEBUG                                                                                    \
-	//	accelerated                                                                                 \
-	//	Igor: Reserve 1 byte for xrMemory header
+#endif // DEBUG
+		// accelerated
+		// Igor: Reserve 1 byte for xrMemory header
 		u32 pool = get_pool(1 + size + _footer);
-		//u32	pool				=	get_pool	(size+_footer);
 		if (mem_generic == pool)
 		{
 			// generic
-			//	Igor: Reserve 1 byte for xrMemory header
+			// Igor: Reserve 1 byte for xrMemory header
 			void *_real = xr_aligned_offset_malloc(1 + size + _footer, 16, 0x1);
-			//void*	_real		=	xr_aligned_offset_malloc	(size + _footer,16,0x1);
 			_ptr = (void *)(((u8 *)_real) + 1);
 			*acc_header(_ptr) = mem_generic;
 		}
 		else
 		{
 			// pooled
-			//	Igor: Reserve 1 byte for xrMemory header
-			//	Already reserved when getting pool id
+			// Igor: Reserve 1 byte for xrMemory header
+			// Already reserved when getting pool id
 			void *_real = mem_pools[pool].create();
 			_ptr = (void *)(((u8 *)_real) + 1);
 			*acc_header(_ptr) = (u8)pool;
@@ -119,17 +106,12 @@ void *xrMemory::mem_alloc(size_t size
 		dbg_register(_ptr, size, _name);
 	if (mem_initialized)
 		debug_cs.Leave();
-		//if(g_globalCheckAddr==_ptr){
-		//	__asm int 3;
-		//}
-		//if (_name && (0==strcmp(_name,"class ISpatial *")) && (size==376))
-		//{
-		//	__asm int 3;
-		//}
 #endif // DEBUG_MEMORY_MANAGER
+
 #ifdef USE_MEMORY_MONITOR
 	memory_monitor::monitor_alloc(_ptr, size, _name);
 #endif // USE_MEMORY_MONITOR
+
 	return _ptr;
 }
 
@@ -140,13 +122,11 @@ void xrMemory::mem_free(void *P)
 	memory_monitor::monitor_free(P);
 #endif // USE_MEMORY_MONITOR
 
-#ifdef PURE_ALLOC
 	if (g_use_pure_alloc)
 	{
 		free(P);
 		return;
 	}
-#endif // PURE_ALLOC
 
 #ifdef DEBUG_MEMORY_MANAGER
 	if (g_globalCheckAddr == P)
@@ -157,10 +137,13 @@ void xrMemory::mem_free(void *P)
 	if (mem_initialized)
 		debug_cs.Enter();
 #endif // DEBUG_MEMORY_MANAGER
+
 	if (debug_mode)
 		dbg_unregister(P);
+
 	u32 pool = get_header(P);
 	void *_real = (void *)(((u8 *)P) - 1);
+
 	if (mem_generic == pool)
 	{
 		// generic
@@ -172,6 +155,7 @@ void xrMemory::mem_free(void *P)
 		VERIFY2(pool < mem_pools_count, "Memory corruption");
 		mem_pools[pool].destroy(_real);
 	}
+
 #ifdef DEBUG_MEMORY_MANAGER
 	if (mem_initialized)
 		debug_cs.Leave();
@@ -188,17 +172,19 @@ void *xrMemory::mem_realloc(void *P, size_t size
 )
 {
 	stat_calls++;
-#ifdef PURE_ALLOC
+
 	if (g_use_pure_alloc)
 	{
 		void *result = realloc(P, size);
+
 #ifdef USE_MEMORY_MONITOR
 		memory_monitor::monitor_free(P);
 		memory_monitor::monitor_alloc(result, size, _name);
 #endif // USE_MEMORY_MONITOR
-		return (result);
+
+		return result;
 	}
-#endif // PURE_ALLOC
+
 	if (0 == P)
 	{
 		return mem_alloc(size
@@ -218,10 +204,11 @@ void *xrMemory::mem_realloc(void *P, size_t size
 	if (mem_initialized)
 		debug_cs.Enter();
 #endif // DEBUG_MEMORY_MANAGER
+
 	u32 p_current = get_header(P);
-	//	Igor: Reserve 1 byte for xrMemory header
+	
+	// Igor: Reserve 1 byte for xrMemory header
 	u32 p_new = get_pool(1 + size + (debug_mode ? 4 : 0));
-	//u32		p_new				= get_pool	(size+(debug_mode?4:0));
 	u32 p_mode;
 
 	if (mem_generic == p_current)
@@ -236,7 +223,8 @@ void *xrMemory::mem_realloc(void *P, size_t size
 
 	void *_real = (void *)(((u8 *)P) - 1);
 	void *_ptr = NULL;
-	if (0 == p_mode)
+
+	if (!p_mode)
 	{
 		u32 _footer = debug_mode ? 4 : 0;
 #ifdef DEBUG_MEMORY_MANAGER
@@ -246,16 +234,18 @@ void *xrMemory::mem_realloc(void *P, size_t size
 			dbg_unregister(P);
 			g_bDbgFillMemory = true;
 		}
-#endif // DEBUG_MEMORY_MANAGER                                                                     \
-	//	Igor: Reserve 1 byte for xrMemory header
+#endif // DEBUG_MEMORY_MANAGER
+
+		// Igor: Reserve 1 byte for xrMemory header
 		void *_real2 = xr_aligned_offset_realloc(_real, 1 + size + _footer, 16, 0x1);
-		//void*	_real2			=	xr_aligned_offset_realloc	(_real,size+_footer,16,0x1);
 		_ptr = (void *)(((u8 *)_real2) + 1);
 		*acc_header(_ptr) = mem_generic;
+
 #ifdef DEBUG_MEMORY_MANAGER
 		if (debug_mode)
 			dbg_register(_ptr, size, _name);
 #endif // DEBUG_MEMORY_MANAGER
+
 #ifdef USE_MEMORY_MONITOR
 		memory_monitor::monitor_free(P);
 		memory_monitor::monitor_alloc(_ptr, size, _name);
@@ -275,10 +265,10 @@ void *xrMemory::mem_realloc(void *P, size_t size
 			_name
 #endif // DEBUG_MEMORY_NAME
 		);
-		//	Igor: Reserve 1 byte for xrMemory header
-		//	Don't bother in this case?
+
+		// Igor: Reserve 1 byte for xrMemory header
+		// Don't bother in this case?
 		mem_copy(p_new_, p_old, _min(s_current - 1, s_dest));
-		//mem_copy				(p_new,p_old,_min(s_current,s_dest));
 		mem_free(p_old);
 		_ptr = p_new_;
 	}
