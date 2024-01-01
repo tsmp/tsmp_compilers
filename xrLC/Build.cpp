@@ -34,10 +34,6 @@ public:
 	}
 };
 
-CBuild::CBuild() {}
-
-CBuild::~CBuild() {}
-
 extern u16 RegisterShader(LPCSTR T);
 
 template <typename T>
@@ -169,25 +165,29 @@ void CBuild::Run(LPCSTR P)
 	xrPhase_ResolveMaterials(g_faces, splits);
 	IsolateVertices(TRUE);
 
-	//UV mapping
-	{
-		FPU::m64r();
-		Phase("Build UV mapping...");
-		mem_Compact();
-		xrPhase_UVmap(splits);
-		IsolateVertices(TRUE);
-	}
+	// UV mapping
+	FPU::m64r();
+	Phase("Build UV mapping...");
+	mem_Compact();
+
+	xr_vector<CDeflector*> deflectors;
+	xrPhase_UVmap(splits, deflectors);
+	IsolateVertices(TRUE);
 
 	// Subdivide geometry
 	FPU::m64r();
 	Phase("Subdividing geometry...");
 	mem_Compact();
-	xrPhase_Subdivide(splits, g_deflectors);
+	xrPhase_Subdivide(splits, deflectors);
 	IsolateVertices(TRUE);
 
 	// All lighting + lmaps building and saving
 	if (!b_nolmaps)
-		Light();
+		Light(deflectors);
+
+	// Cleanup deflectors
+	Status("Destroying deflectors...");
+	CleanPtrVector(deflectors);
 
 	FPU::m64r();
 	Phase("Merging geometry...");

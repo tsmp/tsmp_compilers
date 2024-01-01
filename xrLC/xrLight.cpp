@@ -17,9 +17,10 @@ public:
 	HASH H;
 	CDB::COLLIDER DB;
 	base_lighting LightsSelected;
+	const xr_vector<CDeflector*> &deflectors;
 
 public:
-	CLMThread(u32 ID) : CThread(ID)
+	CLMThread(u32 ID, const xr_vector<CDeflector*> &defl) : CThread(ID), deflectors(defl)
 	{
 		// thMonitor= TRUE;
 		thMessages = TRUE;
@@ -37,7 +38,7 @@ public:
 		{
 			// Get task
 			task_CS.Enter();
-			thProgress = 1.f - float(task_pool.size()) / float(g_deflectors.size());
+			thProgress = 1.f - float(task_pool.size()) / float(deflectors.size());
 
 			if (task_pool.empty())
 			{
@@ -45,7 +46,7 @@ public:
 				return;
 			}
 
-			D = g_deflectors[task_pool.back()];
+			D = deflectors[task_pool.back()];
 			task_pool.pop_back();
 			task_CS.Leave();
 
@@ -55,17 +56,15 @@ public:
 	}
 };
 
-void CBuild::Light()
+void CBuild::Light(xr_vector<CDeflector*> &deflectors)
 {
-	//****************************************** Implicit
-	{
-		FPU::m64r();
-		Phase("LIGHT: Implicit...");
-		mem_Compact();
-		ImplicitLighting();
-	}
+	// Implicit
+	FPU::m64r();
+	Phase("LIGHT: Implicit...");
+	mem_Compact();
+	ImplicitLighting();
 
-	//****************************************** Lmaps
+	// Lmaps
 	{
 		FPU::m64r();
 		Phase("LIGHT: LMaps...");
@@ -73,8 +72,9 @@ void CBuild::Light()
 
 		// Randomize deflectors
 		auto rng = std::default_random_engine{};
-		shuffle(g_deflectors.begin(), g_deflectors.end(), rng);
-		for (u32 dit = 0; dit < g_deflectors.size(); dit++)
+		shuffle(deflectors.begin(), deflectors.end(), rng);
+
+		for (u32 dit = 0; dit < deflectors.size(); dit++)
 			task_pool.push_back(dit);
 
 		// Main process (4 threads)
@@ -83,26 +83,22 @@ void CBuild::Light()
 		CTimer start_time;
 		start_time.Start();
 		for (int L = 0; L < i_ThreadCount; L++)
-			threads.start(xr_new<CLMThread>(L));
+			threads.start(xr_new<CLMThread>(L, deflectors));
 		threads.wait(500);
 		clMsg("%f seconds", start_time.GetElapsed_sec());
 	}
 
-	//****************************************** Vertex
+	// Vertex
 	FPU::m64r();
 	Phase("LIGHT: Vertex...");
 	mem_Compact();
-
 	LightVertex();
 
-	//****************************************** Merge LMAPS
-	{
-		FPU::m64r();
-		Phase("LIGHT: Merging lightmaps...");
-		mem_Compact();
-
-		xrPhase_MergeLM();
-	}
+	// Merge LMAPS
+	FPU::m64r();
+	Phase("LIGHT: Merging lightmaps...");
+	mem_Compact();
+	xrPhase_MergeLM(deflectors);
 }
 
 //-----------------------------------------------------------------------

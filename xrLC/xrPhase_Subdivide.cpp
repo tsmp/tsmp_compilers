@@ -157,7 +157,7 @@ bool SplitSubdivision(const xr_vector<Face *> &subdiv, const Fbox &bb, Fvector &
 	return false;
 }
 
-void CBuild::xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> deflectors)
+void CBuild::xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &deflectors)
 {
 	Status("Subdividing in space...");
 

@@ -70,7 +70,6 @@ public:
 	void Load(const b_params &P, const IReader &fs, HWND Window);
 	void Run(LPCSTR path);
 
-	void Tesselate();
 	void PreOptimize();
 	void CorrectTJunctions();
 
@@ -85,8 +84,6 @@ public:
 	void BuildPortals(IWriter &fs);
 	void BuildRapid(BOOL bSave);
 
-	void ConvertFaces();
-
 	void xrPhase_Radiosity();
 	void xrPhase_MU_light();
 
@@ -95,16 +92,15 @@ public:
 	// Split all faces into groups by materials
 	void xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vector<vecFace*> &outputSplits);
 
-	void xrPhase_UVmap(xr_vector<vecFace*> &splits);
+	void xrPhase_UVmap(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &outDeflectors);
 
-	void xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> deflectors);
+	void xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &deflectors);
 
 	void ImplicitLighting();
 	void Light_prepare();
-	void Light();
-	void Light_R2();
+	void Light(xr_vector<CDeflector*> &deflectors);
 	void LightVertex();
-	void xrPhase_MergeLM();
+	void xrPhase_MergeLM(const xr_vector<CDeflector*> &deflectors);
 	void xrPhase_MergeGeometry(xr_vector<vecFace*> &splits);
 
 	void Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &outputOgfTree);
@@ -117,8 +113,8 @@ public:
 	// Writes in log when split has more faces than limit
 	void ValidateSplits(const xr_vector<vecFace*> &splits);
 
-	CBuild();
-	~CBuild();
+	CBuild() = default;
+	~CBuild() = default;
 };
 
 extern CBuild *pBuild;

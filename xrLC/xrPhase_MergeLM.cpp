@@ -97,15 +97,14 @@ public:
 	};
 };
 
-void CBuild::xrPhase_MergeLM()
+void CBuild::xrPhase_MergeLM(const xr_vector<CDeflector*> &deflectors)
 {
+	// Select all deflectors, which contain this light-layer
 	vecDefl Layer;
 
-	// **** Select all deflectors, which contain this light-layer
-	Layer.clear();
-	for (u32 it = 0; it < g_deflectors.size(); it++)
+	for (u32 it = 0; it < deflectors.size(); it++)
 	{
-		CDeflector *D = g_deflectors[it];
+		CDeflector *D = deflectors[it];
 		if (D->bMerged)
 			continue;
 		Layer.push_back(D);
@@ -192,11 +191,4 @@ void CBuild::xrPhase_MergeLM()
 		lmap->Save();
 	}
 	clMsg("%d lightmaps builded", g_lightmaps.size());
-
-	// Cleanup deflectors
-	Progress(1.f);
-	Status("Destroying deflectors...");
-	for (u32 it = 0; it < g_deflectors.size(); it++)
-		xr_delete(g_deflectors[it]);
-	g_deflectors.clear_and_free();
 }

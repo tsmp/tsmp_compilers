@@ -141,8 +141,6 @@ void blit_r(lm_layer &dst, u32 ds_x, u32 ds_y, lm_layer &src, u32 ss_x, u32 ss_y
 		}
 }
 
-//-------------------------------------
-vecDefl g_deflectors;
 CDeflector *Deflector = 0;
 
 IC BOOL UVpointInside(Fvector2 &P, UVtri &T)

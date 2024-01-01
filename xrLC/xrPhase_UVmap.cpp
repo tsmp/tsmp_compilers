@@ -2,6 +2,7 @@
 #include "build.h"
 
 int affected = 0;
+
 void Face::OA_Unwarp()
 {
 	if (pDeflector)
@@ -11,11 +12,13 @@ void Face::OA_Unwarp()
 
 	// now iterate on all our neigbours
 	for (int i = 0; i < 3; i++)
+	{
 		for (vecFaceIt it = v[i]->adjacent.begin(); it != v[i]->adjacent.end(); ++it)
 		{
 			affected += 1;
 			(*it)->OA_Unwarp();
 		}
+	}
 }
 
 void Detach(xr_vector<Face*> &faces)
@@ -49,11 +52,11 @@ void Detach(xr_vector<Face*> &faces)
 	}
 }
 
-void CBuild::xrPhase_UVmap(xr_vector<vecFace*> &splits)
+void CBuild::xrPhase_UVmap(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &outDeflectors)
 {
-	// Main loop
 	Status("Processing...");
-	g_deflectors.reserve(64 * 1024);
+	outDeflectors.reserve(64 * 1024);
+
 	float p_cost = 1.f / float(splits.size());
 	float p_total = 0.f;
 	vecFace faces_affected;
@@ -61,7 +64,6 @@ void CBuild::xrPhase_UVmap(xr_vector<vecFace*> &splits)
 	for (int SP = 0; SP < int(splits.size()); SP++)
 	{
 		Progress(1.f * SP / splits.size());
-		//	IsolateVertices		(FALSE);
 
 		// Detect vertex-lighting and avoid this subdivision
 		R_ASSERT(!splits[SP]->empty());
@@ -94,7 +96,7 @@ void CBuild::xrPhase_UVmap(xr_vector<vecFace*> &splits)
 
 			if (msF)
 			{
-				g_deflectors.push_back(xr_new<CDeflector>());
+				outDeflectors.push_back(xr_new<CDeflector>());
 
 				// Start recursion from this face
 				affected = 1;
