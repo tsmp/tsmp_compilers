@@ -10,7 +10,7 @@ void xrMU_Model::export_cform_rcast(CDB::CollectorPacked &CL, Fmatrix &xform)
 
 	for (v_faces_it it = m_faces.begin(); it != m_faces.end(); ++it)
 	{
-		_face *F = (*it);
+		FaceMu *F = (*it);
 		Shader_xrLC &SH = F->Shader();
 		if (!SH.flags.bLIGHT_CastShadow)
 			continue;
@@ -20,7 +20,7 @@ void xrMU_Model::export_cform_rcast(CDB::CollectorPacked &CL, Fmatrix &xform)
 
 		for (int vit = 0; vit < 3; vit++)
 		{
-			_vertex *V = F->v[vit];
+			VertexMu *V = F->v[vit];
 			for (u32 adj = 0; adj < V->adjacent.size(); adj++)
 				adjacent.push_back(V->adjacent[adj]);
 		}
@@ -32,7 +32,7 @@ void xrMU_Model::export_cform_rcast(CDB::CollectorPacked &CL, Fmatrix &xform)
 
 		for (u32 ait = 0; ait < adjacent.size(); ait++)
 		{
-			_face *Test = adjacent[ait];
+			FaceMu *Test = adjacent[ait];
 
 			if (Test == F)
 				continue;

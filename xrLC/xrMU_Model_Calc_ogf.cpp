@@ -40,11 +40,11 @@ void xrMU_Model::CalcOgf(xr_vector<OGF_Base*> &ogfTree)
 				for (xrMU_Model::v_faces_it Fit = _beg; Fit != _end; ++Fit)
 				{
 					OGF_Vertex V[3];
-					xrMU_Model::_face *FF = *Fit;
+					xrMU_Model::FaceMu *FF = *Fit;
 					R_ASSERT(FF);
 					for (u32 k = 0; k < 3; k++)
 					{
-						xrMU_Model::_vertex *_V = FF->v[k];
+						xrMU_Model::VertexMu *_V = FF->v[k];
 						u32 id = (u32)(std::find(m_vertices.begin(), m_vertices.end(), _V) -
 									   m_vertices.begin());
 						V[k].P = _V->P;

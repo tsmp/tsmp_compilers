@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "xrMU_Model.h"
 
-bool cmp_face_material(xrMU_Model::_face *f1, xrMU_Model::_face *f2)
+bool cmp_face_material(xrMU_Model::FaceMu *f1, xrMU_Model::FaceMu *f2)
 {
 	return f1->dwMaterial < f2->dwMaterial;
 }
@@ -36,7 +36,7 @@ void xrMU_Model::calc_materials()
 	// remove non-visible materials
 	for (s32 it = 0; it < s32(m_subdivs.size()); it++)
 	{
-		_face *first = m_faces[m_subdivs[it].start];
+		FaceMu *first = m_faces[m_subdivs[it].start];
 		if (first->Shader().flags.bRendering)
 			continue;
 

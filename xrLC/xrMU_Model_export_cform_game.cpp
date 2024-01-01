@@ -9,15 +9,15 @@ int getCFormVID		(xrMU_Model::v_vertices& V,xrMU_Model::_vertex *F)
 */
 
 extern int bCriticalErrCnt;
-int getTriByEdge(xrMU_Model::_vertex *V1, xrMU_Model::_vertex *V2, xrMU_Model::_face *parent,
+int getTriByEdge(xrMU_Model::VertexMu *V1, xrMU_Model::VertexMu *V2, xrMU_Model::FaceMu *parent,
 	xrMU_Model::v_faces &ids)
 {
-	xrMU_Model::_face *found = 0;
+	xrMU_Model::FaceMu *found = 0;
 	int f_count = 0;
 
 	for (xrMU_Model::v_faces_it I = V1->adjacent.begin(); I != V1->adjacent.end(); ++I)
 	{
-		xrMU_Model::_face *test = *I;
+		xrMU_Model::FaceMu *test = *I;
 		if (test == parent)
 			continue;
 		if (test->VContains(V2))
@@ -61,7 +61,7 @@ void xrMU_Reference::export_cform_game(CDB::CollectorPacked &CL)
 		cfFaces->reserve(model->m_faces.size());
 		for (xrMU_Model::v_faces_it I = model->m_faces.begin(); I != model->m_faces.end(); ++I)
 		{
-			xrMU_Model::_face *F = *I;
+			xrMU_Model::FaceMu *F = *I;
 			if (F->Shader().flags.bCollision)
 			{
 				cfFaces->push_back(F);
@@ -88,7 +88,7 @@ void xrMU_Reference::export_cform_game(CDB::CollectorPacked &CL)
 	u32 Offset = (u32)CL.getTS();
 	for (xrMU_Model::v_faces_it F = cfFaces->begin(); F != cfFaces->end(); ++F)
 	{
-		xrMU_Model::_face *T = *F;
+		xrMU_Model::FaceMu *T = *F;
 
 		// xform
 		Fvector P[3];

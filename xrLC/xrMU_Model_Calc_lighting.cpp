@@ -74,14 +74,14 @@ void xrMU_Model::calc_lighting(xr_vector<base_color> &dest, Fmatrix &xform, CDB:
 	// Perform lighting
 	for (I = 0; I < m_vertices.size(); I++)
 	{
-		_vertex *V = m_vertices[I];
+		VertexMu *V = m_vertices[I];
 
 		// Get ambient factor
 		float v_amb = 0.f;
 		float v_trans = 0.f;
 		for (u32 f = 0; f < V->adjacent.size(); f++)
 		{
-			_face *F = V->adjacent[f];
+			FaceMu *F = V->adjacent[f];
 			v_amb += F->Shader().vert_ambient;
 			v_trans += F->Shader().vert_translucency;
 		}
@@ -131,7 +131,7 @@ void xrMU_Model::calc_lighting(xr_vector<base_color> &dest, Fmatrix &xform, CDB:
 		for (; it != it2; ++it)
 		{
 			v_vertices &VL = it->second;
-			_vertex *Front = VL.front();
+			VertexMu *Front = VL.front();
 			R_ASSERT(Front);
 			if (Front->P.similar(V->P, eps))
 			{

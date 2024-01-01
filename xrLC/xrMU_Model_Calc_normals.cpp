@@ -22,30 +22,30 @@ void xrMU_Model::calc_normals()
 	//  so bSplitted means bUsed
 	for (u32 I = 0; I < Vcount; I++)
 	{
-		_vertex *V = m_vertices[I];
+		VertexMu *V = m_vertices[I];
 
 		for (v_faces_it AFit = V->adjacent.begin(); AFit != V->adjacent.end(); ++AFit)
 		{
-			_face *F = *AFit;
+			FaceMu *F = *AFit;
 			F->flags.bSplitted = FALSE;
 		}
 		std::sort(V->adjacent.begin(), V->adjacent.end());
 
 		for (u32 AF = 0; AF < V->adjacent.size(); AF++)
 		{
-			_face *F = V->adjacent[AF];
+			FaceMu *F = V->adjacent[AF];
 			if (F->flags.bSplitted)
 				continue; // Face already used in calculation
 
 			// Create new vertex (except adjacency)
-			_vertex *NV = mu_vertices.create();
+			VertexMu *NV = mu_vertices.create();
 			NV->P = V->P;
 
 			// Calculate it's normal
 			NV->N.set(0, 0, 0);
 			for (u32 NF = 0; NF < V->adjacent.size(); NF++)
 			{
-				_face *Fn = V->adjacent[NF];
+				FaceMu *Fn = V->adjacent[NF];
 
 				float cosa = F->N.dotproduct(Fn->N);
 				if (cosa > sm_cos)

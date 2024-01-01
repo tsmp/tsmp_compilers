@@ -1,24 +1,24 @@
 #include "stdafx.h"
 #include "xrmu_model.h"
 
-poolSS<xrMU_Model::_vertex, 8 * 1024> mu_vertices;
-poolSS<xrMU_Model::_face, 8 * 1024> mu_faces;
+poolSS<xrMU_Model::VertexMu, 8 * 1024> mu_vertices;
+poolSS<xrMU_Model::FaceMu, 8 * 1024> mu_faces;
 
 // vertex utilities
-void xrMU_Model::_vertex::prep_add(_face *F)
+void xrMU_Model::VertexMu::prep_add(FaceMu *F)
 {
 	for (v_faces_it I = adjacent.begin(); I != adjacent.end(); ++I)
 		if (F == (*I))
 			return;
 	adjacent.push_back(F);
 }
-void xrMU_Model::_vertex::prep_remove(_face *F)
+void xrMU_Model::VertexMu::prep_remove(FaceMu *F)
 {
 	v_faces_it I = std::find(adjacent.begin(), adjacent.end(), F);
 	if (I != adjacent.end())
 		adjacent.erase(I);
 }
-void xrMU_Model::_vertex::calc_normal_adjacent()
+void xrMU_Model::VertexMu::calc_normal_adjacent()
 {
 	N.set(0, 0, 0);
 	for (v_faces_it ad = adjacent.begin(); ad != adjacent.end(); ++ad)
@@ -27,7 +27,7 @@ void xrMU_Model::_vertex::calc_normal_adjacent()
 }
 
 // face utilities
-void xrMU_Model::_face::CalcNormal()
+void xrMU_Model::FaceMu::CalcNormal()
 {
 	Fvector t1, t2;
 
@@ -51,10 +51,10 @@ void xrMU_Model::_face::CalcNormal()
 };
 
 // Does the face contains this vertex?
-bool xrMU_Model::_face::VContains(_vertex *pV) { return VIndex(pV) >= 0; }
+bool xrMU_Model::FaceMu::VContains(VertexMu *pV) { return VIndex(pV) >= 0; }
 
 // Replace ONE vertex by ANOTHER
-void xrMU_Model::_face::VReplace(_vertex *what, _vertex *to)
+void xrMU_Model::FaceMu::VReplace(VertexMu *what, VertexMu *to)
 {
 	if (v[0] == what)
 	{
@@ -75,7 +75,7 @@ void xrMU_Model::_face::VReplace(_vertex *what, _vertex *to)
 		to->prep_add(this);
 	}
 }
-void xrMU_Model::_face::VReplace_NoRemove(_vertex *what, _vertex *to)
+void xrMU_Model::FaceMu::VReplace_NoRemove(VertexMu *what, VertexMu *to)
 {
 	if (v[0] == what)
 	{
@@ -93,7 +93,7 @@ void xrMU_Model::_face::VReplace_NoRemove(_vertex *what, _vertex *to)
 		to->prep_add(this);
 	}
 }
-int xrMU_Model::_face::VIndex(_vertex *pV)
+int xrMU_Model::FaceMu::VIndex(VertexMu *pV)
 {
 	if (v[0] == pV)
 		return 0;
@@ -103,20 +103,20 @@ int xrMU_Model::_face::VIndex(_vertex *pV)
 		return 2;
 	return -1;
 }
-void xrMU_Model::_face::VSet(int idx, _vertex *V)
+void xrMU_Model::FaceMu::VSet(int idx, VertexMu *V)
 {
 	v[idx] = V;
 	V->prep_add(this);
 }
-void xrMU_Model::_face::VSet(_vertex *V1, _vertex *V2, _vertex *V3)
+void xrMU_Model::FaceMu::VSet(VertexMu *V1, VertexMu *V2, VertexMu *V3)
 {
 	VSet(0, V1);
 	VSet(1, V2);
 	VSet(2, V3);
 }
-BOOL xrMU_Model::_face::isDegenerated() { return (v[0] == v[1] || v[0] == v[2] || v[1] == v[2]); };
+BOOL xrMU_Model::FaceMu::isDegenerated() { return (v[0] == v[1] || v[0] == v[2] || v[1] == v[2]); };
 
-BOOL xrMU_Model::_face::isEqual(xrMU_Model::_face &F)
+BOOL xrMU_Model::FaceMu::isEqual(xrMU_Model::FaceMu &F)
 {
 	// Test for 6 variations
 	if ((v[0] == F.v[0]) && (v[1] == F.v[1]) && (v[2] == F.v[2]))
@@ -134,13 +134,13 @@ BOOL xrMU_Model::_face::isEqual(xrMU_Model::_face &F)
 	return false;
 }
 
-void xrMU_Model::_face::EdgeVerts(int e, _vertex **A, _vertex **B)
+void xrMU_Model::FaceMu::EdgeVerts(int e, VertexMu **A, VertexMu **B)
 {
 	*A = v[edge2idx[e][0]];
 	*B = v[edge2idx[e][1]];
 }
 
-void xrMU_Model::_face::CalcCenter(Fvector &C)
+void xrMU_Model::FaceMu::CalcCenter(Fvector &C)
 {
 	C.set(v[0]->P);
 	C.add(v[1]->P);
@@ -148,7 +148,7 @@ void xrMU_Model::_face::CalcCenter(Fvector &C)
 	C.div(3);
 };
 
-float xrMU_Model::_face::CalcArea()
+float xrMU_Model::FaceMu::CalcArea()
 {
 	float e1 = v[0]->P.distance_to(v[1]->P);
 	float e2 = v[0]->P.distance_to(v[2]->P);
@@ -157,7 +157,7 @@ float xrMU_Model::_face::CalcArea()
 	float p = (e1 + e2 + e3) / 2.f;
 	return _sqrt(p * (p - e1) * (p - e2) * (p - e3));
 }
-float xrMU_Model::_face::CalcMaxEdge()
+float xrMU_Model::FaceMu::CalcMaxEdge()
 {
 	float e1 = v[0]->P.distance_to(v[1]->P);
 	float e2 = v[0]->P.distance_to(v[2]->P);
@@ -170,7 +170,7 @@ float xrMU_Model::_face::CalcMaxEdge()
 	return e3;
 }
 
-BOOL xrMU_Model::_face::RenderEqualTo(Face *F)
+BOOL xrMU_Model::FaceMu::RenderEqualTo(Face *F)
 {
 	if (F->dwMaterial != dwMaterial)
 		return FALSE;

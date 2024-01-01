@@ -5,8 +5,8 @@
 class xrMU_Model
 {
 public:
-	struct _vertex;
-	struct _face;
+	struct VertexMu;
+	struct FaceMu;
 
 	struct _subdiv
 	{
@@ -25,45 +25,45 @@ public:
 		u32 sw_id;
 	};
 
-	typedef xr_vector<_vertex *> v_vertices;
+	typedef xr_vector<VertexMu *> v_vertices;
 	typedef v_vertices::iterator v_vertices_it;
-	typedef xr_vector<_face *> v_faces;
+	typedef xr_vector<FaceMu *> v_faces;
 	typedef v_faces::iterator v_faces_it;
 	typedef xr_vector<_subdiv> v_subdivs;
 	typedef v_subdivs::iterator v_subdivs_it;
 
-	struct _vertex : public ::BaseVertex
+	struct VertexMu : public ::BaseVertex
 	{
 		v_faces adjacent;
 
 	public:
-		void prep_add(_face *F);
-		void prep_remove(_face *F);
+		void prep_add(FaceMu *F);
+		void prep_remove(FaceMu *F);
 		void calc_normal_adjacent();
 
-		_vertex() = default;
-		~_vertex() = default;
+		VertexMu() = default;
+		~VertexMu() = default;
 	};
 
-	struct _face : public ::base_Face
+	struct FaceMu : public ::base_Face
 	{
 	public:
-		_vertex *v[3];
+		VertexMu *v[3];
 		Fvector2 tc[3];
 		Fvector N;
 
 	public:
 		virtual Fvector2 *getTC0() { return tc; };
 
-		bool VContains(_vertex *pV);			   // Does the face contains this vertex?
-		void VReplace(_vertex *what, _vertex *to); // Replace ONE vertex by ANOTHER
-		void VReplace_NoRemove(_vertex *what, _vertex *to);
-		int VIndex(_vertex *pV);
-		void VSet(int idx, _vertex *V);
-		void VSet(_vertex *V1, _vertex *V2, _vertex *V3);
+		bool VContains(VertexMu *pV);			   // Does the face contains this vertex?
+		void VReplace(VertexMu *what, VertexMu *to); // Replace ONE vertex by ANOTHER
+		void VReplace_NoRemove(VertexMu *what, VertexMu *to);
+		int VIndex(VertexMu *pV);
+		void VSet(int idx, VertexMu *V);
+		void VSet(VertexMu *V1, VertexMu *V2, VertexMu *V3);
 		BOOL isDegenerated();
-		BOOL isEqual(_face &F);
-		void EdgeVerts(int e, _vertex **A, _vertex **B);
+		BOOL isEqual(FaceMu &F);
+		void EdgeVerts(int e, VertexMu **A, VertexMu **B);
 		void CalcNormal();
 		void CalcNormal2();
 		float CalcArea();
@@ -71,8 +71,8 @@ public:
 		void CalcCenter(Fvector &C);
 		BOOL RenderEqualTo(Face *F);
 
-		_face(){};
-		virtual ~_face(){};
+		FaceMu(){};
+		virtual ~FaceMu(){};
 	};
 
 public:
@@ -85,10 +85,10 @@ public:
 	xr_vector<base_color> color;
 
 private:
-	_face *create_face(_vertex *v0, _vertex *v1, _vertex *v2, b_face &F);
-	_vertex *create_vertex(Fvector &P);
-	_face *load_create_face(Fvector &P1, Fvector &P2, Fvector &P3, b_face &F);
-	_vertex *load_create_vertex(Fvector &P);
+	FaceMu *create_face(VertexMu *v0, VertexMu *v1, VertexMu *v2, b_face &F);
+	VertexMu *create_vertex(Fvector &P);
+	FaceMu *load_create_face(Fvector &P1, Fvector &P2, Fvector &P3, b_face &F);
+	VertexMu *load_create_vertex(Fvector &P);
 
 public:
 	void Load(IReader &fs);
@@ -125,5 +125,5 @@ public:
 	void ExportOgf(xr_vector<OGF_Base*> &ogfTree);
 };
 
-extern poolSS<xrMU_Model::_vertex, 8 * 1024> mu_vertices;
-extern poolSS<xrMU_Model::_face, 8 * 1024> mu_faces;
+extern poolSS<xrMU_Model::VertexMu, 8 * 1024> mu_vertices;
+extern poolSS<xrMU_Model::FaceMu, 8 * 1024> mu_faces;
