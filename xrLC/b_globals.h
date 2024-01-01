@@ -34,7 +34,6 @@ typedef map_v2v::iterator map_v2v_it;
 // Globals
 extern vecVertex g_vertices;
 extern vecFace g_faces;
-extern vec2Face g_XSplit;
 extern vecDefl g_deflectors;
 extern CDB::MODEL *RCAST_Model;
 extern CDeflector *Deflector;

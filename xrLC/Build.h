@@ -65,7 +65,6 @@ public:
 	string_path path;
 
 	void mem_Compact();
-	void mem_CompactSubdivs();
 
 public:
 	void Load(const b_params &P, const IReader &fs, HWND Window);
@@ -96,8 +95,7 @@ public:
 	// Split all faces into groups by materials
 	void xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vector<vecFace*> &outputSplits);
 
-	void xrPhase_UVmap();
-	void xrPhase_UVmapThread(const int from, const int to);
+	void xrPhase_UVmap(xr_vector<vecFace*> &splits);
 
 	void xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> deflectors);
 
@@ -107,7 +105,7 @@ public:
 	void Light_R2();
 	void LightVertex();
 	void xrPhase_MergeLM();
-	void xrPhase_MergeGeometry();
+	void xrPhase_MergeGeometry(xr_vector<vecFace*> &splits);
 
 	void Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &outputOgfTree);
 	void BuildSectors(xr_vector<OGF_Base*> &ogfTree);

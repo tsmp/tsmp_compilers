@@ -101,14 +101,14 @@ IC BOOL ValidateMerge(u32 f1, Fbox &bb_base, u32 f2, Fbox &bb, float &volume)
 	return TRUE;
 }
 
-void CBuild::xrPhase_MergeGeometry()
+void CBuild::xrPhase_MergeGeometry(xr_vector<vecFace*> &splits)
 {
 	Status("Processing...");
-	ValidateSplits(g_XSplit);
+	ValidateSplits(splits);
 
-	for (u32 split = 0; split < g_XSplit.size(); split++)
+	for (u32 split = 0; split < splits.size(); split++)
 	{
-		vecFace &subdiv = *(g_XSplit[split]);
+		vecFace &subdiv = *(splits[split]);
 		Fbox bb_base;
 
 		while (NeedMerge(subdiv, bb_base))
@@ -117,11 +117,11 @@ void CBuild::xrPhase_MergeGeometry()
 			u32 selected = split;
 			float selected_volume = flt_max;
 
-			for (u32 test = split + 1; test < g_XSplit.size(); test++)
+			for (u32 test = split + 1; test < splits.size(); test++)
 			{
 				Fbox bb;
 				float volume;
-				vecFace &TEST = *(g_XSplit[test]);
+				vecFace &TEST = *(splits[test]);
 
 				if (!FaceEqual(subdiv.front(), TEST.front()))
 					continue;
@@ -141,14 +141,14 @@ void CBuild::xrPhase_MergeGeometry()
 				break; // No candidates for merge
 
 			// **OK**. Perform merge
-			subdiv.insert(subdiv.begin(), g_XSplit[selected]->begin(), g_XSplit[selected]->end());
-			xr_delete(g_XSplit[selected]);
-			g_XSplit.erase(g_XSplit.begin() + selected);
+			subdiv.insert(subdiv.begin(), splits[selected]->begin(), splits[selected]->end());
+			xr_delete(splits[selected]);
+			splits.erase(splits.begin() + selected);
 		}
 
-		Progress(float(split) / float(g_XSplit.size()));
+		Progress(float(split) / float(splits.size()));
 	}
 
-	clMsg("%d subdivisions.", g_XSplit.size());
-	ValidateSplits(g_XSplit);
+	clMsg("%d subdivisions.", splits.size());
+	ValidateSplits(splits);
 }

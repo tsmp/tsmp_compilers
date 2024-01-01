@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "build.h"
 
-vec2Face g_XSplit;
-
 void Detach(xr_vector<Face*> &faces);
 
 struct MateraialCounter

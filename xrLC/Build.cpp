@@ -40,6 +40,15 @@ CBuild::~CBuild() {}
 
 extern u16 RegisterShader(LPCSTR T);
 
+template <typename T>
+void CleanPtrVector(xr_vector<T> vec)
+{
+	for (auto *elem : vec)
+		xr_delete(elem);
+
+	vec.clear();
+}
+
 // mu-light
 
 void CBuild::Light_prepare()
@@ -155,7 +164,9 @@ void CBuild::Run(LPCSTR P)
 	FPU::m64r();
 	Phase("Resolving materials...");
 	mem_Compact();
-	xrPhase_ResolveMaterials(g_faces, g_XSplit);
+
+	xr_vector<vecFace*> splits;
+	xrPhase_ResolveMaterials(g_faces, splits);
 	IsolateVertices(TRUE);
 
 	//UV mapping
@@ -163,7 +174,7 @@ void CBuild::Run(LPCSTR P)
 		FPU::m64r();
 		Phase("Build UV mapping...");
 		mem_Compact();
-		xrPhase_UVmap();
+		xrPhase_UVmap(splits);
 		IsolateVertices(TRUE);
 	}
 
@@ -171,40 +182,33 @@ void CBuild::Run(LPCSTR P)
 	FPU::m64r();
 	Phase("Subdividing geometry...");
 	mem_Compact();
-	xrPhase_Subdivide(g_XSplit, g_deflectors);
+	xrPhase_Subdivide(splits, g_deflectors);
 	IsolateVertices(TRUE);
 
 	// All lighting + lmaps building and saving
 	if (!b_nolmaps)
 		Light();
 
-	//****************************************** Merge geometry
 	FPU::m64r();
 	Phase("Merging geometry...");
 	mem_Compact();
-	xrPhase_MergeGeometry();
+	xrPhase_MergeGeometry(splits);
 
-	//Convert to OGF
+	// Convert to OGF
 	FPU::m64r();
 	Phase("Converting to OGFs...");
 	mem_Compact();
 
 	xr_vector<OGF_Base*> ogfTree;
-	Flex2OGF(g_XSplit, ogfTree);
-
-	//Wait for MU
-	//	FPU::m64r					();
-	//	Phase						("LIGHT: Waiting for MU-thread...");
-	//	mem_Compact					();
-	//	mu_base.wait				(500);
-	//	mu_secondary.wait			(500);
+	Flex2OGF(splits, ogfTree);
+	CleanPtrVector(splits);
 
 	FPU::m64r();
 	Phase("LIGHT: Waiting for MU-thread...");
 	mem_Compact();
 	mu_light_thread.wait(500);
 
-	//Export MU-models
+	// Export MU-models
 	FPU::m64r();
 	Phase("Converting MU-models to OGFs...");
 	mem_Compact();
@@ -223,19 +227,19 @@ void CBuild::Run(LPCSTR P)
 			mu_refs[m]->ExportOgf(ogfTree);
 	}
 
-	//Destroy RCast-model
+	// Destroy RCast-model
 	FPU::m64r();
 	Phase("Destroying ray-trace model...");
 	mem_Compact();
 	xr_delete(RCAST_Model);
 
-	//Build sectors
+	// Build sectors
 	FPU::m64r();
 	Phase("Building sectors...");
 	mem_Compact();
 	BuildSectors(ogfTree);
 
-	//Saving MISC stuff
+	// Saving MISC stuff
 	FPU::m64r();
 	Phase("Saving...");
 	mem_Compact();
@@ -255,11 +259,7 @@ void CBuild::Run(LPCSTR P)
 
 	SaveTREE(*fs, ogfTree);
 	SaveSectors(*fs, ogfTree);
-
-	for (OGF_Base* ogf : ogfTree)
-		xr_delete(ogf);
-
-	ogfTree.clear();
+	CleanPtrVector(ogfTree);
 
 	err_save();
 }

@@ -5,12 +5,6 @@
 #include "std_classes.h"
 #include "lightmap.h"
 
-#include <thread>
-#include <mutex>
-std::mutex mtx;
-
-float progr_time = 0;
-
 #define TRY(a)                                                                                     \
 	try                                                                                            \
 	{                                                                                              \
@@ -39,6 +33,7 @@ void CBuild::Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &ou
 {
 	float p_total = 0;
 	float p_cost = 1 / float(inputSplits.size());
+	float progr_time = 0;
 
 	ValidateSplits(inputSplits);
 	outputOgfTree.reserve(4096);
@@ -180,6 +175,4 @@ void CBuild::Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &ou
 
 	clMsg("%f seconds", start_ogf.GetElapsed_sec());
 	clMsg("%f seconds (progressive)", progr_time);
-
-	inputSplits.clear();
 }
