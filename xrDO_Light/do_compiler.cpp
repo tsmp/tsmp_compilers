@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "xr_3da\xrLevel.h"
 #include "xr_3da\shader_xrlc.h"
+#include "CommonCompilers\BuildTexture.h"
 #include "CommonCompilers\communicate.h"
 #include "CommonCompilers\xrThread.h"
 #include "xr_3da\xrRender\DetailFormat.h"
@@ -33,6 +34,7 @@ float color_intensity(Fcolor &c)
 	float absolute = c.magnitude_rgb() / 1.7320508075688772935274463415059f;
 	return ntsc * 0.5f + absolute * 0.5f;
 }
+
 class base_lighting
 {
 public:
@@ -43,12 +45,14 @@ public:
 	void select(xr_vector<R_Light> &dest, xr_vector<R_Light> &src, Fvector &P, float R);
 	void select(base_lighting &from, Fvector &P, float R);
 };
+
 void base_lighting::select(xr_vector<R_Light> &dest, xr_vector<R_Light> &src, Fvector &P, float R)
 {
 	Fsphere Sphere;
 	Sphere.set(P, R);
 	dest.clear();
 	R_Light *L = &*src.begin();
+
 	for (; L != &*src.end(); L++)
 	{
 		if (L->type == LT_POINT)
@@ -60,6 +64,7 @@ void base_lighting::select(xr_vector<R_Light> &dest, xr_vector<R_Light> &src, Fv
 		dest.push_back(*L);
 	}
 }
+
 void base_lighting::select(base_lighting &from, Fvector &P, float R)
 {
 	select(rgb, from.rgb, P, R);
@@ -74,6 +79,7 @@ public:
 	float hemi;	 // - hemisphere
 	float sun;	 // - sun
 	float _tmp_; // ???
+
 	base_color()
 	{
 		rgb.set(0, 0, 0);
@@ -87,71 +93,53 @@ public:
 		rgb.mul(s);
 		hemi *= s;
 		sun *= s;
-	};
+	}
+
 	void add(float s)
 	{
 		rgb.add(s);
 		hemi += s;
 		sun += s;
-	};
+	}
+
 	void add(base_color &s)
 	{
 		rgb.add(s.rgb);
 		hemi += s.hemi;
 		sun += s.sun;
-	};
-	void scale(int samples) { mul(1.f / float(samples)); };
+	}
+
+	void scale(int samples) { mul(1.f / float(samples)); }
+
 	void max(base_color &s)
 	{
 		rgb.max(s.rgb);
 		hemi = _max(hemi, s.hemi);
 		sun = _max(sun, s.sun);
-	};
+	}
+
 	void lerp(base_color &A, base_color &B, float s)
 	{
 		rgb.lerp(A.rgb, B.rgb, s);
 		float is = 1 - s;
 		hemi = is * A.hemi + s * B.hemi;
 		sun = is * A.sun + s * B.sun;
-	};
+	}
 };
+
 IC u8 u8_clr(float a)
 {
 	s32 _a = iFloor(a * 255.f);
 	clamp(_a, 0, 255);
 	return u8(_a);
-};
+}
 
-//-----------------------------------------------------------------------------------------------------------------
 const int LIGHT_Count = 7;
 
-//-----------------------------------------------------------------
-__declspec(thread) u64 t_start = 0;
-__declspec(thread) u64 t_time = 0;
-__declspec(thread) u64 t_count = 0;
+thread_local u64 t_start = 0;
+thread_local u64 t_time = 0;
+thread_local u64 t_count = 0;
 
-struct b_BuildTexture : public b_texture
-{
-	STextureParams THM;
-
-	u32 &Texel(u32 x, u32 y) { return pSurface[y * dwWidth + x]; }
-	void Vflip()
-	{
-		R_ASSERT(pSurface);
-		for (u32 y = 0; y < dwHeight / 2; y++)
-		{
-			u32 y2 = dwHeight - y - 1;
-			for (u32 x = 0; x < dwWidth; x++)
-			{
-				u32 t = Texel(x, y);
-				Texel(x, y) = Texel(x, y2);
-				Texel(x, y2) = t;
-			}
-		}
-	}
-};
-
-//-----------------------------------------------------------------
 base_lighting g_lights;
 CDB::MODEL RCAST_Model;
 Fbox LevelBB;
@@ -169,18 +157,19 @@ xr_vector<b_shader> g_shader_compile;
 xr_vector<b_BuildTexture> g_textures;
 xr_vector<b_rc_face> g_rc_faces;
 
-//-----------------------------------------------------------------
 template <class T>
 void transfer(const char *name, xr_vector<T> &dest, IReader &F, u32 chunk)
 {
 	IReader *O = F.open_chunk(chunk);
 	u32 count = O ? (O->length() / sizeof(T)) : 0;
 	clMsg("* %16s: %d", name, count);
+
 	if (count)
 	{
 		dest.reserve(count);
 		dest.insert(dest.begin(), (T *)O->pointer(), (T *)O->pointer() + count);
 	}
+
 	if (O)
 		O->close();
 }

@@ -6,8 +6,8 @@
 #include "..\xr_3da\xrLevel.h"
 #include "AIMapExport.h"
 #include "..\xr_3da\Shader_xrLC.h"
+#include "CommonCompilers\BuildTexture.h"
 #include "CommonCompilers\communicate.h"
-#include "CommonCompilers\ETextureParams.h"
 
 // base patch used all the time up to merging
 const u32 InvalidNode = (1 << 24) - 1;
@@ -95,27 +95,6 @@ extern CDB::MODEL Level;
 extern CDB::COLLIDER XRC;
 extern Fbox LevelBB;
 extern Vectors Emitters;
-
-struct b_BuildTexture : public b_texture
-{
-	STextureParams THM;
-
-	u32 &Texel(u32 x, u32 y) { return pSurface[y * dwWidth + x]; }
-	void Vflip()
-	{
-		R_ASSERT(pSurface);
-		for (u32 y = 0; y < dwHeight / 2; y++)
-		{
-			u32 y2 = dwHeight - y - 1;
-			for (u32 x = 0; x < dwWidth; x++)
-			{
-				u32 t = Texel(x, y);
-				Texel(x, y) = Texel(x, y2);
-				Texel(x, y2) = t;
-			}
-		}
-	}
-};
 
 extern Shader_xrLC_LIB *g_shaders_xrlc;
 extern xr_vector<b_material> g_materials;

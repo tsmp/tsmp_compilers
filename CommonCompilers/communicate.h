@@ -38,24 +38,6 @@ struct b_shader
 {
 	string128 name;
 };
-#ifdef _WIN64
-struct help_b_texture
-{
-	string128 name;
-	u32 dwWidth;
-	u32 dwHeight;
-	BOOL bHasAlpha;
-	DWORD pSurface;
-};
-#endif
-struct b_texture
-{
-	string128 name;
-	u32 dwWidth;
-	u32 dwHeight;
-	BOOL bHasAlpha;
-	u32 *pSurface;
-};
 
 struct b_light_control // controller or "layer", 30fps
 {
