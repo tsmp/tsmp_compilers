@@ -66,10 +66,7 @@ void base_Face::CacheOpacity()
 	}
 }
 
-//
 const int edge2idx[3][2] = {{0, 1}, {1, 2}, {2, 0}};
-const int edge2idx3[3][3] = {{0, 1, 2}, {1, 2, 0}, {2, 0, 1}};
-const int idx2edge[3][3] = {{-1, 0, 2}, {0, -1, 1}, {2, 1, -1}};
 
 volatile u32 dwInvalidFaces = 0;
 

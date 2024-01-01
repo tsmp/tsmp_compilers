@@ -129,22 +129,6 @@ void CBuild::BuildRapid(BOOL bSaveForOtherCompilers)
 		Progress(fProgr);
 	}
 
-	/*	auto LodThreadsManager = [](const CBuild *BLD, CDB::CollectorPacked &CLP, const int from, const int to)
-	{
-		//CDB::CollectorPacked CLL = CLP;
-
-		for (int ref = from; ref < to; ref++)
-		{
-			BLD->mu_refs[ref]->export_cform_rcast(CLP);
-		}
-	};
-
-	std::thread thread_1(LodThreadsManager, *this, CL, 0, MRS/2);
-	std::thread thread_2(LodThreadsManager, *this, CL, MRS/2, MRS);
-	thread_1.join();
-	thread_2.join();
-	*/
-
 	// "Building tree..
 	Status("Building search tree...");
 	RCAST_Model = xr_new<CDB::MODEL>();

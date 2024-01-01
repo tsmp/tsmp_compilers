@@ -134,17 +134,12 @@ BOOL xrMU_Model::_face::isEqual(xrMU_Model::_face &F)
 	return false;
 }
 
-float xrMU_Model::_face::EdgeLen(int edge)
-{
-	_vertex *V1 = v[edge2idx[edge][0]];
-	_vertex *V2 = v[edge2idx[edge][1]];
-	return V1->P.distance_to(V2->P);
-};
 void xrMU_Model::_face::EdgeVerts(int e, _vertex **A, _vertex **B)
 {
 	*A = v[edge2idx[e][0]];
 	*B = v[edge2idx[e][1]];
 }
+
 void xrMU_Model::_face::CalcCenter(Fvector &C)
 {
 	C.set(v[0]->P);

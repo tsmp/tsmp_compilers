@@ -63,7 +63,6 @@ public:
 		void VSet(_vertex *V1, _vertex *V2, _vertex *V3);
 		BOOL isDegenerated();
 		BOOL isEqual(_face &F);
-		float EdgeLen(int edge);
 		void EdgeVerts(int e, _vertex **A, _vertex **B);
 		void CalcNormal();
 		void CalcNormal2();

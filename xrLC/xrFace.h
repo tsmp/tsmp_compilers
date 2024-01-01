@@ -275,7 +275,6 @@ public:
 	void CalcNormal();
 	void CalcNormal2();
 
-	//------------------------------//
 	void Failure();
 	void Verify();
 
@@ -303,7 +302,8 @@ public:
 			what->prep_remove(this);
 			to->prep_add(this);
 		}
-	};
+	}
+
 	IC void VReplace_not_remove(Vertex *what, Vertex *to)
 	{
 		if (v[0] == what)
@@ -321,7 +321,8 @@ public:
 			v[2] = to;
 			to->prep_add(this);
 		}
-	};
+	}
+
 	IC int VIndex(Vertex *pV)
 	{
 		if (v[0] == pV)
@@ -331,26 +332,23 @@ public:
 		if (v[2] == pV)
 			return 2;
 		return -1;
-	};
+	}
 
 	IC void SetVertex(int idx, Vertex *V)
 	{
 		v[idx] = V;
 		V->prep_add(this);
-	};
+	}
+
 	IC void SetVertices(Vertex *V1, Vertex *V2, Vertex *V3)
 	{
 		SetVertex(0, V1);
 		SetVertex(1, V2);
 		SetVertex(2, V3);
-	};
+	}
+
 	IC BOOL isDegenerated() { return (v[0] == v[1] || v[0] == v[2] || v[1] == v[2]); };
-	IC float EdgeLen(int edge)
-	{
-		Vertex *V1 = v[edge2idx[edge][0]];
-		Vertex *V2 = v[edge2idx[edge][1]];
-		return V1->P.distance_to(V2->P);
-	};
+
 	IC void EdgeVerts(int e, Vertex **A, Vertex **B)
 	{
 		*A = v[edge2idx[e][0]];
@@ -370,7 +368,6 @@ public:
 	virtual ~Face();
 };
 
-//
 typedef poolSS<Vertex, 8 * 1024> poolVertices;
 extern poolVertices VertexPool;
 typedef poolSS<Face, 8 * 1024> poolFaces;
