@@ -92,7 +92,10 @@ public:
 	void xrPhase_MU_light();
 
 	void IsolateVertices(BOOL bProgress);
-	void xrPhase_ResolveMaterials();
+
+	// Split all faces into groups by materials
+	void xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vector<vecFace*> &outputSplits);
+
 	void xrPhase_UVmap();
 	void xrPhase_UVmapThread(const int from, const int to);
 

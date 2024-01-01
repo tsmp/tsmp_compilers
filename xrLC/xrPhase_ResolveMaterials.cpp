@@ -5,85 +5,76 @@ vec2Face g_XSplit;
 
 void Detach(xr_vector<Face*> &faces);
 
-struct _counter
+struct MateraialCounter
 {
 	u16 dwMaterial;
 	u32 dwCount;
 };
 
-void CBuild::xrPhase_ResolveMaterials()
+void CBuild::xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vector<vecFace*> &outputSplits)
 {
 	// Count number of materials
 	Status("Calculating materials/subdivs...");
-	xr_vector<_counter> counts;
+	xr_vector<MateraialCounter> materialCounts;
+	materialCounts.reserve(256);
+
+	u32 iteration = 0;
+	const float facesCount = static_cast<float>(inputFaces.size());
+
+	for (Face *face : inputFaces)
 	{
-		counts.reserve(256);
-		for (vecFaceIt F_it = g_faces.begin(); F_it != g_faces.end(); ++F_it)
+		if (!face->Shader().flags.bRendering)
 		{
-			Face *F = *F_it;
-			BOOL bCreate = TRUE;
-			for (u32 I = 0; I < counts.size(); I++)
-			{
-				if (F->dwMaterial == counts[I].dwMaterial)
-				{
-					counts[I].dwCount += 1;
-					bCreate = FALSE;
-					break;
-				}
-			}
-			if (bCreate)
-			{
-				_counter C;
-				C.dwMaterial = F->dwMaterial;
-				C.dwCount = 1;
-				counts.push_back(C);
-			}
-			Progress(float(F_it - g_faces.begin()) / float(g_faces.size()));
+			iteration++;
+			continue;
 		}
+
+		auto it = std::find_if(materialCounts.begin(), materialCounts.end(), [face](const MateraialCounter &counter)
+		{
+			return counter.dwMaterial == face->dwMaterial;
+		});
+
+		if (it == materialCounts.end())
+		{
+			auto &newMtl = materialCounts.emplace_back();
+			newMtl.dwCount = 1;
+			newMtl.dwMaterial = face->dwMaterial;
+		}
+		else
+			it->dwCount++;
+
+		Progress(static_cast<float>(iteration) / facesCount);
+		iteration++;
 	}
 
 	Status("Perfroming subdivisions...");
+	outputSplits.resize(materialCounts.size());
+
+	for (u32 i = 0, cnt = materialCounts.size(); i < cnt; i++)
 	{
-		g_XSplit.reserve(64 * 1024);
-		g_XSplit.resize(counts.size());
-		for (u32 I = 0; I < counts.size(); I++)
-		{
-			g_XSplit[I] = xr_new<vecFace>();
-			g_XSplit[I]->reserve(counts[I].dwCount);
-		}
-
-		for (vecFaceIt F_it = g_faces.begin(); F_it != g_faces.end(); ++F_it)
-		{
-			Face *F = *F_it;
-			if (!F->Shader().flags.bRendering)
-				continue;
-
-			for (u32 I = 0; I < counts.size(); I++)
-			{
-				if (F->dwMaterial == counts[I].dwMaterial)
-				{
-					g_XSplit[I]->push_back(F);
-				}
-			}
-			Progress(float(F_it - g_faces.begin()) / float(g_faces.size()));
-		}
+		outputSplits[i] = xr_new<vecFace>();
+		outputSplits[i]->reserve(materialCounts[i].dwCount);
 	}
 
-	Status("Removing empty subdivs...");
+	iteration = 0;
+	const u32 materialsCnt = materialCounts.size();
+
+	for (Face* face: inputFaces)
 	{
-		for (int SP = 0; SP < int(g_XSplit.size()); SP++)
-			if (g_XSplit[SP]->empty())
-				xr_delete(g_XSplit[SP]);
-		g_XSplit.erase(std::remove(g_XSplit.begin(), g_XSplit.end(), (vecFace *)NULL),
-			g_XSplit.end());
+		for (u32 i = 0; i < materialsCnt; i++)
+		{
+			if (face->dwMaterial == materialCounts[i].dwMaterial)
+				outputSplits[i]->push_back(face);
+		}
+
+		Progress(static_cast<float>(iteration) / facesCount);
+		iteration++;
 	}
 
 	Status("Detaching subdivs...");
-	{
-		for (u32 it = 0; it < g_XSplit.size(); it++)
-		{
-			Detach(*g_XSplit[it]);
-		}
-	}
-	clMsg("%d subdivisions.", g_XSplit.size());
+
+	for (auto split : outputSplits)
+		Detach(*split);
+
+	clMsg("%d subdivisions.", outputSplits.size());
 }

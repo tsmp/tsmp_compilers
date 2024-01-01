@@ -151,11 +151,11 @@ void CBuild::Run(LPCSTR P)
 	CThreadManager mu_light_thread;
 	mu_light_thread.start(xr_new<CMULightHiddenThread>(0));
 
-	//Resolve materials
+	// Resolve materials
 	FPU::m64r();
 	Phase("Resolving materials...");
 	mem_Compact();
-	xrPhase_ResolveMaterials();
+	xrPhase_ResolveMaterials(g_faces, g_XSplit);
 	IsolateVertices(TRUE);
 
 	//UV mapping
