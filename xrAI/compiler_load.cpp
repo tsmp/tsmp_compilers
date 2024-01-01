@@ -4,6 +4,7 @@
 #include "ServerEntities\levelgamedef.h"
 #include "Graph\level_graph.h"
 #include "AIMapExport.h"
+#include "xrDXT/DXT.h"
 
 IC const Fvector vertex_position(const CLevelGraph::CPosition &Psrc, const Fbox &bb,
 	const SAIParams &params)
@@ -50,9 +51,6 @@ void transfer(const char *name, xr_vector<T> &dest, IReader &F, u32 chunk)
 	if (O)
 		O->close();
 }
-
-extern u32 *Surface_Load(char *name, u32 &w, u32 &h);
-extern void Surface_Init();
 
 void xrLoad(LPCSTR name, bool draft_mode)
 {

@@ -141,7 +141,6 @@
     <ClCompile Include="compiler_save.cpp" />
     <ClCompile Include="compiler_smooth.cpp" />
     <ClCompile Include="motion_simulator.cpp" />
-    <ClCompile Include="..\xr_3da\xrLoadSurface.cpp" />
     <ClCompile Include="xrCrossTable.cpp" />
     <ClCompile Include="game_graph_builder.cpp" />
     <ClCompile Include="xr_graph_merge.cpp" />
@@ -154,6 +153,9 @@
   <ItemGroup>
     <ProjectReference Include="..\xrCore\xrCore.vcxproj">
       <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\xrDXT\DXT.vcxproj">
+      <Project>{ebf9b543-0830-4866-9b48-dc0740e87e8a}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
