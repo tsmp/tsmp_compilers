@@ -259,8 +259,12 @@ void CBuild::Run(LPCSTR P)
 
 	SaveTREE(*fs, ogfTree);
 	SaveSectors(*fs, ogfTree);
-	CleanPtrVector(ogfTree);
 
+	Phase("Cleaning up resources...");
+	CleanPtrVector(ogfTree);
+	g_bUnregister = false;
+	FacePool.clear();
+	VertexPool.clear();
 	err_save();
 }
 
