@@ -15,21 +15,21 @@
 		clMsg("* E: %s", #a);                                                                      \
 	}
 
-void CBuild::ValidateSplits(const xr_vector<vecFace*> &splits)
+void CBuild::ValidateSplits(const xr_vector<vecFace> &splits)
 {
 	u32 splitIndex = 0;
 	const u32 MaxSplitSize = c_SS_HighVertLimit * 2;
 
-	for (const vecFace *split : splits)
+	for (const vecFace &split : splits)
 	{
-		if (split->size() > MaxSplitSize)
-			clMsg("! ERROR: subdiv #%d has more than %d faces (%d)", splitIndex, MaxSplitSize, split->size());
+		if (split.size() > MaxSplitSize)
+			clMsg("! ERROR: subdiv #%d has more than %d faces (%d)", splitIndex, MaxSplitSize, split.size());
 
 		splitIndex++;
 	}
 }
 
-void CBuild::Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &outputOgfTree)
+void CBuild::Flex2OGF(xr_vector<vecFace> &inputSplits, xr_vector<OGF_Base*> &outputOgfTree)
 {
 	float p_total = 0;
 	float p_cost = 1 / float(inputSplits.size());
@@ -41,13 +41,16 @@ void CBuild::Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &ou
 	CTimer start_ogf;
 	start_ogf.Start();
 
-	for (splitIt it = inputSplits.begin(); it != inputSplits.end(); ++it)
+	const float SplitsCount = static_cast<float>(inputSplits.size());
+	u32 counter = 0;
+
+	for (auto &split: inputSplits)
 	{
-		R_ASSERT(!(*it)->empty());
-		u32 MODEL_ID = u32(it - inputSplits.begin());
+		R_ASSERT(!split.empty());
+		u32 MODEL_ID = counter;
 
 		OGF *pOGF = xr_new<OGF>();
-		Face *F = *((*it)->begin());				 // first face
+		Face *F = split[0];				 // first face
 		b_material *M = &(materials[F->dwMaterial]); // and it's material
 		R_ASSERT(F && M);
 
@@ -103,28 +106,27 @@ void CBuild::Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &ou
 			// Collect faces & vertices
 			F->CacheOpacity();
 			bool _tc_ = !(F->flags.bOpaque);
+
 			try
 			{
-				for (vecFaceIt Fit = (*it)->begin(); Fit != (*it)->end(); ++Fit)
+				for (Face *face: split)
 				{
 					OGF_Vertex V[3];
-
-					Face *FF = *Fit;
-					R_ASSERT(FF);
+					R_ASSERT(face);
 
 					// Geometry
 					for (u32 fv = 0; fv < 3; fv++)
 					{
-						V[fv].P.set(FF->v[fv]->P);
-						V[fv].N.set(FF->v[fv]->N);
-						V[fv].T = FF->basis_tangent[fv];
-						V[fv].B = FF->basis_binormal[fv];
-						V[fv].Color = FF->v[fv]->C;
+						V[fv].P.set(face->v[fv]->P);
+						V[fv].N.set(face->v[fv]->N);
+						V[fv].T = face->basis_tangent[fv];
+						V[fv].B = face->basis_binormal[fv];
+						V[fv].Color = face->v[fv]->C;
 					}
 
 					// Normal order
-					svector<_TCF, 2>::iterator TC = FF->tc.begin();
-					for (; TC != FF->tc.end(); TC++)
+					svector<_TCF, 2>::iterator TC = face->tc.begin();
+					for (; TC != face->tc.end(); TC++)
 					{
 						V[0].UV.push_back(TC->uv[0]);
 						V[1].UV.push_back(TC->uv[1]);

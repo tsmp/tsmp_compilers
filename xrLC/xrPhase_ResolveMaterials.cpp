@@ -9,7 +9,7 @@ struct MateraialCounter
 	u32 dwCount;
 };
 
-void CBuild::xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vector<vecFace*> &outputSplits)
+void CBuild::xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vector<vecFace> &outputSplits)
 {
 	// Count number of materials
 	Status("Calculating materials/subdivs...");
@@ -49,10 +49,7 @@ void CBuild::xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vec
 	outputSplits.resize(materialCounts.size());
 
 	for (u32 i = 0, cnt = materialCounts.size(); i < cnt; i++)
-	{
-		outputSplits[i] = xr_new<vecFace>();
-		outputSplits[i]->reserve(materialCounts[i].dwCount);
-	}
+		outputSplits[i].reserve(materialCounts[i].dwCount);
 
 	iteration = 0;
 	const u32 materialsCnt = materialCounts.size();
@@ -62,7 +59,7 @@ void CBuild::xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vec
 		for (u32 i = 0; i < materialsCnt; i++)
 		{
 			if (face->dwMaterial == materialCounts[i].dwMaterial)
-				outputSplits[i]->push_back(face);
+				outputSplits[i].push_back(face);
 		}
 
 		Progress(static_cast<float>(iteration) / facesCount);
@@ -71,8 +68,8 @@ void CBuild::xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vec
 
 	Status("Detaching subdivs...");
 
-	for (auto split : outputSplits)
-		Detach(*split);
+	for (auto &split : outputSplits)
+		Detach(split);
 
 	clMsg("%d subdivisions.", outputSplits.size());
 }

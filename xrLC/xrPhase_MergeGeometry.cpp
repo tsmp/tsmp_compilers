@@ -101,14 +101,14 @@ IC BOOL ValidateMerge(u32 f1, Fbox &bb_base, u32 f2, Fbox &bb, float &volume)
 	return TRUE;
 }
 
-void CBuild::xrPhase_MergeGeometry(xr_vector<vecFace*> &splits)
+void CBuild::xrPhase_MergeGeometry(xr_vector<vecFace> &splits)
 {
 	Status("Processing...");
 	ValidateSplits(splits);
 
 	for (u32 split = 0; split < splits.size(); split++)
 	{
-		vecFace &subdiv = *(splits[split]);
+		vecFace &subdiv = splits[split];
 		Fbox bb_base;
 
 		while (NeedMerge(subdiv, bb_base))
@@ -121,7 +121,7 @@ void CBuild::xrPhase_MergeGeometry(xr_vector<vecFace*> &splits)
 			{
 				Fbox bb;
 				float volume;
-				vecFace &TEST = *(splits[test]);
+				vecFace &TEST = splits[test];
 
 				if (!FaceEqual(subdiv.front(), TEST.front()))
 					continue;
@@ -141,8 +141,7 @@ void CBuild::xrPhase_MergeGeometry(xr_vector<vecFace*> &splits)
 				break; // No candidates for merge
 
 			// **OK**. Perform merge
-			subdiv.insert(subdiv.begin(), splits[selected]->begin(), splits[selected]->end());
-			xr_delete(splits[selected]);
+			subdiv.insert(subdiv.begin(), splits[selected].begin(), splits[selected].end());
 			splits.erase(splits.begin() + selected);
 		}
 

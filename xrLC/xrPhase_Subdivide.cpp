@@ -157,16 +157,15 @@ bool SplitSubdivision(const xr_vector<Face *> &subdiv, const Fbox &bb, Fvector &
 	return false;
 }
 
-void CBuild::xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &deflectors)
+void CBuild::xrPhase_Subdivide(xr_vector<vecFace> &splits, xr_vector<CDeflector*> &deflectors)
 {
 	Status("Subdividing in space...");
 
 	for (u32 i = 0; i < splits.size(); i++)
 	{
 		// Remove if empty
-		if (splits[i]->empty())
+		if (splits[i].empty())
 		{
-			xr_delete(splits[i]);
 			splits.erase(splits.begin() + i);
 			i--;
 			continue;
@@ -178,15 +177,15 @@ void CBuild::xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector
 		Fbox bb;
 		Fvector size;
 
-		if (!NeedSplitSubdivision(*splits[i], bb, size))
+		if (!NeedSplitSubdivision(splits[i], bb, size))
 			continue;
 
 		vecFace newSubdiv1, newSubdiv2;
 
-		if (SplitSubdivision(*splits[i], bb, size, newSubdiv1, newSubdiv2))
+		if (SplitSubdivision(splits[i], bb, size, newSubdiv1, newSubdiv2))
 		{
 			// Split deflector into TWO
-			if (const auto deflector = reinterpret_cast<CDeflector*>(splits[i]->front()->pDeflector))
+			if (const auto deflector = reinterpret_cast<CDeflector*>(splits[i].front()->pDeflector))
 			{
 				// Delete old deflector
 				for (u32 it = 0; it < deflectors.size(); it++)
@@ -209,12 +208,11 @@ void CBuild::xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector
 			}
 
 			// Delete old SPLIT and push two new
-			xr_delete(splits[i]);
 			splits.erase(splits.begin() + i);
 			i--;
-			splits.emplace_back(xr_new<vecFace>(newSubdiv1));
+			splits.emplace_back(std::move(newSubdiv1));
 			Detach(newSubdiv1);
-			splits.emplace_back(xr_new<vecFace>(newSubdiv2));
+			splits.emplace_back(std::move(newSubdiv2));
 			Detach(newSubdiv2);
 
 			// Detach duplicates vertices, on super huge maps could run out of memory.

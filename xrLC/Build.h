@@ -69,20 +69,20 @@ public:
 	void IsolateVertices(BOOL bProgress);
 
 	// Split all faces into groups by materials
-	void xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vector<vecFace*> &outputSplits);
+	void xrPhase_ResolveMaterials(const xr_vector<Face*> &inputFaces, xr_vector<vecFace> &outputSplits);
 
-	void xrPhase_UVmap(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &outDeflectors);
+	void xrPhase_UVmap(xr_vector<vecFace> &splits, xr_vector<CDeflector*> &outDeflectors);
 
-	void xrPhase_Subdivide(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &deflectors);
+	void xrPhase_Subdivide(xr_vector<vecFace> &splits, xr_vector<CDeflector*> &deflectors);
 
 	void ImplicitLighting();
 	void Light_prepare();
 	void Light(xr_vector<CDeflector*> &deflectors);
 	void LightVertex();
 	void xrPhase_MergeLM(const xr_vector<CDeflector*> &deflectors);
-	void xrPhase_MergeGeometry(xr_vector<vecFace*> &splits);
+	void xrPhase_MergeGeometry(xr_vector<vecFace> &splits);
 
-	void Flex2OGF(xr_vector<vecFace*> &inputSplits, xr_vector<OGF_Base*> &outputOgfTree);
+	void Flex2OGF(xr_vector<vecFace> &inputSplits, xr_vector<OGF_Base*> &outputOgfTree);
 	void BuildSectors(xr_vector<OGF_Base*> &ogfTree);
 
 	void SaveLights(IWriter &fs);
@@ -90,7 +90,7 @@ public:
 	void SaveSectors(IWriter &fs, const xr_vector<OGF_Base*> &ogfTree);
 
 	// Writes in log when split has more faces than limit
-	void ValidateSplits(const xr_vector<vecFace*> &splits);
+	void ValidateSplits(const xr_vector<vecFace> &splits);
 
 	CBuild() = default;
 	~CBuild() = default;

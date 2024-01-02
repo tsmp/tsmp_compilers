@@ -161,7 +161,7 @@ void CBuild::Run(LPCSTR P)
 	Phase("Resolving materials...");
 	mem_Compact();
 
-	xr_vector<vecFace*> splits;
+	xr_vector<vecFace> splits;
 	xrPhase_ResolveMaterials(g_faces, splits);
 	IsolateVertices(TRUE);
 
@@ -201,7 +201,7 @@ void CBuild::Run(LPCSTR P)
 
 	xr_vector<OGF_Base*> ogfTree;
 	Flex2OGF(splits, ogfTree);
-	CleanPtrVector(splits);
+	splits.clear();
 
 	FPU::m64r();
 	Phase("LIGHT: Waiting for MU-thread...");

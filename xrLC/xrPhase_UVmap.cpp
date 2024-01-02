@@ -52,7 +52,7 @@ void Detach(xr_vector<Face*> &faces)
 	}
 }
 
-void CBuild::xrPhase_UVmap(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &outDeflectors)
+void CBuild::xrPhase_UVmap(xr_vector<vecFace> &splits, xr_vector<CDeflector*> &outDeflectors)
 {
 	Status("Processing...");
 	outDeflectors.reserve(64 * 1024);
@@ -66,8 +66,8 @@ void CBuild::xrPhase_UVmap(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &
 		Progress(1.f * SP / splits.size());
 
 		// Detect vertex-lighting and avoid this subdivision
-		R_ASSERT(!splits[SP]->empty());
-		Face *Fvl = splits[SP]->front();
+		R_ASSERT(!splits[SP].empty());
+		Face *Fvl = splits[SP].front();
 		if (Fvl->Shader().flags.bLIGHT_Vertex)
 			continue; // do-not touch (skip)
 		if (!Fvl->Shader().flags.bRendering)
@@ -81,7 +81,7 @@ void CBuild::xrPhase_UVmap(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &
 			// Select maximal sized poly
 			Face *msF = NULL;
 			float msA = 0;
-			for (vecFaceIt it = splits[SP]->begin(); it != splits[SP]->end(); ++it)
+			for (vecFaceIt it = splits[SP].begin(); it != splits[SP].end(); ++it)
 			{
 				if ((*it)->pDeflector == NULL)
 				{
@@ -108,26 +108,25 @@ void CBuild::xrPhase_UVmap(xr_vector<vecFace*> &splits, xr_vector<CDeflector*> &
 
 				// Detach affected faces
 				faces_affected.clear();
-				for (int i = 0; i < int(splits[SP]->size()); i++)
+				for (int i = 0; i < int(splits[SP].size()); i++)
 				{
-					Face *F = (*splits[SP])[i];
+					Face *F = (splits[SP])[i];
 					if (F->pDeflector == Deflector)
 					{
 						faces_affected.push_back(F);
-						splits[SP]->erase(splits[SP]->begin() + i);
+						splits[SP].erase(splits[SP].begin() + i);
 						i--;
 					}
 				}
 
 				// detaching itself
 				Detach(faces_affected);
-				splits.push_back(xr_new<vecFace>(faces_affected));
+				splits.emplace_back(std::move(faces_affected));
 			}
 			else
 			{
-				if (splits[SP]->empty())
+				if (splits[SP].empty())
 				{
-					xr_delete(splits[SP]);
 					splits.erase(splits.begin() + SP);
 					SP--;
 				}
