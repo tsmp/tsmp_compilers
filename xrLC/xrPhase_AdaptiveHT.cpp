@@ -68,10 +68,12 @@ bool is_CCW(int _1, int _2)
 }
 
 // Iterate on edges - select longest
-int callback_edge_longest(Face *F)
+// -1 = none, 0,1,2 = edge-number
+int GetLongestEdgeIdx(Face *F)
 {
 	float max_err = -1;
 	int max_id = -1;
+
 	for (u32 e = 0; e < 3; e++)
 	{
 		Vertex *V1, *V2;
@@ -95,15 +97,17 @@ void CBuild::xrPhase_AdaptiveHT()
 
 	Status("Tesselating...");
 
-	if (1)
+	if (!strstr(Core.Params, "-notess"))
 	{
+		// clear split flag from all faces + calculate normals
 		for (u32 fit = 0; fit < g_faces.size(); fit++)
-		{ // clear split flag from all faces + calculate normals
+		{
 			g_faces[fit]->flags.bSplitted = false;
 			g_faces[fit]->flags.bLocked = true;
 			g_faces[fit]->CalcNormal();
 		}
-		u_Tesselate(callback_edge_longest, 0, 0); // tesselate
+
+		Tesselate();
 	}
 
 	// Tesselate + calculate
@@ -145,17 +149,18 @@ void CBuild::xrPhase_AdaptiveHT()
 	}
 }
 
-void CBuild::u_Tesselate(tesscb_estimator *cb_E, tesscb_face *cb_F, tesscb_vertex *cb_V)
+void CBuild::Tesselate()
 {
 	// main process
 	FPU::m64r();
 	Status("Tesselating...");
-	g_bUnregister = FALSE;
+
+	g_bUnregister = false;
 	xr_vector<Face *> adjacent;
 	adjacent.reserve(6 * 2 * 3);
 	u32 counter_create = 0;
 	u32 cnt_verts = g_vertices.size();
-	u32 cnt_faces = g_faces.size();
+
 	for (u32 I = 0; I < g_faces.size(); I++)
 	{
 		Face *F = g_faces[I];
@@ -171,7 +176,7 @@ void CBuild::u_Tesselate(tesscb_estimator *cb_E, tesscb_face *cb_F, tesscb_verte
 			continue;
 
 		Progress(float(I) / float(g_faces.size()));
-		int max_id = cb_E(F);
+		int max_id = GetLongestEdgeIdx(F);
 		if (max_id < 0)
 			continue; // nothing selected
 
@@ -180,6 +185,7 @@ void CBuild::u_Tesselate(tesscb_estimator *cb_E, tesscb_face *cb_F, tesscb_verte
 		Vertex *V1, *V2;
 		F->EdgeVerts(max_id, &V1, &V2);
 		adjacent.clear();
+
 		for (u32 adj = 0; adj < V1->adjacent.size(); adj++)
 		{
 			Face *A = V1->adjacent[adj];
@@ -193,13 +199,14 @@ void CBuild::u_Tesselate(tesscb_estimator *cb_E, tesscb_face *cb_F, tesscb_verte
 
 		// create new vertex (lerp)
 		counter_create++;
+
 		if (0 == (counter_create % 10000))
 		{
 			for (u32 I = 0; I < g_vertices.size(); I++)
 				if (0 == g_vertices[I]->adjacent.size())
 					VertexPool.destroy(g_vertices[I]);
-			Status("Working: %d verts created, %d(now) / %d(was) ...", counter_create,
-				g_vertices.size(), cnt_verts);
+
+			Status("Working: %d verts created, %d(now) / %d(was) ...", counter_create, g_vertices.size(), cnt_verts);
 			FlushLog();
 		}
 
@@ -254,11 +261,7 @@ void CBuild::u_Tesselate(tesscb_estimator *cb_E, tesscb_face *cb_F, tesscb_verte
 
 			// Normals and checkpoint
 			F1->N = AF->N;
-			if (cb_F)
-				cb_F(F1);
 			F2->N = AF->N;
-			if (cb_F)
-				cb_F(F2);
 
 			// don't destroy old face	(it can be used as occluder during ray-trace)
 			// if (AF->bLocked)	continue;
@@ -266,61 +269,19 @@ void CBuild::u_Tesselate(tesscb_estimator *cb_E, tesscb_face *cb_F, tesscb_verte
 		}
 
 		// calc vertex attributes
-		{
-			V->normalFromAdj();
-			if (cb_V)
-				cb_V(V);
-		}
+		V->normalFromAdj();
 	}
 
 	// Cleanup
 	for (u32 I = 0; I < g_faces.size(); I++)
 		if (0 != g_faces[I] && g_faces[I]->flags.bSplitted)
 			FacePool.destroy(g_faces[I]);
+
 	for (u32 I = 0; I < g_vertices.size(); I++)
 		if (0 == g_vertices[I]->adjacent.size())
 			VertexPool.destroy(g_vertices[I]);
-	g_faces.erase(std::remove(g_faces.begin(), g_faces.end(), (Face *)0), g_faces.end());
-	g_vertices.erase(std::remove(g_vertices.begin(), g_vertices.end(), (Vertex *)0),
-		g_vertices.end());
+
+	g_faces.erase(std::remove(g_faces.begin(), g_faces.end(), nullptr), g_faces.end());
+	g_vertices.erase(std::remove(g_vertices.begin(), g_vertices.end(), nullptr), g_vertices.end());
 	g_bUnregister = true;
-}
-
-void CBuild::u_SmoothVertColors(int count)
-{
-	for (int iteration = 0; iteration < count; iteration++)
-	{
-		// Gather
-		xr_vector<base_color> colors;
-		colors.resize(g_vertices.size());
-		for (u32 it = 0; it < g_vertices.size(); it++)
-		{
-			// Circle
-			xr_vector<Vertex *> circle;
-			Vertex *V = g_vertices[it];
-			for (u32 fit = 0; fit < V->adjacent.size(); fit++)
-			{
-				Face *F = V->adjacent[fit];
-				circle.push_back(F->v[0]);
-				circle.push_back(F->v[1]);
-				circle.push_back(F->v[2]);
-			}
-			std::sort(circle.begin(), circle.end());
-			circle.erase(std::unique(circle.begin(), circle.end()), circle.end());
-
-			// Average
-			base_color_c avg, tmp;
-			for (u32 cit = 0; cit < circle.size(); cit++)
-			{
-				circle[cit]->C._get(tmp);
-				avg.add(tmp);
-			}
-			avg.scale(circle.size());
-			colors[it]._set(avg);
-		}
-
-		// Transfer
-		for (u32 it = 0; it < g_vertices.size(); it++)
-			g_vertices[it]->C = colors[it];
-	}
 }

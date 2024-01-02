@@ -40,6 +40,7 @@ static const char *h_str = "The following keys are supported / required:\n"
 						   "-skipinvalid	== skip crash if invalid faces exists\n"
 						   "-lmap_quality	== lightmap quality\n"
 						   "-lmap_rgba     == save lightmaps with lossless format\n"
+						   "-notess			== disable geometry tesselation\n"
 						   "-f<NAME>		== compile level in GameData\\Levels\\<NAME>\\\n"
 						   "\n"
 						   "NOTE: The last key is required for any functionality\n";
