@@ -7,23 +7,11 @@
 
 XRCORE_API void ComputeBuildID(LPCSTR Date);
 
-extern void DoCompiler();
-
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "d3dx9.lib")
 #pragma comment(lib, "IMAGEHLP.LIB")
 #pragma comment(lib, "winmm.LIB")
 #pragma comment(lib, "xrCore.lib")
-
-#define PROTECTED_BUILD
-
-#ifdef PROTECTED_BUILD
-#define TRIVIAL_ENCRYPTOR_ENCODER
-#define TRIVIAL_ENCRYPTOR_DECODER
-#include "../xr_3da/trivial_encryptor.h"
-#undef TRIVIAL_ENCRYPTOR_ENCODER
-#undef TRIVIAL_ENCRYPTOR_DECODER
-#endif // PROTECTED_BUILD
 
 CBuild *pBuild = NULL;
 
@@ -197,16 +185,12 @@ void Startup(LPSTR lpCmdLine)
 	Sleep(500);
 }
 
-typedef void DUMMY_STUFF(const void *, const u32 &, void *);
-XRCORE_API DUMMY_STUFF *g_temporary_stuff;
-XRCORE_API DUMMY_STUFF *g_dummy_stuff;
-
 int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 
 	// KD: let's init debug to enable exception handling
-	//Debug._initialize	(false);
+	Debug._initialize(false);
 
 	// KD: custom log name
 	char app_name[10];
@@ -217,9 +201,6 @@ int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine, 
 #endif
 	// KD: let it be build number like in game
 	ComputeBuildID(__DATE__);
-
-	g_temporary_stuff = &trivial_encryptor::decode;
-	g_dummy_stuff = &trivial_encryptor::encode;
 
 	Core._initialize(app_name);
 	Startup(lpCmdLine);

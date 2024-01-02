@@ -1,9 +1,3 @@
-// LocatorAPI.h: interface for the CLocatorAPI class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#ifndef LocatorAPIH
-#define LocatorAPIH
 #pragma once
 
 #pragma warning(push)
@@ -39,17 +33,11 @@ private:
 			return xr_strcmp(x.name, y.name) < 0;
 		}
 	};
-	struct archive
-	{
-		shared_str path;
-		void *hSrcFile, *hSrcMap;
-		u32 size;
-	};
+
 	DEFINE_MAP_PRED(LPCSTR, FS_Path *, PathMap, PathPairIt, pred_str);
 	PathMap pathes;
 
 	DEFINE_SET_PRED(file, files_set, files_it, file_pred);
-	DEFINE_VECTOR(archive, archives_vec, archives_it);
 
 	DEFINE_VECTOR(_finddata_t, FFVec, FFIt);
 	FFVec rec_files;
@@ -59,23 +47,14 @@ private:
 	void check_pathes();
 
 	files_set files;
-	archives_vec archives;
 	BOOL bNoRecurse;
-
-	xrCriticalSection m_auth_lock;
-	u64 m_auth_code;
 
 	void Register(LPCSTR name, u32 vfs, u32 crc, u32 ptr, u32 size_real, u32 size_compressed,
 		u32 modif);
 
 	void ProcessOne(LPCSTR path, void *F);
 	bool Recurse(LPCSTR path);
-	//	bool						CheckExistance	(LPCSTR path);
-
 	files_it file_find_it(LPCSTR n);
-
-public:
-	void ProcessArchive(LPCSTR path, LPCSTR base_path = NULL);
 
 public:
 	enum
@@ -103,9 +82,6 @@ private:
 	template <typename T>
 	void file_from_cache(T *&R, LPSTR fname, const file &desc, LPCSTR &source_name);
 
-	void file_from_archive(IReader *&R, LPCSTR fname, const file &desc);
-	void file_from_archive(CStreamReader *&R, LPCSTR fname, const file &desc);
-
 	void copy_file_to_build(IWriter *W, IReader *r);
 	void copy_file_to_build(IWriter *W, CStreamReader *r);
 	template <typename T>
@@ -115,7 +91,6 @@ private:
 
 	template <typename T>
 	IC T *r_open_impl(LPCSTR path, LPCSTR _fname);
-	void ProcessExternalArch();
 
 public:
 	CLocatorAPI();
@@ -170,10 +145,6 @@ public:
 	LPCSTR update_path(string_path &dest, LPCSTR initial, LPCSTR src);
 
 	void file_list(FileList &list, LPCSTR path, LPCSTR mask);
-	//.    void						update_path			(xr_string& dest, LPCSTR initial, LPCSTR src);
-
-	//
-	//void						register_archieve	(LPCSTR path); // не вызывается вообще нигде
 	void auth_generate(xr_vector<xr_string> &ignore, xr_vector<xr_string> &important);
 	u64 auth_get();
 	void auth_runtime(void *);
@@ -186,5 +157,3 @@ public:
 
 extern XRCORE_API CLocatorAPI *xr_FS;
 #define FS (*xr_FS)
-
-#endif // LocatorAPIH

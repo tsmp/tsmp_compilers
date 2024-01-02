@@ -17,12 +17,6 @@
 #pragma comment(lib, "MagicFM.LIB")
 #pragma comment(lib, "xrCore.LIB")
 
-typedef void DUMMY_STUFF(const void*, const u32&, void*);
-XRCORE_API DUMMY_STUFF* g_temporary_stuff;
-
-#define TRIVIAL_ENCRYPTOR_DECODER
-#include "../xr_3da/trivial_encryptor.h"
-
 extern LPCSTR LEVEL_GRAPH_NAME;
 
 extern void xrCompiler(LPCSTR name, bool draft_mode, bool pure_covers, LPCSTR out_name);
@@ -210,8 +204,6 @@ void Startup(LPSTR lpCmdLine)
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Core._initialize("xrai", 0);
-	
-	g_temporary_stuff = &trivial_encryptor::decode;
 	string_path systemLtxPath;
 	FS.update_path(systemLtxPath, "$game_config$", "system.ltx");
 	pSettings = xr_new<CInifile>(systemLtxPath);

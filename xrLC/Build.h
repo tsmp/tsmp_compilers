@@ -49,7 +49,6 @@ public:
 
 	void xrPhase_AdaptiveHT();
 	void Tesselate();
-	void u_SmoothVertColors(int count);
 
 	void CalcNormals();
 	void xrPhase_TangentBasis();
