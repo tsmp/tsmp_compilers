@@ -104,7 +104,9 @@ void Phase(const char *phase_name)
 	u32 uCurTime = timeGetTime();
 
 	phase_total_time = uCurTime - phase_start_time;
-	sprintf(tbuf, "%s : %s", make_time(phase_total_time / 1000).c_str(), phase);
+	std::string phaseTime = make_time(phase_total_time / 1000);
+	sprintf(tbuf, "%s : %s", phaseTime.c_str(), phase);
+	clMsg("Phase time: %s", phaseTime.c_str());
 	SendMessage(hwPhaseTime, LB_DELETESTRING, SendMessage(hwPhaseTime, LB_GETCOUNT, 0, 0) - 1, 0);
 	SendMessage(hwPhaseTime, LB_ADDSTRING, 0, (LPARAM)tbuf);
 
