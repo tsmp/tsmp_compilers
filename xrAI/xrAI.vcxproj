@@ -87,6 +87,7 @@
     <ClInclude Include="spawn_patcher.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\CommonCompilers\CompilerStartup.cpp" />
     <ClCompile Include="FactoryApi.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

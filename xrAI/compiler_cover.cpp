@@ -320,8 +320,8 @@ public:
 	}
 };
 
-#define NUM_THREADS 3
 extern void mem_Optimize();
+int i_ThreadCount = 1;
 
 void xrCover(bool pure_covers)
 {
@@ -330,12 +330,12 @@ void xrCover(bool pure_covers)
 	// Start threads, wait, continue --- perform all the work
 	u32 start_time = timeGetTime();
 	CThreadManager Threads;
-	u32 stride = g_nodes.size() / NUM_THREADS;
-	u32 last = g_nodes.size() - stride * (NUM_THREADS - 1);
+	u32 stride = g_nodes.size() / i_ThreadCount;
+	u32 last = g_nodes.size() - stride * (i_ThreadCount - 1);
 
-	for (u32 thID = 0; thID < NUM_THREADS; thID++)
+	for (u32 thID = 0; thID < i_ThreadCount; thID++)
 		Threads.start(xr_new<CoverThread>(thID, thID * stride,
-			thID * stride + ((thID == (NUM_THREADS - 1)) ? last : stride)));
+			thID * stride + ((thID == (i_ThreadCount - 1)) ? last : stride)));
 	Threads.wait();
 	Msg("%d seconds elapsed.", (timeGetTime() - start_time) / 1000);
 

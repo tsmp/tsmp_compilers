@@ -22,6 +22,7 @@
     <ClCompile Include="do_compiler.cpp" />
     <ClCompile Include="..\CommonCompilers\cl_log.cpp" />
     <ClCompile Include="..\CommonCompilers\xrThread.cpp" />
+    <ClCompile Include="..\CommonCompilers\CompilerStartup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\CommonCompilers\resource.rc" />

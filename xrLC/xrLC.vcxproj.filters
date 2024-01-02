@@ -309,6 +309,9 @@
     </ClCompile>
     <ClCompile Include="..\CommonCompilers\cl_log.cpp" />
     <ClCompile Include="..\CommonCompilers\xrThread.cpp" />
+    <ClCompile Include="..\CommonCompilers\CompilerStartup.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\CommonCompilers\resource.rc" />

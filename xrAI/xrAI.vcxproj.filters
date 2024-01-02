@@ -254,6 +254,7 @@
     <ClCompile Include="ServerEntities\xrServer_Objects_ALife_Items.cpp" />
     <ClCompile Include="ServerEntities\xrServer_Objects_ALife_Monsters.cpp" />
     <ClCompile Include="ServerEntities\xrServer_Object_Base.cpp" />
+    <ClCompile Include="..\CommonCompilers\CompilerStartup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\CommonCompilers\resource.rc" />
